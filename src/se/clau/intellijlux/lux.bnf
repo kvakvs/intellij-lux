@@ -1,0 +1,22 @@
+{
+  parserClass="se.clau.intellijlux.parser.LuxParser"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Lux"
+  psiImplClassSuffix="Impl"
+  psiPackage="se.clau.intellijlux.psi"
+  psiImplPackage="se.clau.intellijlux.impl"
+
+  elementTypeHolderClass="se.clau.intellijlux.psi.LuxTypes"
+  elementTypeClass="se.clau.intellijlux.psi.LuxElementType"
+  tokenTypeClass="se.clau.intellijlux.psi.LuxTokenType"
+}
+
+luxFile ::= item*
+
+private item ::= (command | META | COMMENT | CRLF)
+
+command ::= (SEND | SENDLN | EXPECT_VERBATIM | EXPECT_TEMPLATE | EXPECT_REGEXP
+            | FLUSH | EXPECT_MAYBEREGEXP
+            | SET_FAILURE | SET_SUCCESS | SET_LOOPBREAK)
