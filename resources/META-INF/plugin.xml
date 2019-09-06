@@ -30,12 +30,12 @@
               implementationClass="se.clau.intellijlux.LuxFileType"
               fieldName="INSTANCE"
               language="Lux"
-              extensions="simple"/>
+              extensions="lux"/>
     <fileType name="Lux Include"
               implementationClass="se.clau.intellijlux.LuxIncludeFileType"
               fieldName="INSTANCE"
               language="Lux"
-              extensions="simple"/>
+              extensions="luxinc"/>
     <lang.parserDefinition
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxParserDefinition"/>

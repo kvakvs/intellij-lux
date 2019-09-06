@@ -22,7 +22,7 @@ public class LuxIncludeFileType extends LanguageFileType {
   @NotNull
   @Override
   public String getDescription() {
-    return "Lux (LUcid eXpect) script";
+    return "Lucid Expect";
   }
 
   @NotNull

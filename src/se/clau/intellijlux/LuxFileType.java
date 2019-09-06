@@ -20,9 +20,7 @@ public class LuxFileType extends LanguageFileType {
 
   @NotNull
   @Override
-  public String getDescription() {
-    return "Lux";
-  }
+  public String getDescription() { return "Lucid Expect"; }
 
   @NotNull
   @Override

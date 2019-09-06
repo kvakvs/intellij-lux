@@ -21,7 +21,7 @@ public class LuxFile extends PsiFileBase {
 
   @Override
   public String toString() {
-    return "Lux Test Script";
+    return "Lux Script";
   }
 
   @Override
