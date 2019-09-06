@@ -67,6 +67,10 @@ public class LuxVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitMetaSleep(@NotNull LuxMetaSleep o) {
+    visitPsiElement(o);
+  }
+
   public void visitMetaTimeout(@NotNull LuxMetaTimeout o) {
     visitPsiElement(o);
   }

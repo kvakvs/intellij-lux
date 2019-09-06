@@ -52,7 +52,8 @@ public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
 //    } else if (tokenType.equals(SimpleTypes.VALUE)) {
 //      return VALUE_KEYS;
 //  } else
-    if (tokenType.equals(LuxTypes.T_LINE_CONTENTS)) {
+    if (tokenType.equals(LuxTypes.T_LINE_CONTENTS)
+            || tokenType.equals(LuxTypes.T_MULTILINE_CONTENTS)) {
       return LINE_CONTENT_KEYS;
     } else if (tokenType.equals(LuxTypes.COMMENT)) {
       return COMMENT_KEYS;
@@ -70,6 +71,16 @@ public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(LuxTypes.K_SET_SUCCESS_ONLY)
             || tokenType.equals(LuxTypes.K_SET_LOOP_BREAK)
             || tokenType.equals(LuxTypes.K_SET_LOOP_BREAK_ONLY)) {
+      return KEYWORD_KEYS;
+    } else if (tokenType.equals(LuxTypes.K_ML_SEND)
+            || tokenType.equals(LuxTypes.K_ML_SEND_LN)
+            || tokenType.equals(LuxTypes.K_ML_EXP_VERBATIM)
+            || tokenType.equals(LuxTypes.K_ML_EXP_TEMPLATE)
+            || tokenType.equals(LuxTypes.K_ML_EXP_MAYBE_REGEX)
+            || tokenType.equals(LuxTypes.K_ML_EXP_REGEX)
+            || tokenType.equals(LuxTypes.K_ML_SET_FAILURE)
+            || tokenType.equals(LuxTypes.K_ML_SET_SUCCESS)
+            || tokenType.equals(LuxTypes.K_ML_SET_LOOP_BREAK)) {
       return KEYWORD_KEYS;
     } else {
       return EMPTY_KEYS;

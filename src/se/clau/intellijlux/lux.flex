@@ -1,8 +1,8 @@
 package se.clau.intellijlux;
 
-import android.security.keystore.KeyNotYetValidException;import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import se.clau.intellijlux.psi.LuxTokenType;import se.clau.intellijlux.psi.LuxTypes;
+import se.clau.intellijlux.psi.LuxTypes;
 import com.intellij.psi.TokenType;
 
 %%
@@ -18,17 +18,18 @@ import com.intellij.psi.TokenType;
 CRLF            = [\r\n]
 BLANK           = [\ \t\f]
 COMMENT         = "#"[^\r\n]*
-T_META_CONTENTS = ([^\]\r\n] | {BLANK})+ "]" {CRLF}
+T_META_CONTENTS = ~"]" {CRLF}
 T_WORD          = [\w_][\w\d_]*
 T_NUMBER        = [0-9]+
 T_LINE_CONTENTS = [^\r\n]+ {CRLF}
+T_QQQ           = "\"\"\""
+T_MULTILINE_CONTENTS = ~{T_QQQ} {CRLF}
 
 %state IN_DOC
 %state IN_CONFIG
 %state IN_CONFIG_VAL
 %state IN_NEWSHELL
 %state IN_SHELL
-%state IN_TIMEOUT
 %state IN_INCLUDE
 %state IN_LOOP
 %state IN_MACRO
@@ -36,31 +37,46 @@ T_LINE_CONTENTS = [^\r\n]+ {CRLF}
 %state IN_INVOKE
 %state IN_INVOKE_ARGS
 
-%state IN_LINE_COMMAND
+//=== Generic states ===
+// consumes one numeric argument
+%state WAIT_NUM
+// consumes everything until end of the meta, closing ] and CRLF
+%state REMAINING_META
+// consumes everything until end of the line, to CRLF
+%state REMAINING_LINE
+// consumes everything until """ including CRLF
+%state REMAINING_MULTILINE
 
 %%
 
 <YYINITIAL> {COMMENT}          { return LuxTypes.COMMENT; }
 
-<YYINITIAL> "!"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SEND; }
-<YYINITIAL> "~"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SEND_LN; }
-<YYINITIAL> "???"              { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_VERBATIM; }
-<YYINITIAL> "??"               { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_TEMPLATE; }
-<YYINITIAL> "?+"               { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_MAYBE_REGEX; }
+<YYINITIAL> "!"                { yybegin(REMAINING_LINE); return LuxTypes.K_SEND; }
+<YYINITIAL> {T_QQQ}"!"         { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND; }
+<YYINITIAL> "~"                { yybegin(REMAINING_LINE); return LuxTypes.K_SEND_LN; }
+<YYINITIAL> {T_QQQ}"~"         { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND_LN; }
+<YYINITIAL> "???"              { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_VERBATIM; }
+<YYINITIAL> {T_QQQ}"???"       { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_VERBATIM; }
+<YYINITIAL> "??"               { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_TEMPLATE; }
+<YYINITIAL> {T_QQQ}"??"        { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_TEMPLATE; }
+<YYINITIAL> "?+"               { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX; }
+<YYINITIAL> {T_QQQ}"?+"        { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_MAYBE_REGEX; }
 
 <YYINITIAL> "?"{CRLF}          { return LuxTypes.K_FLUSH; }
-<YYINITIAL> "?"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_REGEX; }
+<YYINITIAL> "?"                { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX; }
+<YYINITIAL> {T_QQQ}"?"         { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_REGEX; }
 
 <YYINITIAL> "+"{CRLF}          { return LuxTypes.K_SET_SUCCESS_ONLY; }
-<YYINITIAL> "+"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_SUCCESS; }
+<YYINITIAL> "+"                { yybegin(REMAINING_LINE); return LuxTypes.K_SET_SUCCESS; }
 
 <YYINITIAL> "-"{CRLF}          { return LuxTypes.K_SET_FAILURE_ONLY; }
-<YYINITIAL> "-"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_FAILURE; }
+<YYINITIAL> "-"                { yybegin(REMAINING_LINE); return LuxTypes.K_SET_FAILURE; }
 
 <YYINITIAL> "@"{CRLF}          { return LuxTypes.K_SET_LOOP_BREAK_ONLY; }
-<YYINITIAL> "@"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_LOOP_BREAK; }
+<YYINITIAL> "@"                { yybegin(REMAINING_LINE); return LuxTypes.K_SET_LOOP_BREAK; }
 
-<IN_LINE_COMMAND> {T_LINE_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_LINE_CONTENTS; }
+<REMAINING_LINE> {T_LINE_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_LINE_CONTENTS; }
+<REMAINING_MULTILINE> {T_MULTILINE_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_MULTILINE_CONTENTS; }
 
 <YYINITIAL> "]"                { return LuxTypes.T_SQR_CLOSE; }
 
@@ -79,8 +95,9 @@ T_LINE_CONTENTS = [^\r\n]+ {CRLF}
 <IN_INVOKE_ARGS> {T_META_CONTENTS}  { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
 <YYINITIAL> "[doc]"{CRLF}      { return LuxTypes.K_DOC_ONLY; }
-<YYINITIAL> "[doc"{BLANK}      { yybegin(IN_DOC); return LuxTypes.K_DOC; }
-<IN_DOC> {T_META_CONTENTS}     { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+<YYINITIAL> "[enddoc]"{CRLF}   { return LuxTypes.K_END_DOC; }
+<YYINITIAL> "[doc"{BLANK}      { yybegin(REMAINING_META); return LuxTypes.K_DOC; }
+<REMAINING_META> {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
 <YYINITIAL> "[config"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG; }
 <YYINITIAL> "[local"{BLANK}    { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL; }
@@ -99,8 +116,9 @@ T_LINE_CONTENTS = [^\r\n]+ {CRLF}
 <IN_SHELL> {T_META_CONTENTS}   { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
 <YYINITIAL> "[timeout]"{CRLF}  { return LuxTypes.K_TIMEOUT_ONLY; }
-<YYINITIAL> "[timeout"{BLANK}  { yybegin(IN_TIMEOUT); return LuxTypes.K_TIMEOUT; }
-<IN_TIMEOUT> {T_NUMBER}        { yybegin(YYINITIAL); return LuxTypes.T_NUMBER; }
+<YYINITIAL> "[timeout"{BLANK}  { yybegin(WAIT_NUM); return LuxTypes.K_TIMEOUT; }
+<YYINITIAL> "[sleep"{BLANK}    { yybegin(WAIT_NUM); return LuxTypes.K_SLEEP; }
+<WAIT_NUM> {T_NUMBER}    { yybegin(YYINITIAL); return LuxTypes.T_NUMBER; }
 
 <YYINITIAL> "[include"{BLANK}  { yybegin(IN_INCLUDE); return LuxTypes.K_INCLUDE; }
 <IN_INCLUDE> {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }

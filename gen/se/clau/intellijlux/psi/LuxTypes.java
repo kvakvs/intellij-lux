@@ -23,6 +23,7 @@ public interface LuxTypes {
   IElementType META_MY = new LuxElementType("META_MY");
   IElementType META_NEWSHELL = new LuxElementType("META_NEWSHELL");
   IElementType META_SHELL = new LuxElementType("META_SHELL");
+  IElementType META_SLEEP = new LuxElementType("META_SLEEP");
   IElementType META_TIMEOUT = new LuxElementType("META_TIMEOUT");
   IElementType SEND = new LuxElementType("SEND");
   IElementType SEND_LN = new LuxElementType("SEND_LN");
@@ -36,6 +37,7 @@ public interface LuxTypes {
   IElementType K_CONFIG = new LuxTokenType("K_CONFIG");
   IElementType K_DOC = new LuxTokenType("K_DOC");
   IElementType K_DOC_ONLY = new LuxTokenType("K_DOC_ONLY");
+  IElementType K_END_DOC = new LuxTokenType("K_END_DOC");
   IElementType K_END_LOOP = new LuxTokenType("K_END_LOOP");
   IElementType K_END_MACRO = new LuxTokenType("K_END_MACRO");
   IElementType K_EXP_MAYBE_REGEX = new LuxTokenType("K_EXP_MAYBE_REGEX");
@@ -49,6 +51,15 @@ public interface LuxTypes {
   IElementType K_LOCAL = new LuxTokenType("K_LOCAL");
   IElementType K_LOOP = new LuxTokenType("K_LOOP");
   IElementType K_MACRO = new LuxTokenType("K_MACRO");
+  IElementType K_ML_EXP_MAYBE_REGEX = new LuxTokenType("K_ML_EXP_MAYBE_REGEX");
+  IElementType K_ML_EXP_REGEX = new LuxTokenType("K_ML_EXP_REGEX");
+  IElementType K_ML_EXP_TEMPLATE = new LuxTokenType("K_ML_EXP_TEMPLATE");
+  IElementType K_ML_EXP_VERBATIM = new LuxTokenType("K_ML_EXP_VERBATIM");
+  IElementType K_ML_SEND = new LuxTokenType("K_ML_SEND");
+  IElementType K_ML_SEND_LN = new LuxTokenType("K_ML_SEND_LN");
+  IElementType K_ML_SET_FAILURE = new LuxTokenType("K_ML_SET_FAILURE");
+  IElementType K_ML_SET_LOOP_BREAK = new LuxTokenType("K_ML_SET_LOOP_BREAK");
+  IElementType K_ML_SET_SUCCESS = new LuxTokenType("K_ML_SET_SUCCESS");
   IElementType K_MY = new LuxTokenType("K_MY");
   IElementType K_NEWSHELL = new LuxTokenType("K_NEWSHELL");
   IElementType K_NEWSHELL_ONLY = new LuxTokenType("K_NEWSHELL_ONLY");
@@ -62,6 +73,7 @@ public interface LuxTypes {
   IElementType K_SET_SUCCESS_ONLY = new LuxTokenType("K_SET_SUCCESS_ONLY");
   IElementType K_SHELL = new LuxTokenType("K_SHELL");
   IElementType K_SHELL_ONLY = new LuxTokenType("K_SHELL_ONLY");
+  IElementType K_SLEEP = new LuxTokenType("K_SLEEP");
   IElementType K_TIMEOUT = new LuxTokenType("K_TIMEOUT");
   IElementType K_TIMEOUT_ONLY = new LuxTokenType("K_TIMEOUT_ONLY");
   IElementType T_AT = new LuxTokenType("@");
@@ -71,6 +83,7 @@ public interface LuxTypes {
   IElementType T_LINE_CONTENTS = new LuxTokenType("T_LINE_CONTENTS");
   IElementType T_META_CONTENTS = new LuxTokenType("T_META_CONTENTS");
   IElementType T_MINUS = new LuxTokenType("-");
+  IElementType T_MULTILINE_CONTENTS = new LuxTokenType("T_MULTILINE_CONTENTS");
   IElementType T_NUMBER = new LuxTokenType("T_NUMBER");
   IElementType T_PLUS = new LuxTokenType("+");
   IElementType T_QUESTION = new LuxTokenType("?");
@@ -128,6 +141,9 @@ public interface LuxTypes {
       }
       else if (type == META_SHELL) {
         return new LuxMetaShellImpl(node);
+      }
+      else if (type == META_SLEEP) {
+        return new LuxMetaSleepImpl(node);
       }
       else if (type == META_TIMEOUT) {
         return new LuxMetaTimeoutImpl(node);

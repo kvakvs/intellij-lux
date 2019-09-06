@@ -2,9 +2,9 @@
 
 package se.clau.intellijlux;
 
-import android.security.keystore.KeyNotYetValidException;import com.intellij.lexer.FlexLexer;
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import se.clau.intellijlux.psi.LuxTokenType;import se.clau.intellijlux.psi.LuxTypes;
+import se.clau.intellijlux.psi.LuxTypes;
 import com.intellij.psi.TokenType;
 
 
@@ -28,13 +28,15 @@ class LuxLexer implements FlexLexer {
   public static final int IN_CONFIG_VAL = 6;
   public static final int IN_NEWSHELL = 8;
   public static final int IN_SHELL = 10;
-  public static final int IN_TIMEOUT = 12;
-  public static final int IN_INCLUDE = 14;
-  public static final int IN_LOOP = 16;
-  public static final int IN_MACRO = 18;
-  public static final int IN_INVOKE = 20;
-  public static final int IN_INVOKE_ARGS = 22;
-  public static final int IN_LINE_COMMAND = 24;
+  public static final int IN_INCLUDE = 12;
+  public static final int IN_LOOP = 14;
+  public static final int IN_MACRO = 16;
+  public static final int IN_INVOKE = 18;
+  public static final int IN_INVOKE_ARGS = 20;
+  public static final int WAIT_NUM = 22;
+  public static final int REMAINING_META = 24;
+  public static final int REMAINING_LINE = 26;
+  public static final int REMAINING_MULTILINE = 28;
 
   /**
    * ZZ_LEXSTATE[l] is the state in the DFA for the lexical state l
@@ -43,8 +45,8 @@ class LuxLexer implements FlexLexer {
    * l is of the form l = 2*k, k a non negative integer
    */
   private static final int ZZ_LEXSTATE[] = { 
-     0,  0,  1,  1,  2,  2,  1,  1,  1,  1,  1,  1,  3,  3,  1,  1, 
-     1,  1,  1,  1,  4,  4,  1,  1,  5, 5
+     0,  0,  1,  1,  2,  2,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3, 
+     3,  3,  4,  4,  3,  3,  5,  5,  3,  3,  6,  6,  7, 7
   };
 
   /** 
@@ -128,10 +130,10 @@ class LuxLexer implements FlexLexer {
 
   /* The ZZ_CMAP_A table has 3200 entries */
   static final char ZZ_CMAP_A[] = zzUnpackCMap(
-    "\11\0\1\2\1\1\1\0\1\2\1\1\22\0\1\2\1\7\1\0\1\3\7\0\1\12\1\0\1\13\2\0\12\6"+
-    "\3\0\1\40\1\0\1\11\1\14\32\5\1\15\1\0\1\4\1\0\1\5\1\0\1\21\1\36\1\16\1\25"+
-    "\1\20\1\34\1\35\1\43\1\31\1\5\1\33\1\17\1\27\1\22\1\26\1\24\1\5\1\30\1\42"+
-    "\1\44\1\23\1\32\1\41\1\5\1\37\1\5\3\0\1\10\13\0\1\5\12\0\1\5\4\0\1\5\5\0\27"+
+    "\11\0\1\2\1\1\1\0\1\2\1\1\22\0\1\2\1\10\1\7\1\3\7\0\1\13\1\0\1\14\2\0\12\6"+
+    "\3\0\1\41\1\0\1\12\1\15\32\5\1\16\1\0\1\4\1\0\1\5\1\0\1\22\1\37\1\17\1\26"+
+    "\1\21\1\35\1\36\1\44\1\32\1\5\1\34\1\20\1\30\1\23\1\27\1\25\1\5\1\31\1\43"+
+    "\1\45\1\24\1\33\1\42\1\5\1\40\1\5\3\0\1\11\13\0\1\5\12\0\1\5\4\0\1\5\5\0\27"+
     "\5\1\0\12\5\4\0\14\5\16\0\5\5\7\0\1\5\1\0\1\5\1\0\5\5\1\0\2\5\2\0\4\5\1\0"+
     "\1\5\6\0\1\5\1\0\3\5\1\0\1\5\1\0\4\5\1\0\23\5\1\0\11\5\1\0\26\5\2\0\1\5\6"+
     "\0\10\5\10\0\16\5\1\0\1\5\1\0\2\5\1\0\2\5\1\0\1\5\10\0\13\5\5\0\3\5\15\0\12"+
@@ -181,17 +183,19 @@ class LuxLexer implements FlexLexer {
   private static final int [] ZZ_ACTION = zzUnpackAction();
 
   private static final String ZZ_ACTION_PACKED_0 =
-    "\6\0\1\1\1\2\1\3\1\4\1\5\1\6\1\7"+
-    "\1\10\1\11\1\12\1\13\2\1\1\14\1\15\1\16"+
-    "\1\17\1\1\1\20\1\21\1\22\1\23\1\24\1\25"+
-    "\15\0\1\26\1\27\14\0\1\30\10\0\1\31\14\0"+
-    "\1\32\12\0\1\33\3\0\1\34\10\0\1\35\3\0"+
-    "\1\36\3\0\1\37\3\0\1\40\4\0\1\41\1\42"+
-    "\1\43\5\0\1\44\1\45\1\0\1\46\1\47\1\0"+
-    "\1\50\1\0\1\51\1\52\1\53";
+    "\10\0\1\1\1\2\1\3\1\4\1\5\1\1\1\6"+
+    "\1\7\1\10\1\11\1\12\1\13\1\1\1\14\1\15"+
+    "\2\1\1\16\1\17\3\1\1\0\1\20\1\21\1\22"+
+    "\1\23\1\24\1\25\14\0\1\26\1\0\1\27\4\0"+
+    "\1\30\16\0\1\31\1\32\1\33\10\0\1\34\6\0"+
+    "\1\35\1\0\1\36\1\37\10\0\1\40\11\0\1\41"+
+    "\3\0\1\42\4\0\1\43\11\0\1\44\4\0\1\45"+
+    "\3\0\1\46\1\47\3\0\1\50\5\0\1\51\1\52"+
+    "\1\53\3\0\1\54\2\0\1\55\1\56\1\0\1\57"+
+    "\1\60\1\0\1\61\1\0\1\62\1\63\1\64";
 
   private static int [] zzUnpackAction() {
-    int [] result = new int[139];
+    int [] result = new int[170];
     int offset = 0;
     offset = zzUnpackAction(ZZ_ACTION_PACKED_0, offset, result);
     return result;
@@ -216,27 +220,31 @@ class LuxLexer implements FlexLexer {
   private static final int [] ZZ_ROWMAP = zzUnpackRowMap();
 
   private static final String ZZ_ROWMAP_PACKED_0 =
-    "\0\0\0\45\0\112\0\157\0\224\0\271\0\336\0\u0103"+
-    "\0\u0128\0\u014d\0\336\0\336\0\336\0\u0172\0\u0197\0\u01bc"+
-    "\0\u01e1\0\u0206\0\u022b\0\u0250\0\336\0\u0275\0\u029a\0\u02bf"+
-    "\0\336\0\u02e4\0\336\0\336\0\336\0\336\0\u0309\0\u032e"+
-    "\0\u0353\0\u0378\0\u039d\0\u03c2\0\u03e7\0\u040c\0\u0431\0\u0456"+
-    "\0\u022b\0\u047b\0\u02bf\0\336\0\336\0\u04a0\0\u04c5\0\u04ea"+
-    "\0\u050f\0\u0534\0\u0559\0\u057e\0\u05a3\0\u05c8\0\u05ed\0\u0612"+
-    "\0\u0637\0\336\0\u065c\0\u0681\0\u06a6\0\u06cb\0\u06f0\0\u0715"+
-    "\0\u073a\0\u075f\0\336\0\u0784\0\u07a9\0\u07ce\0\u07f3\0\u0818"+
-    "\0\u083d\0\u0862\0\u0887\0\u08ac\0\u08d1\0\u08f6\0\u091b\0\336"+
-    "\0\u0940\0\u0965\0\u098a\0\u09af\0\u09d4\0\u09f9\0\u0a1e\0\u0a43"+
-    "\0\u0a68\0\u0a8d\0\336\0\u0ab2\0\u0ad7\0\u0afc\0\336\0\u0b21"+
-    "\0\u0b46\0\u0b6b\0\u0b90\0\u0bb5\0\u0bda\0\u0bff\0\u0c24\0\336"+
-    "\0\u0c49\0\u0c6e\0\u0c93\0\336\0\u0cb8\0\u0cdd\0\u0d02\0\336"+
-    "\0\u0d27\0\u0d4c\0\u0d71\0\336\0\u0d96\0\u0dbb\0\u0de0\0\u0e05"+
-    "\0\336\0\336\0\336\0\u0e2a\0\u0e4f\0\u0e74\0\u0e99\0\u0ebe"+
-    "\0\336\0\336\0\u0ee3\0\336\0\336\0\u0f08\0\336\0\u0f2d"+
-    "\0\336\0\336\0\336";
+    "\0\0\0\46\0\114\0\162\0\230\0\276\0\344\0\u010a"+
+    "\0\u0130\0\u0156\0\u017c\0\u01a2\0\u0130\0\u01c8\0\u0130\0\u0130"+
+    "\0\u01ee\0\u0214\0\u023a\0\u0260\0\u0286\0\u02ac\0\u0130\0\u02d2"+
+    "\0\u02f8\0\u031e\0\u0344\0\u036a\0\u0390\0\u03b6\0\u03dc\0\u0130"+
+    "\0\u0402\0\u0130\0\u0130\0\u0130\0\u0130\0\u0428\0\u044e\0\u0474"+
+    "\0\u049a\0\u04c0\0\u04e6\0\u050c\0\u0532\0\u0558\0\u057e\0\u02d2"+
+    "\0\u02f8\0\u0130\0\u036a\0\u0130\0\u0390\0\u03b6\0\u05a4\0\u05ca"+
+    "\0\u0130\0\u05f0\0\u0616\0\u063c\0\u0662\0\u0688\0\u06ae\0\u06d4"+
+    "\0\u06fa\0\u0720\0\u0746\0\u076c\0\u0792\0\u07b8\0\u07de\0\u0130"+
+    "\0\u0130\0\u0804\0\u082a\0\u0850\0\u0876\0\u089c\0\u08c2\0\u08e8"+
+    "\0\u090e\0\u0934\0\u0130\0\u095a\0\u0980\0\u09a6\0\u09cc\0\u09f2"+
+    "\0\u0a18\0\u0130\0\u0a3e\0\u0a64\0\u0130\0\u0a8a\0\u0ab0\0\u0ad6"+
+    "\0\u0afc\0\u0b22\0\u0b48\0\u0b6e\0\u0b94\0\u0130\0\u0bba\0\u0be0"+
+    "\0\u0c06\0\u0c2c\0\u0c52\0\u0c78\0\u0c9e\0\u0cc4\0\u0cea\0\u0130"+
+    "\0\u0d10\0\u0d36\0\u0d5c\0\u0130\0\u0d82\0\u0da8\0\u0dce\0\u0df4"+
+    "\0\u0130\0\u0e1a\0\u0e40\0\u0e66\0\u0e8c\0\u0eb2\0\u0ed8\0\u0efe"+
+    "\0\u0f24\0\u0f4a\0\u0130\0\u0f70\0\u0f96\0\u0fbc\0\u0fe2\0\u0130"+
+    "\0\u1008\0\u102e\0\u1054\0\u0130\0\u0130\0\u107a\0\u10a0\0\u10c6"+
+    "\0\u0130\0\u10ec\0\u1112\0\u1138\0\u115e\0\u1184\0\u0130\0\u0130"+
+    "\0\u0130\0\u11aa\0\u11d0\0\u11f6\0\u0130\0\u121c\0\u1242\0\u0130"+
+    "\0\u0130\0\u1268\0\u0130\0\u0130\0\u128e\0\u0130\0\u12b4\0\u0130"+
+    "\0\u0130\0\u0130";
 
   private static int [] zzUnpackRowMap() {
-    int [] result = new int[139];
+    int [] result = new int[170];
     int offset = 0;
     offset = zzUnpackRowMap(ZZ_ROWMAP_PACKED_0, offset, result);
     return result;
@@ -259,45 +267,52 @@ class LuxLexer implements FlexLexer {
   private static final int [] ZZ_TRANS = zzUnpackTrans();
 
   private static final String ZZ_TRANS_PACKED_0 =
-    "\1\7\1\10\1\11\1\12\1\13\2\7\1\14\1\15"+
-    "\1\16\1\17\1\20\1\21\1\22\27\7\1\23\1\7"+
-    "\2\23\1\7\40\23\5\7\2\24\7\7\22\24\1\25"+
-    "\4\24\6\7\1\26\43\7\2\27\7\7\22\27\1\7"+
-    "\4\27\1\30\1\7\43\30\46\0\1\10\45\0\1\11"+
-    "\42\0\1\12\1\0\43\12\1\0\1\31\7\0\1\32"+
-    "\1\33\33\0\1\34\44\0\1\35\44\0\1\36\61\0"+
-    "\1\37\1\40\1\41\1\0\1\42\2\0\1\43\1\0"+
-    "\1\44\1\0\1\45\3\0\1\46\4\0\1\47\1\0"+
-    "\1\50\1\51\1\0\2\51\1\52\40\51\5\0\2\24"+
-    "\7\0\22\24\1\0\4\24\6\0\1\26\43\0\2\27"+
-    "\7\0\22\27\1\0\4\27\1\53\1\54\43\53\11\0"+
-    "\1\55\52\0\1\56\6\0\1\57\44\0\1\60\40\0"+
-    "\1\61\42\0\1\62\52\0\1\63\37\0\1\64\15\0"+
-    "\1\65\27\0\1\66\41\0\1\67\70\0\1\70\32\0"+
-    "\1\71\14\0\1\72\63\0\1\73\46\0\1\74\40\0"+
-    "\1\75\7\0\1\76\43\0\1\77\60\0\1\100\21\0"+
-    "\1\101\44\0\1\102\30\0\1\103\60\0\1\104\13\0"+
-    "\1\105\40\0\1\106\36\0\1\107\53\0\1\110\36\0"+
-    "\1\111\57\0\1\112\31\0\1\113\47\0\1\114\37\0"+
-    "\1\115\7\0\1\116\57\0\1\117\4\0\1\120\1\0"+
-    "\1\121\70\0\1\122\33\0\1\123\53\0\1\124\54\0"+
-    "\1\125\25\0\1\126\45\0\1\127\46\0\1\130\53\0"+
-    "\1\131\32\0\1\132\27\0\1\133\70\0\1\134\37\0"+
-    "\1\135\66\0\1\136\2\0\1\137\71\0\1\140\41\0"+
-    "\1\141\54\0\1\142\32\0\1\143\42\0\1\144\53\0"+
-    "\1\145\41\0\1\146\56\0\1\147\11\0\1\150\70\0"+
-    "\1\151\34\0\1\152\46\0\1\153\26\0\1\154\67\0"+
-    "\1\155\37\0\1\156\43\0\1\157\27\0\1\160\1\0"+
-    "\1\161\63\0\1\162\45\0\1\163\22\0\1\164\66\0"+
-    "\1\165\50\0\1\166\33\0\1\167\45\0\1\170\26\0"+
-    "\1\171\44\0\1\172\43\0\1\173\107\0\1\174\4\0"+
-    "\1\175\44\0\1\176\66\0\1\177\35\0\1\200\27\0"+
-    "\1\201\44\0\1\202\1\0\1\203\41\0\1\204\44\0"+
-    "\1\205\47\0\1\206\42\0\1\207\1\0\1\210\41\0"+
-    "\1\211\44\0\1\212\44\0\1\213\43\0";
+    "\1\11\1\12\1\13\1\14\1\15\2\11\1\16\1\17"+
+    "\1\20\1\21\1\22\1\23\1\24\1\25\102\11\2\26"+
+    "\10\11\22\26\1\27\4\26\4\30\1\31\41\30\5\11"+
+    "\2\32\10\11\22\32\1\11\4\32\6\11\1\33\37\11"+
+    "\1\34\1\11\44\34\7\35\1\36\36\35\47\0\1\12"+
+    "\46\0\1\13\43\0\1\14\1\0\44\14\7\0\1\37"+
+    "\37\0\1\40\10\0\1\41\1\42\33\0\1\43\45\0"+
+    "\1\44\45\0\1\45\63\0\1\46\1\47\1\50\1\0"+
+    "\1\51\2\0\1\52\1\0\1\53\1\0\1\54\3\0"+
+    "\1\55\4\0\1\56\1\0\1\57\5\0\2\26\10\0"+
+    "\22\26\1\0\4\26\4\60\1\61\41\60\1\0\1\62"+
+    "\51\0\2\32\10\0\22\32\1\0\4\32\6\0\1\33"+
+    "\37\0\1\63\1\64\44\63\7\65\1\66\45\65\1\67"+
+    "\36\65\7\0\1\70\50\0\1\71\53\0\1\72\6\0"+
+    "\1\73\45\0\1\74\41\0\1\75\43\0\1\76\53\0"+
+    "\1\77\40\0\1\100\15\0\1\101\30\0\1\102\42\0"+
+    "\1\103\45\0\1\104\23\0\1\105\33\0\1\106\13\0"+
+    "\7\65\1\107\36\65\10\0\1\110\1\111\1\112\54\0"+
+    "\1\113\47\0\1\114\41\0\1\115\7\0\1\116\44\0"+
+    "\1\117\61\0\1\120\22\0\1\121\45\0\1\122\30\0"+
+    "\1\123\62\0\1\124\13\0\1\125\41\0\1\126\37\0"+
+    "\1\127\45\0\1\130\54\0\1\131\16\0\1\132\5\0"+
+    "\1\133\50\0\1\134\1\135\54\0\1\136\60\0\1\137"+
+    "\32\0\1\140\50\0\1\141\40\0\1\142\5\0\1\143"+
+    "\1\0\1\144\60\0\1\145\4\0\1\146\1\0\1\147"+
+    "\72\0\1\150\34\0\1\151\54\0\1\152\55\0\1\153"+
+    "\27\0\1\154\44\0\1\155\46\0\1\156\25\0\1\132"+
+    "\5\0\1\157\50\0\1\160\56\0\1\161\54\0\1\162"+
+    "\33\0\1\163\27\0\1\164\72\0\1\165\45\0\1\166"+
+    "\40\0\1\167\67\0\1\170\2\0\1\171\73\0\1\172"+
+    "\42\0\1\173\55\0\1\174\33\0\1\175\50\0\1\176"+
+    "\40\0\1\177\54\0\1\200\17\0\1\132\70\0\1\201"+
+    "\57\0\1\202\11\0\1\203\72\0\1\204\35\0\1\205"+
+    "\45\0\1\206\47\0\1\207\26\0\1\210\71\0\1\211"+
+    "\40\0\1\212\44\0\1\213\27\0\1\214\45\0\1\215"+
+    "\1\0\1\216\65\0\1\217\46\0\1\220\22\0\1\221"+
+    "\70\0\1\222\24\0\1\223\72\0\1\224\34\0\1\225"+
+    "\46\0\1\226\26\0\1\227\45\0\1\230\44\0\1\231"+
+    "\111\0\1\232\4\0\1\233\45\0\1\234\42\0\1\235"+
+    "\73\0\1\236\36\0\1\237\27\0\1\240\45\0\1\241"+
+    "\1\0\1\242\42\0\1\243\45\0\1\244\50\0\1\245"+
+    "\43\0\1\246\1\0\1\247\42\0\1\250\45\0\1\251"+
+    "\45\0\1\252\44\0";
 
   private static int [] zzUnpackTrans() {
-    int [] result = new int[3922];
+    int [] result = new int[4826];
     int offset = 0;
     offset = zzUnpackTrans(ZZ_TRANS_PACKED_0, offset, result);
     return result;
@@ -335,14 +350,17 @@ class LuxLexer implements FlexLexer {
   private static final int [] ZZ_ATTRIBUTE = zzUnpackAttribute();
 
   private static final String ZZ_ATTRIBUTE_PACKED_0 =
-    "\6\0\1\11\3\1\3\11\7\1\1\11\3\1\1\11"+
-    "\1\1\4\11\15\0\2\11\14\0\1\11\10\0\1\11"+
-    "\14\0\1\11\12\0\1\11\3\0\1\11\10\0\1\11"+
-    "\3\0\1\11\3\0\1\11\3\0\1\11\4\0\3\11"+
-    "\5\0\2\11\1\0\2\11\1\0\1\11\1\0\3\11";
+    "\10\0\1\11\3\1\1\11\1\1\2\11\6\1\1\11"+
+    "\7\1\1\0\1\11\1\1\4\11\14\0\1\11\1\0"+
+    "\1\11\4\0\1\11\16\0\2\11\1\1\10\0\1\11"+
+    "\6\0\1\11\1\0\1\1\1\11\10\0\1\11\11\0"+
+    "\1\11\3\0\1\11\4\0\1\11\11\0\1\11\4\0"+
+    "\1\11\3\0\2\11\3\0\1\11\5\0\3\11\3\0"+
+    "\1\11\2\0\2\11\1\0\2\11\1\0\1\11\1\0"+
+    "\3\11";
 
   private static int [] zzUnpackAttribute() {
-    int [] result = new int[139];
+    int [] result = new int[170];
     int offset = 0;
     offset = zzUnpackAttribute(ZZ_ATTRIBUTE_PACKED_0, offset, result);
     return result;
@@ -659,217 +677,262 @@ class LuxLexer implements FlexLexer {
             { return TokenType.BAD_CHARACTER;
             } 
             // fall through
-          case 44: break;
+          case 53: break;
           case 2: 
             { return LuxTypes.CRLF;
             } 
             // fall through
-          case 45: break;
+          case 54: break;
           case 3: 
             { return TokenType.WHITE_SPACE;
             } 
             // fall through
-          case 46: break;
+          case 55: break;
           case 4: 
             { return LuxTypes.COMMENT;
             } 
             // fall through
-          case 47: break;
+          case 56: break;
           case 5: 
             { return LuxTypes.T_SQR_CLOSE;
             } 
             // fall through
-          case 48: break;
+          case 57: break;
           case 6: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SEND;
+            { yybegin(REMAINING_LINE); return LuxTypes.K_SEND;
             } 
             // fall through
-          case 49: break;
+          case 58: break;
           case 7: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SEND_LN;
+            { yybegin(REMAINING_LINE); return LuxTypes.K_SEND_LN;
             } 
             // fall through
-          case 50: break;
+          case 59: break;
           case 8: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_REGEX;
+            { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX;
             } 
             // fall through
-          case 51: break;
+          case 60: break;
           case 9: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_SUCCESS;
+            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_SUCCESS;
             } 
             // fall through
-          case 52: break;
+          case 61: break;
           case 10: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_FAILURE;
+            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_FAILURE;
             } 
             // fall through
-          case 53: break;
+          case 62: break;
           case 11: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_LOOP_BREAK;
+            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_LOOP_BREAK;
             } 
             // fall through
-          case 54: break;
+          case 63: break;
           case 12: 
             { return LuxTypes.T_WORD;
             } 
             // fall through
-          case 55: break;
+          case 64: break;
           case 13: 
             { yybegin(IN_CONFIG_VAL); return LuxTypes.T_EQUALS;
             } 
             // fall through
-          case 56: break;
+          case 65: break;
           case 14: 
-            { yybegin(YYINITIAL); return LuxTypes.T_NUMBER;
-            } 
-            // fall through
-          case 57: break;
-          case 15: 
             { yybegin(IN_INVOKE_ARGS); return LuxTypes.T_WORD;
             } 
             // fall through
-          case 58: break;
+          case 66: break;
+          case 15: 
+            { yybegin(YYINITIAL); return LuxTypes.T_NUMBER;
+            } 
+            // fall through
+          case 67: break;
           case 16: 
             { return LuxTypes.K_FLUSH;
             } 
             // fall through
-          case 59: break;
+          case 68: break;
           case 17: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_TEMPLATE;
+            { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_TEMPLATE;
             } 
             // fall through
-          case 60: break;
+          case 69: break;
           case 18: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_MAYBE_REGEX;
+            { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX;
             } 
             // fall through
-          case 61: break;
+          case 70: break;
           case 19: 
             { return LuxTypes.K_SET_SUCCESS_ONLY;
             } 
             // fall through
-          case 62: break;
+          case 71: break;
           case 20: 
             { return LuxTypes.K_SET_FAILURE_ONLY;
             } 
             // fall through
-          case 63: break;
+          case 72: break;
           case 21: 
             { return LuxTypes.K_SET_LOOP_BREAK_ONLY;
             } 
             // fall through
-          case 64: break;
+          case 73: break;
           case 22: 
-            { yybegin(YYINITIAL); return LuxTypes.T_LINE_CONTENTS;
-            } 
-            // fall through
-          case 65: break;
-          case 23: 
-            { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_VERBATIM;
-            } 
-            // fall through
-          case 66: break;
-          case 24: 
             { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS;
             } 
             // fall through
-          case 67: break;
-          case 25: 
-            { yybegin(IN_CONFIG); return LuxTypes.K_MY;
-            } 
-            // fall through
-          case 68: break;
-          case 26: 
-            { yybegin(IN_DOC); return LuxTypes.K_DOC;
-            } 
-            // fall through
-          case 69: break;
-          case 27: 
-            { yybegin(IN_LOOP); return LuxTypes.K_LOOP;
-            } 
-            // fall through
-          case 70: break;
-          case 28: 
-            { return LuxTypes.K_DOC_ONLY;
-            } 
-            // fall through
-          case 71: break;
-          case 29: 
-            { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL;
-            } 
-            // fall through
-          case 72: break;
-          case 30: 
-            { yybegin(IN_MACRO); return LuxTypes.K_MACRO;
-            } 
-            // fall through
-          case 73: break;
-          case 31: 
-            { yybegin(IN_SHELL); return LuxTypes.K_SHELL;
-            } 
-            // fall through
           case 74: break;
-          case 32: 
-            { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG;
+          case 23: 
+            { yybegin(YYINITIAL); return LuxTypes.T_LINE_CONTENTS;
             } 
             // fall through
           case 75: break;
-          case 33: 
-            { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE;
+          case 24: 
+            { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_VERBATIM;
             } 
             // fall through
           case 76: break;
-          case 34: 
-            { yybegin(IN_CONFIG); return LuxTypes.K_GLOBAL;
+          case 25: 
+            { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND;
             } 
             // fall through
           case 77: break;
-          case 35: 
-            { return LuxTypes.K_SHELL_ONLY;
+          case 26: 
+            { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND_LN;
             } 
             // fall through
           case 78: break;
-          case 36: 
-            { yybegin(IN_INCLUDE); return LuxTypes.K_INCLUDE;
+          case 27: 
+            { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_REGEX;
             } 
             // fall through
           case 79: break;
-          case 37: 
-            { yybegin(IN_TIMEOUT); return LuxTypes.K_TIMEOUT;
+          case 28: 
+            { yybegin(IN_CONFIG); return LuxTypes.K_MY;
             } 
             // fall through
           case 80: break;
-          case 38: 
-            { return LuxTypes.K_CLEANUP;
+          case 29: 
+            { yybegin(YYINITIAL); return LuxTypes.T_MULTILINE_CONTENTS;
             } 
             // fall through
           case 81: break;
-          case 39: 
-            { return LuxTypes.K_END_LOOP;
+          case 30: 
+            { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_TEMPLATE;
             } 
             // fall through
           case 82: break;
-          case 40: 
-            { yybegin(IN_NEWSHELL); return LuxTypes.K_NEWSHELL;
+          case 31: 
+            { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_MAYBE_REGEX;
             } 
             // fall through
           case 83: break;
-          case 41: 
-            { return LuxTypes.K_TIMEOUT_ONLY;
+          case 32: 
+            { yybegin(REMAINING_META); return LuxTypes.K_DOC;
             } 
             // fall through
           case 84: break;
-          case 42: 
-            { return LuxTypes.K_END_MACRO;
+          case 33: 
+            { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_VERBATIM;
             } 
             // fall through
           case 85: break;
-          case 43: 
-            { return LuxTypes.K_NEWSHELL_ONLY;
+          case 34: 
+            { yybegin(IN_LOOP); return LuxTypes.K_LOOP;
             } 
             // fall through
           case 86: break;
+          case 35: 
+            { return LuxTypes.K_DOC_ONLY;
+            } 
+            // fall through
+          case 87: break;
+          case 36: 
+            { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL;
+            } 
+            // fall through
+          case 88: break;
+          case 37: 
+            { yybegin(IN_MACRO); return LuxTypes.K_MACRO;
+            } 
+            // fall through
+          case 89: break;
+          case 38: 
+            { yybegin(WAIT_NUM); return LuxTypes.K_SLEEP;
+            } 
+            // fall through
+          case 90: break;
+          case 39: 
+            { yybegin(IN_SHELL); return LuxTypes.K_SHELL;
+            } 
+            // fall through
+          case 91: break;
+          case 40: 
+            { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG;
+            } 
+            // fall through
+          case 92: break;
+          case 41: 
+            { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE;
+            } 
+            // fall through
+          case 93: break;
+          case 42: 
+            { yybegin(IN_CONFIG); return LuxTypes.K_GLOBAL;
+            } 
+            // fall through
+          case 94: break;
+          case 43: 
+            { return LuxTypes.K_SHELL_ONLY;
+            } 
+            // fall through
+          case 95: break;
+          case 44: 
+            { return LuxTypes.K_END_DOC;
+            } 
+            // fall through
+          case 96: break;
+          case 45: 
+            { yybegin(IN_INCLUDE); return LuxTypes.K_INCLUDE;
+            } 
+            // fall through
+          case 97: break;
+          case 46: 
+            { yybegin(WAIT_NUM); return LuxTypes.K_TIMEOUT;
+            } 
+            // fall through
+          case 98: break;
+          case 47: 
+            { return LuxTypes.K_CLEANUP;
+            } 
+            // fall through
+          case 99: break;
+          case 48: 
+            { return LuxTypes.K_END_LOOP;
+            } 
+            // fall through
+          case 100: break;
+          case 49: 
+            { yybegin(IN_NEWSHELL); return LuxTypes.K_NEWSHELL;
+            } 
+            // fall through
+          case 101: break;
+          case 50: 
+            { return LuxTypes.K_TIMEOUT_ONLY;
+            } 
+            // fall through
+          case 102: break;
+          case 51: 
+            { return LuxTypes.K_END_MACRO;
+            } 
+            // fall through
+          case 103: break;
+          case 52: 
+            { return LuxTypes.K_NEWSHELL_ONLY;
+            } 
+            // fall through
+          case 104: break;
           default:
             zzScanError(ZZ_NO_MATCH);
           }

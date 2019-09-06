@@ -30,7 +30,9 @@ luxFile ::= item *
 
 private item ::= (
     COMMENT | CRLF
-    | meta_doc | meta_shell | meta_newshell | meta_timeout
+    | meta_doc | K_END_DOC
+    | meta_shell | meta_newshell
+    | meta_timeout | meta_sleep
     | meta_config | meta_local | meta_global | meta_my
     | K_CLEANUP | meta_include
     | meta_macro | K_END_MACRO | meta_invoke
@@ -46,6 +48,7 @@ meta_doc ::= K_DOC_ONLY | (K_DOC inner_meta)
 meta_shell ::= K_SHELL_ONLY | (K_SHELL inner_meta)
 meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL inner_meta)
 meta_timeout ::= K_TIMEOUT_ONLY | (K_TIMEOUT inner_number)
+meta_sleep ::= K_SLEEP inner_number
 meta_include ::= K_INCLUDE inner_meta
 meta_macro ::= K_MACRO inner_meta
 meta_invoke ::= (K_INVOKE T_WORD) inner_meta
@@ -59,19 +62,20 @@ meta_local ::= K_LOCAL inner_x_equals_y
 meta_global ::= K_GLOBAL inner_x_equals_y
 meta_my ::= K_MY inner_x_equals_y
 
-private inner inner_x_equals_y ::= T_WORD T_EQUALS T_META_CONTENTS T_SQR_CLOSE CRLF
+private inner inner_x_equals_y ::= T_WORD T_EQUALS T_META_CONTENTS
 
-send ::= K_SEND inner_line
-send_ln ::= K_SEND_LN inner_line
-expect_verbatim ::= K_EXP_VERBATIM inner_line
-expect_template ::= K_EXP_TEMPLATE inner_line
-expect_regex ::= K_EXP_REGEX inner_line
-expect_maybe_regex ::= K_EXP_MAYBE_REGEX inner_line
-set_failure ::= K_SET_FAILURE_ONLY | K_SET_FAILURE inner_line
-set_success ::= K_SET_SUCCESS_ONLY | K_SET_SUCCESS inner_line
-set_loop_break ::= K_SET_LOOP_BREAK_ONLY | K_SET_LOOP_BREAK inner_line
+send ::= (K_SEND inner_line) | (K_ML_SEND inner_multiline)
+send_ln ::= (K_SEND_LN inner_line) | (K_ML_SEND_LN inner_multiline)
+expect_verbatim ::= (K_EXP_VERBATIM inner_line) | (K_ML_EXP_VERBATIM inner_multiline)
+expect_template ::= (K_EXP_TEMPLATE inner_line) | (K_ML_EXP_TEMPLATE inner_multiline)
+expect_regex ::= (K_EXP_REGEX inner_line) | (K_ML_EXP_REGEX inner_multiline)
+expect_maybe_regex ::= (K_EXP_MAYBE_REGEX inner_line) | (K_ML_EXP_MAYBE_REGEX inner_multiline)
+set_failure ::= K_SET_FAILURE_ONLY | (K_SET_FAILURE inner_line) | (K_ML_SET_FAILURE inner_multiline)
+set_success ::= K_SET_SUCCESS_ONLY | (K_SET_SUCCESS inner_line) | (K_ML_SET_SUCCESS inner_multiline)
+set_loop_break ::= K_SET_LOOP_BREAK_ONLY | (K_SET_LOOP_BREAK inner_line) | (K_ML_SET_LOOP_BREAK inner_multiline)
 
 private inner inner_line ::= T_LINE_CONTENTS
+private inner inner_multiline ::= T_MULTILINE_CONTENTS
 
 //setFailure0 ::= '-' CRLF
 //setFailure ::= '-' regex CRLF

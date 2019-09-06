@@ -36,54 +36,142 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // K_EXP_MAYBE_REGEX inner_line
+  // (K_EXP_MAYBE_REGEX inner_line) | (K_ML_EXP_MAYBE_REGEX inner_multiline)
   public static boolean expect_maybe_regex(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expect_maybe_regex")) return false;
-    if (!nextTokenIs(b, K_EXP_MAYBE_REGEX)) return false;
+    if (!nextTokenIs(b, "<expect maybe regex>", K_EXP_MAYBE_REGEX, K_ML_EXP_MAYBE_REGEX)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, EXPECT_MAYBE_REGEX, "<expect maybe regex>");
+    r = expect_maybe_regex_0(b, l + 1);
+    if (!r) r = expect_maybe_regex_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // K_EXP_MAYBE_REGEX inner_line
+  private static boolean expect_maybe_regex_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_maybe_regex_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_EXP_MAYBE_REGEX);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, EXPECT_MAYBE_REGEX, r);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // K_ML_EXP_MAYBE_REGEX inner_multiline
+  private static boolean expect_maybe_regex_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_maybe_regex_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_EXP_MAYBE_REGEX);
+    r = r && inner_multiline(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // K_EXP_REGEX inner_line
+  // (K_EXP_REGEX inner_line) | (K_ML_EXP_REGEX inner_multiline)
   public static boolean expect_regex(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expect_regex")) return false;
-    if (!nextTokenIs(b, K_EXP_REGEX)) return false;
+    if (!nextTokenIs(b, "<expect regex>", K_EXP_REGEX, K_ML_EXP_REGEX)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, EXPECT_REGEX, "<expect regex>");
+    r = expect_regex_0(b, l + 1);
+    if (!r) r = expect_regex_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // K_EXP_REGEX inner_line
+  private static boolean expect_regex_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_regex_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_EXP_REGEX);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, EXPECT_REGEX, r);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // K_ML_EXP_REGEX inner_multiline
+  private static boolean expect_regex_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_regex_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_EXP_REGEX);
+    r = r && inner_multiline(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // K_EXP_TEMPLATE inner_line
+  // (K_EXP_TEMPLATE inner_line) | (K_ML_EXP_TEMPLATE inner_multiline)
   public static boolean expect_template(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expect_template")) return false;
-    if (!nextTokenIs(b, K_EXP_TEMPLATE)) return false;
+    if (!nextTokenIs(b, "<expect template>", K_EXP_TEMPLATE, K_ML_EXP_TEMPLATE)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, EXPECT_TEMPLATE, "<expect template>");
+    r = expect_template_0(b, l + 1);
+    if (!r) r = expect_template_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // K_EXP_TEMPLATE inner_line
+  private static boolean expect_template_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_template_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_EXP_TEMPLATE);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, EXPECT_TEMPLATE, r);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // K_ML_EXP_TEMPLATE inner_multiline
+  private static boolean expect_template_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_template_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_EXP_TEMPLATE);
+    r = r && inner_multiline(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // K_EXP_VERBATIM inner_line
+  // (K_EXP_VERBATIM inner_line) | (K_ML_EXP_VERBATIM inner_multiline)
   public static boolean expect_verbatim(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expect_verbatim")) return false;
-    if (!nextTokenIs(b, K_EXP_VERBATIM)) return false;
+    if (!nextTokenIs(b, "<expect verbatim>", K_EXP_VERBATIM, K_ML_EXP_VERBATIM)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, EXPECT_VERBATIM, "<expect verbatim>");
+    r = expect_verbatim_0(b, l + 1);
+    if (!r) r = expect_verbatim_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // K_EXP_VERBATIM inner_line
+  private static boolean expect_verbatim_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_verbatim_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_EXP_VERBATIM);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, EXPECT_VERBATIM, r);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // K_ML_EXP_VERBATIM inner_multiline
+  private static boolean expect_verbatim_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_verbatim_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_EXP_VERBATIM);
+    r = r && inner_multiline(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -100,26 +188,34 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // T_MULTILINE_CONTENTS
+  static boolean inner_multiline(PsiBuilder b, int l) {
+    return consumeToken(b, T_MULTILINE_CONTENTS);
+  }
+
+  /* ********************************************************** */
   // T_NUMBER
   static boolean inner_number(PsiBuilder b, int l) {
     return consumeToken(b, T_NUMBER);
   }
 
   /* ********************************************************** */
-  // T_WORD T_EQUALS T_META_CONTENTS T_SQR_CLOSE CRLF
+  // T_WORD T_EQUALS T_META_CONTENTS
   static boolean inner_x_equals_y(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inner_x_equals_y")) return false;
     if (!nextTokenIs(b, T_WORD)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, T_WORD, T_EQUALS, T_META_CONTENTS, T_SQR_CLOSE, CRLF);
+    r = consumeTokens(b, 0, T_WORD, T_EQUALS, T_META_CONTENTS);
     exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
   // COMMENT | CRLF
-  //     | meta_doc | meta_shell | meta_newshell | meta_timeout
+  //     | meta_doc | K_END_DOC
+  //     | meta_shell | meta_newshell
+  //     | meta_timeout | meta_sleep
   //     | meta_config | meta_local | meta_global | meta_my
   //     | K_CLEANUP | meta_include
   //     | meta_macro | K_END_MACRO | meta_invoke
@@ -132,9 +228,11 @@ public class LuxParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, COMMENT);
     if (!r) r = consumeToken(b, CRLF);
     if (!r) r = meta_doc(b, l + 1);
+    if (!r) r = consumeToken(b, K_END_DOC);
     if (!r) r = meta_shell(b, l + 1);
     if (!r) r = meta_newshell(b, l + 1);
     if (!r) r = meta_timeout(b, l + 1);
+    if (!r) r = meta_sleep(b, l + 1);
     if (!r) r = meta_config(b, l + 1);
     if (!r) r = meta_local(b, l + 1);
     if (!r) r = meta_global(b, l + 1);
@@ -368,6 +466,19 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // K_SLEEP inner_number
+  public static boolean meta_sleep(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "meta_sleep")) return false;
+    if (!nextTokenIs(b, K_SLEEP)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_SLEEP);
+    r = r && inner_number(b, l + 1);
+    exit_section_(b, m, META_SLEEP, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // K_TIMEOUT_ONLY | (K_TIMEOUT inner_number)
   public static boolean meta_timeout(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_timeout")) return false;
@@ -392,40 +503,84 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // K_SEND inner_line
+  // (K_SEND inner_line) | (K_ML_SEND inner_multiline)
   public static boolean send(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "send")) return false;
-    if (!nextTokenIs(b, K_SEND)) return false;
+    if (!nextTokenIs(b, "<send>", K_ML_SEND, K_SEND)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, SEND, "<send>");
+    r = send_0(b, l + 1);
+    if (!r) r = send_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // K_SEND inner_line
+  private static boolean send_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "send_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_SEND);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, SEND, r);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // K_ML_SEND inner_multiline
+  private static boolean send_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "send_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SEND);
+    r = r && inner_multiline(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // K_SEND_LN inner_line
+  // (K_SEND_LN inner_line) | (K_ML_SEND_LN inner_multiline)
   public static boolean send_ln(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "send_ln")) return false;
-    if (!nextTokenIs(b, K_SEND_LN)) return false;
+    if (!nextTokenIs(b, "<send ln>", K_ML_SEND_LN, K_SEND_LN)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, SEND_LN, "<send ln>");
+    r = send_ln_0(b, l + 1);
+    if (!r) r = send_ln_1(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  // K_SEND_LN inner_line
+  private static boolean send_ln_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "send_ln_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_SEND_LN);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, SEND_LN, r);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // K_ML_SEND_LN inner_multiline
+  private static boolean send_ln_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "send_ln_1")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SEND_LN);
+    r = r && inner_multiline(b, l + 1);
+    exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // K_SET_FAILURE_ONLY | K_SET_FAILURE inner_line
+  // K_SET_FAILURE_ONLY | (K_SET_FAILURE inner_line) | (K_ML_SET_FAILURE inner_multiline)
   public static boolean set_failure(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "set_failure")) return false;
-    if (!nextTokenIs(b, "<set failure>", K_SET_FAILURE, K_SET_FAILURE_ONLY)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, SET_FAILURE, "<set failure>");
     r = consumeToken(b, K_SET_FAILURE_ONLY);
     if (!r) r = set_failure_1(b, l + 1);
+    if (!r) r = set_failure_2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -441,15 +596,26 @@ public class LuxParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  // K_ML_SET_FAILURE inner_multiline
+  private static boolean set_failure_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_failure_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SET_FAILURE);
+    r = r && inner_multiline(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
   /* ********************************************************** */
-  // K_SET_LOOP_BREAK_ONLY | K_SET_LOOP_BREAK inner_line
+  // K_SET_LOOP_BREAK_ONLY | (K_SET_LOOP_BREAK inner_line) | (K_ML_SET_LOOP_BREAK inner_multiline)
   public static boolean set_loop_break(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "set_loop_break")) return false;
-    if (!nextTokenIs(b, "<set loop break>", K_SET_LOOP_BREAK, K_SET_LOOP_BREAK_ONLY)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, SET_LOOP_BREAK, "<set loop break>");
     r = consumeToken(b, K_SET_LOOP_BREAK_ONLY);
     if (!r) r = set_loop_break_1(b, l + 1);
+    if (!r) r = set_loop_break_2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -465,15 +631,26 @@ public class LuxParser implements PsiParser, LightPsiParser {
     return r;
   }
 
+  // K_ML_SET_LOOP_BREAK inner_multiline
+  private static boolean set_loop_break_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_loop_break_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SET_LOOP_BREAK);
+    r = r && inner_multiline(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
   /* ********************************************************** */
-  // K_SET_SUCCESS_ONLY | K_SET_SUCCESS inner_line
+  // K_SET_SUCCESS_ONLY | (K_SET_SUCCESS inner_line) | (K_ML_SET_SUCCESS inner_multiline)
   public static boolean set_success(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "set_success")) return false;
-    if (!nextTokenIs(b, "<set success>", K_SET_SUCCESS, K_SET_SUCCESS_ONLY)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, SET_SUCCESS, "<set success>");
     r = consumeToken(b, K_SET_SUCCESS_ONLY);
     if (!r) r = set_success_1(b, l + 1);
+    if (!r) r = set_success_2(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -485,6 +662,17 @@ public class LuxParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = consumeToken(b, K_SET_SUCCESS);
     r = r && inner_line(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // K_ML_SET_SUCCESS inner_multiline
+  private static boolean set_success_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_success_2")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SET_SUCCESS);
+    r = r && inner_multiline(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
