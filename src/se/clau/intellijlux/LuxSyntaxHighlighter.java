@@ -20,14 +20,20 @@ public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
 //          createTextAttributesKey("SIMPLE_VALUE", DefaultLanguageHighlighterColors.STRING);
   public static final TextAttributesKey COMMENT =
           createTextAttributesKey("LUX_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
+  public static final TextAttributesKey LINE_CONTENT =
+          createTextAttributesKey("LUX_LINE_CONTENT", DefaultLanguageHighlighterColors.STRING);
   public static final TextAttributesKey BAD_CHARACTER =
           createTextAttributesKey("LUX_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
+  public static final TextAttributesKey KEYWORD =
+          createTextAttributesKey("LUX_KEYWORD", DefaultLanguageHighlighterColors.KEYWORD);
 
   private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
 //  private static final TextAttributesKey[] SEPARATOR_KEYS = new TextAttributesKey[]{SEPARATOR};
 //  private static final TextAttributesKey[] KEY_KEYS = new TextAttributesKey[]{KEY};
 //  private static final TextAttributesKey[] VALUE_KEYS = new TextAttributesKey[]{VALUE};
   private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
+  private static final TextAttributesKey[] LINE_CONTENT_KEYS = new TextAttributesKey[]{LINE_CONTENT};
+  private static final TextAttributesKey[] KEYWORD_KEYS = new TextAttributesKey[]{KEYWORD};
   private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
   @NotNull
@@ -46,10 +52,25 @@ public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
 //    } else if (tokenType.equals(SimpleTypes.VALUE)) {
 //      return VALUE_KEYS;
 //  } else
-    if (tokenType.equals(LuxTypes.COMMENT)) {
+    if (tokenType.equals(LuxTypes.T_LINE_CONTENTS)) {
+      return LINE_CONTENT_KEYS;
+    } else if (tokenType.equals(LuxTypes.COMMENT)) {
       return COMMENT_KEYS;
     } else if (tokenType.equals(TokenType.BAD_CHARACTER)) {
       return BAD_CHAR_KEYS;
+    } else if (tokenType.equals(LuxTypes.K_SEND)
+            || tokenType.equals(LuxTypes.K_SEND_LN)
+            || tokenType.equals(LuxTypes.K_EXP_VERBATIM)
+            || tokenType.equals(LuxTypes.K_EXP_TEMPLATE)
+            || tokenType.equals(LuxTypes.K_EXP_MAYBE_REGEX)
+            || tokenType.equals(LuxTypes.K_EXP_REGEX)
+            || tokenType.equals(LuxTypes.K_SET_FAILURE)
+            || tokenType.equals(LuxTypes.K_SET_FAILURE_ONLY)
+            || tokenType.equals(LuxTypes.K_SET_SUCCESS)
+            || tokenType.equals(LuxTypes.K_SET_SUCCESS_ONLY)
+            || tokenType.equals(LuxTypes.K_SET_LOOP_BREAK)
+            || tokenType.equals(LuxTypes.K_SET_LOOP_BREAK_ONLY)) {
+      return KEYWORD_KEYS;
     } else {
       return EMPTY_KEYS;
     }

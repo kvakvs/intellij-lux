@@ -1,6 +1,6 @@
 package se.clau.intellijlux;
 
-import com.intellij.lexer.FlexLexer;
+import android.security.keystore.KeyNotYetValidException;import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import se.clau.intellijlux.psi.LuxTokenType;import se.clau.intellijlux.psi.LuxTypes;
 import com.intellij.psi.TokenType;
@@ -18,20 +18,10 @@ import com.intellij.psi.TokenType;
 CRLF            = [\r\n]
 BLANK           = [\ \t\f]
 COMMENT         = "#"[^\r\n]*
-NOT_CLOSING_SQR = ([^\]\r\n] | {BLANK}) +
-T_WORD          = [\w]+
+T_META_CONTENTS = ([^\]\r\n] | {BLANK})+ "]" {CRLF}
+T_WORD          = [\w_][\w\d_]*
 T_NUMBER        = [0-9]+
-
-//SEND="!"[^\r\n]+
-//SENDLN="~"[^\r\n]+
-//EXPECT_VERBATIM="???"[^\r\n]+
-//EXPECT_TEMPLATE="??"[^\r\n]+
-//EXPECT_MAYBEREGEXP="?+"[^\r\n]+
-//EXPECT_REGEXP="?"[^+][^\r\n]+
-//FLUSH="?"[\r\n]
-//SET_FAILURE="-"[^\r\n]*
-//SET_SUCCESS="+"[^\r\n]*
-//SET_LOOPBREAK="@"[^\r\n]*
+T_LINE_CONTENTS = [^\r\n]+ {CRLF}
 
 %state IN_DOC
 %state IN_CONFIG
@@ -39,42 +29,81 @@ T_NUMBER        = [0-9]+
 %state IN_NEWSHELL
 %state IN_SHELL
 %state IN_TIMEOUT
+%state IN_INCLUDE
+%state IN_LOOP
+%state IN_MACRO
+
+%state IN_INVOKE
+%state IN_INVOKE_ARGS
+
+%state IN_LINE_COMMAND
 
 %%
 
 <YYINITIAL> {COMMENT}          { return LuxTypes.COMMENT; }
-<YYINITIAL> "!"                { return LuxTypes.T_BANG; }
-<YYINITIAL> "~"                { return LuxTypes.T_TILDE; }
-<YYINITIAL> "???"              { return LuxTypes.T_TRIPLE_QUESTION; }
-<YYINITIAL> "??"               { return LuxTypes.T_DOUBLE_QUESTION; }
-<YYINITIAL> "?+"               { return LuxTypes.T_QUESTION_PLUS; }
-<YYINITIAL> "?"                { return LuxTypes.T_QUESTION; }
-<YYINITIAL> "-"                { return LuxTypes.T_MINUS; }
-<YYINITIAL> "+"                { return LuxTypes.T_PLUS; }
-<YYINITIAL> "@"                { return LuxTypes.T_AT; }
+
+<YYINITIAL> "!"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SEND; }
+<YYINITIAL> "~"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SEND_LN; }
+<YYINITIAL> "???"              { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_VERBATIM; }
+<YYINITIAL> "??"               { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_TEMPLATE; }
+<YYINITIAL> "?+"               { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_MAYBE_REGEX; }
+
+<YYINITIAL> "?"{CRLF}          { return LuxTypes.K_FLUSH; }
+<YYINITIAL> "?"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_EXP_REGEX; }
+
+<YYINITIAL> "+"{CRLF}          { return LuxTypes.K_SET_SUCCESS_ONLY; }
+<YYINITIAL> "+"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_SUCCESS; }
+
+<YYINITIAL> "-"{CRLF}          { return LuxTypes.K_SET_FAILURE_ONLY; }
+<YYINITIAL> "-"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_FAILURE; }
+
+<YYINITIAL> "@"{CRLF}          { return LuxTypes.K_SET_LOOP_BREAK_ONLY; }
+<YYINITIAL> "@"                { yybegin(IN_LINE_COMMAND); return LuxTypes.K_SET_LOOP_BREAK; }
+
+<IN_LINE_COMMAND> {T_LINE_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_LINE_CONTENTS; }
 
 <YYINITIAL> "]"                { return LuxTypes.T_SQR_CLOSE; }
 
-<YYINITIAL> "[doc]"            { return LuxTypes.K_DOC_ONLY; }
+<YYINITIAL> "[cleanup]"{CRLF}  { return LuxTypes.K_CLEANUP; }
+
+<YYINITIAL> "[endloop]"{CRLF}  { return LuxTypes.K_END_LOOP; }
+<YYINITIAL> "[loop"{BLANK}     { yybegin(IN_LOOP); return LuxTypes.K_LOOP; }
+<IN_LOOP> {T_META_CONTENTS}    { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+
+<YYINITIAL> "[endmacro]"{CRLF} { return LuxTypes.K_END_MACRO; }
+<YYINITIAL> "[macro"{BLANK}    { yybegin(IN_MACRO); return LuxTypes.K_MACRO; }
+<IN_MACRO> {T_META_CONTENTS}   { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+
+<YYINITIAL> "[invoke"{BLANK}   { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE; }
+<IN_INVOKE> {T_WORD}           { yybegin(IN_INVOKE_ARGS); return LuxTypes.T_WORD; }
+<IN_INVOKE_ARGS> {T_META_CONTENTS}  { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+
+<YYINITIAL> "[doc]"{CRLF}      { return LuxTypes.K_DOC_ONLY; }
 <YYINITIAL> "[doc"{BLANK}      { yybegin(IN_DOC); return LuxTypes.K_DOC; }
-<IN_DOC> {NOT_CLOSING_SQR}     { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+<IN_DOC> {T_META_CONTENTS}     { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
 <YYINITIAL> "[config"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG; }
+<YYINITIAL> "[local"{BLANK}    { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL; }
+<YYINITIAL> "[global"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_GLOBAL; }
+<YYINITIAL> "[my"{BLANK}       { yybegin(IN_CONFIG); return LuxTypes.K_MY; }
 <IN_CONFIG> {T_WORD}           { return LuxTypes.T_WORD; }
 <IN_CONFIG> "="                { yybegin(IN_CONFIG_VAL); return LuxTypes.T_EQUALS; }
-<IN_CONFIG_VAL> {NOT_CLOSING_SQR} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+<IN_CONFIG_VAL> {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
-<YYINITIAL> "[newshell]"       { return LuxTypes.K_NEWSHELL_ONLY; }
+<YYINITIAL> "[newshell]"{CRLF} { return LuxTypes.K_NEWSHELL_ONLY; }
 <YYINITIAL> "[newshell"{BLANK} { yybegin(IN_NEWSHELL); return LuxTypes.K_NEWSHELL; }
-<IN_NEWSHELL> {NOT_CLOSING_SQR} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+<IN_NEWSHELL> {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
-<YYINITIAL> "[shell]"          { return LuxTypes.K_SHELL_ONLY; }
+<YYINITIAL> "[shell]"{CRLF}    { return LuxTypes.K_SHELL_ONLY; }
 <YYINITIAL> "[shell"{BLANK}    { yybegin(IN_SHELL); return LuxTypes.K_SHELL; }
-<IN_SHELL> {NOT_CLOSING_SQR}   { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+<IN_SHELL> {T_META_CONTENTS}   { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
-<YYINITIAL> "[timeout]"        { return LuxTypes.K_TIMEOUT_ONLY; }
+<YYINITIAL> "[timeout]"{CRLF}  { return LuxTypes.K_TIMEOUT_ONLY; }
 <YYINITIAL> "[timeout"{BLANK}  { yybegin(IN_TIMEOUT); return LuxTypes.K_TIMEOUT; }
 <IN_TIMEOUT> {T_NUMBER}        { yybegin(YYINITIAL); return LuxTypes.T_NUMBER; }
+
+<YYINITIAL> "[include"{BLANK}  { yybegin(IN_INCLUDE); return LuxTypes.K_INCLUDE; }
+<IN_INCLUDE> {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
 <YYINITIAL> {BLANK}+           { return TokenType.WHITE_SPACE; }
 <YYINITIAL> {CRLF}+            { return LuxTypes.CRLF; }
