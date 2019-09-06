@@ -42,6 +42,9 @@
     <lang.syntaxHighlighterFactory
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxSyntaxHighlighterFactory"/>
+    <lang.commenter
+            language="Lux"
+            implementationClass="se.clau.intellijlux.LuxCommenter"/>
   </extensions>
 
   <actions>

@@ -194,19 +194,25 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // T_NUMBER
+  // T_NUMBER T_SQR_CLOSE CRLF
   static boolean inner_number(PsiBuilder b, int l) {
-    return consumeToken(b, T_NUMBER);
+    if (!recursion_guard_(b, l, "inner_number")) return false;
+    if (!nextTokenIs(b, T_NUMBER)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, T_NUMBER, T_SQR_CLOSE, CRLF);
+    exit_section_(b, m, null, r);
+    return r;
   }
 
   /* ********************************************************** */
-  // T_WORD T_EQUALS T_META_CONTENTS
+  // T_IDENT T_EQUALS T_META_CONTENTS
   static boolean inner_x_equals_y(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inner_x_equals_y")) return false;
-    if (!nextTokenIs(b, T_WORD)) return false;
+    if (!nextTokenIs(b, T_IDENT)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, T_WORD, T_EQUALS, T_META_CONTENTS);
+    r = consumeTokens(b, 0, T_IDENT, T_EQUALS, T_META_CONTENTS);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -333,7 +339,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (K_INVOKE T_WORD) inner_meta
+  // (K_INVOKE T_IDENT) inner_meta
   public static boolean meta_invoke(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_invoke")) return false;
     if (!nextTokenIs(b, K_INVOKE)) return false;
@@ -345,12 +351,12 @@ public class LuxParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // K_INVOKE T_WORD
+  // K_INVOKE T_IDENT
   private static boolean meta_invoke_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_invoke_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, K_INVOKE, T_WORD);
+    r = consumeTokens(b, 0, K_INVOKE, T_IDENT);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -369,7 +375,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (K_LOOP T_WORD) inner_meta
+  // (K_LOOP T_IDENT) inner_meta
   public static boolean meta_loop(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_loop")) return false;
     if (!nextTokenIs(b, K_LOOP)) return false;
@@ -381,12 +387,12 @@ public class LuxParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // K_LOOP T_WORD
+  // K_LOOP T_IDENT
   private static boolean meta_loop_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_loop_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, K_LOOP, T_WORD);
+    r = consumeTokens(b, 0, K_LOOP, T_IDENT);
     exit_section_(b, m, null, r);
     return r;
   }

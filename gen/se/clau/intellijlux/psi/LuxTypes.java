@@ -80,6 +80,7 @@ public interface LuxTypes {
   IElementType T_BANG = new LuxTokenType("!");
   IElementType T_DOUBLE_QUESTION = new LuxTokenType("??");
   IElementType T_EQUALS = new LuxTokenType("T_EQUALS");
+  IElementType T_IDENT = new LuxTokenType("T_IDENT");
   IElementType T_LINE_CONTENTS = new LuxTokenType("T_LINE_CONTENTS");
   IElementType T_META_CONTENTS = new LuxTokenType("T_META_CONTENTS");
   IElementType T_MINUS = new LuxTokenType("-");
@@ -92,7 +93,6 @@ public interface LuxTypes {
   IElementType T_SQR_OPEN = new LuxTokenType("[");
   IElementType T_TILDE = new LuxTokenType("~");
   IElementType T_TRIPLE_QUESTION = new LuxTokenType("???");
-  IElementType T_WORD = new LuxTokenType("T_WORD");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {

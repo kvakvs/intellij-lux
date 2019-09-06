@@ -50,11 +50,12 @@ meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL inner_meta)
 meta_timeout ::= K_TIMEOUT_ONLY | (K_TIMEOUT inner_number)
 meta_sleep ::= K_SLEEP inner_number
 meta_include ::= K_INCLUDE inner_meta
-meta_macro ::= K_MACRO inner_meta
-meta_invoke ::= (K_INVOKE T_WORD) inner_meta
-meta_loop ::= (K_LOOP T_WORD) inner_meta
+meta_macro ::= K_MACRO inner_macro
+meta_invoke ::= (K_INVOKE T_IDENT) inner_meta
+meta_loop ::= (K_LOOP T_IDENT) inner_meta
 
-private inner inner_number ::= T_NUMBER
+private inner inner_number ::= T_NUMBER T_SQR_CLOSE CRLF
+private inner inner_macro ::= T_IDENT T_META_CONTENTS
 private inner inner_meta ::= T_META_CONTENTS
 
 meta_config ::= K_CONFIG inner_x_equals_y
@@ -62,7 +63,7 @@ meta_local ::= K_LOCAL inner_x_equals_y
 meta_global ::= K_GLOBAL inner_x_equals_y
 meta_my ::= K_MY inner_x_equals_y
 
-private inner inner_x_equals_y ::= T_WORD T_EQUALS T_META_CONTENTS
+private inner inner_x_equals_y ::= T_IDENT T_EQUALS T_META_CONTENTS
 
 send ::= (K_SEND inner_line) | (K_ML_SEND inner_multiline)
 send_ln ::= (K_SEND_LN inner_line) | (K_ML_SEND_LN inner_multiline)

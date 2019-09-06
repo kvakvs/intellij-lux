@@ -729,7 +729,7 @@ class LuxLexer implements FlexLexer {
             // fall through
           case 63: break;
           case 12: 
-            { return LuxTypes.T_WORD;
+            { return LuxTypes.T_IDENT;
             } 
             // fall through
           case 64: break;
@@ -739,7 +739,7 @@ class LuxLexer implements FlexLexer {
             // fall through
           case 65: break;
           case 14: 
-            { yybegin(IN_INVOKE_ARGS); return LuxTypes.T_WORD;
+            { yybegin(IN_INVOKE_ARGS); return LuxTypes.T_IDENT;
             } 
             // fall through
           case 66: break;

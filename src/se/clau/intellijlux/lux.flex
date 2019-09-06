@@ -19,7 +19,7 @@ CRLF            = [\r\n]
 BLANK           = [\ \t\f]
 COMMENT         = "#"[^\r\n]*
 T_META_CONTENTS = ~"]" {CRLF}
-T_WORD          = [\w_][\w\d_]*
+T_IDENT          = [\w_][\w\d_\-]*
 T_NUMBER        = [0-9]+
 T_LINE_CONTENTS = [^\r\n]+ {CRLF}
 T_QQQ           = "\"\"\""
@@ -91,7 +91,7 @@ T_MULTILINE_CONTENTS = ~{T_QQQ} {CRLF}
 <IN_MACRO> {T_META_CONTENTS}   { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
 <YYINITIAL> "[invoke"{BLANK}   { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE; }
-<IN_INVOKE> {T_WORD}           { yybegin(IN_INVOKE_ARGS); return LuxTypes.T_WORD; }
+<IN_INVOKE> {T_IDENT}           { yybegin(IN_INVOKE_ARGS); return LuxTypes.T_IDENT; }
 <IN_INVOKE_ARGS> {T_META_CONTENTS}  { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
 <YYINITIAL> "[doc]"{CRLF}      { return LuxTypes.K_DOC_ONLY; }
@@ -103,7 +103,7 @@ T_MULTILINE_CONTENTS = ~{T_QQQ} {CRLF}
 <YYINITIAL> "[local"{BLANK}    { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL; }
 <YYINITIAL> "[global"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_GLOBAL; }
 <YYINITIAL> "[my"{BLANK}       { yybegin(IN_CONFIG); return LuxTypes.K_MY; }
-<IN_CONFIG> {T_WORD}           { return LuxTypes.T_WORD; }
+<IN_CONFIG> {T_IDENT}           { return LuxTypes.T_IDENT; }
 <IN_CONFIG> "="                { yybegin(IN_CONFIG_VAL); return LuxTypes.T_EQUALS; }
 <IN_CONFIG_VAL> {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
