@@ -1,38 +1,39 @@
 package se.clau.intellijlux;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class LuxFileType extends LanguageFileType {
-  public static final LuxFileType INSTANCE = new LuxFileType();
+public class LuxIncludeFileType extends LanguageFileType {
+  public static final LuxIncludeFileType INSTANCE = new LuxIncludeFileType();
 
-  private LuxFileType() {
+  private LuxIncludeFileType() {
     super(LuxLanguage.INSTANCE);
   }
 
   @NotNull
   @Override
   public String getName() {
-    return "Lux Script";
+    return "Lux Include";
   }
 
   @NotNull
   @Override
   public String getDescription() {
-    return "Lux";
+    return "Lux (LUcid eXpect) script";
   }
 
   @NotNull
   @Override
   public String getDefaultExtension() {
-    return "lux";
+    return "luxinc";
   }
 
   @Nullable
   @Override
   public Icon getIcon() {
-    return LuxIcons.FILE;
+    return LuxIcons.FILE_INC;
   }
 }

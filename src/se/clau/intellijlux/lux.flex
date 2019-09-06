@@ -2,7 +2,7 @@ package se.clau.intellijlux;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import se.clau.intellijlux.psi.LuxTypes;
+import se.clau.intellijlux.psi.LuxTokenType;import se.clau.intellijlux.psi.LuxTypes;
 import com.intellij.psi.TokenType;
 
 %%
@@ -15,48 +15,67 @@ import com.intellij.psi.TokenType;
 %eof{  return;
 %eof}
 
-CRLF=\R
-WHITE_SPACE=[\ \n\t\f]
-FIRST_VALUE_CHARACTER=[^ \n\f\\] | "\\"{CRLF} | "\\".
-VALUE_CHARACTER=[^\n\f\\] | "\\"{CRLF} | "\\".
-END_OF_LINE_COMMENT="#"[^\r\n]*
-// SEPARATOR=[:=]
-// KEY_CHARACTER=[^:=\ \n\t\f\\] | "\\ "
+CRLF            = [\r\n]
+BLANK           = [\ \t\f]
+COMMENT         = "#"[^\r\n]*
+NOT_CLOSING_SQR = ([^\]\r\n] | {BLANK}) +
+T_WORD          = [\w]+
+T_NUMBER        = [0-9]+
 
-SEND="!"[^\r\n]+
-SENDLN="~"[^\r\n]+
-EXPECT_VERBATIM="???"[^\r\n]+
-EXPECT_TEMPLATE="??"[^\r\n]+
-EXPECT_MAYBEREGEXP="?+"[^\r\n]+
-EXPECT_REGEXP="?"[^\r\n]+
-FLUSH="?"[\r\n]
-SET_FAILURE="-"[^\r\n]*
-SET_SUCCESS="-"[^\r\n]*
-SET_LOOPBREAK="@"[^\r\n]*
-META="["[\w]+.*"]"[\r\n]
+//SEND="!"[^\r\n]+
+//SENDLN="~"[^\r\n]+
+//EXPECT_VERBATIM="???"[^\r\n]+
+//EXPECT_TEMPLATE="??"[^\r\n]+
+//EXPECT_MAYBEREGEXP="?+"[^\r\n]+
+//EXPECT_REGEXP="?"[^+][^\r\n]+
+//FLUSH="?"[\r\n]
+//SET_FAILURE="-"[^\r\n]*
+//SET_SUCCESS="+"[^\r\n]*
+//SET_LOOPBREAK="@"[^\r\n]*
 
-//%state IN_META
+%state IN_DOC
+%state IN_CONFIG
+%state IN_CONFIG_VAL
+%state IN_NEWSHELL
+%state IN_SHELL
+%state IN_TIMEOUT
 
 %%
 
-<YYINITIAL> {END_OF_LINE_COMMENT}  { yybegin(YYINITIAL); return LuxTypes.COMMENT; }
-<YYINITIAL> {SEND}                 { yybegin(YYINITIAL); return LuxTypes.SEND; }
-<YYINITIAL> {SENDLN}               { yybegin(YYINITIAL); return LuxTypes.SENDLN; }
-<YYINITIAL> {EXPECT_VERBATIM}      { yybegin(YYINITIAL); return LuxTypes.EXPECT_VERBATIM; }
-<YYINITIAL> {EXPECT_TEMPLATE}      { yybegin(YYINITIAL); return LuxTypes.EXPECT_TEMPLATE; }
-<YYINITIAL> {EXPECT_REGEXP}        { yybegin(YYINITIAL); return LuxTypes.EXPECT_REGEXP; }
-<YYINITIAL> {EXPECT_MAYBEREGEXP}   { yybegin(YYINITIAL); return LuxTypes.EXPECT_MAYBEREGEXP; }
-<YYINITIAL> {FLUSH}                { yybegin(YYINITIAL); return LuxTypes.FLUSH; }
-<YYINITIAL> {SET_FAILURE}          { yybegin(YYINITIAL); return LuxTypes.SET_FAILURE; }
-<YYINITIAL> {SET_SUCCESS}          { yybegin(YYINITIAL); return LuxTypes.SET_SUCCESS; }
-<YYINITIAL> {SET_LOOPBREAK}        { yybegin(YYINITIAL); return LuxTypes.SET_LOOPBREAK; }
+<YYINITIAL> {COMMENT}          { return LuxTypes.COMMENT; }
+<YYINITIAL> "!"                { return LuxTypes.T_BANG; }
+<YYINITIAL> "~"                { return LuxTypes.T_TILDE; }
+<YYINITIAL> "???"              { return LuxTypes.T_TRIPLE_QUESTION; }
+<YYINITIAL> "??"               { return LuxTypes.T_DOUBLE_QUESTION; }
+<YYINITIAL> "?+"               { return LuxTypes.T_QUESTION_PLUS; }
+<YYINITIAL> "?"                { return LuxTypes.T_QUESTION; }
+<YYINITIAL> "-"                { return LuxTypes.T_MINUS; }
+<YYINITIAL> "+"                { return LuxTypes.T_PLUS; }
+<YYINITIAL> "@"                { return LuxTypes.T_AT; }
 
-// <YYINITIAL> {KEY_CHARACTER}+    { yybegin(YYINITIAL); return LuxTypes.KEY; }
-// <YYINITIAL> {SEPARATOR}         { yybegin(WAITING_VALUE); return LuxTypes.SEPARATOR; }
+<YYINITIAL> "]"                { return LuxTypes.T_SQR_CLOSE; }
 
-//<IN_META> {CRLF}({CRLF}|{WHITE_SPACE})+               { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-//<IN_META> {WHITE_SPACE}+                              { yybegin(IN_META); return TokenType.WHITE_SPACE; }
-// <IN_META> {FIRST_VALUE_CHARACTER}{VALUE_CHARACTER}*   { yybegin(YYINITIAL); return LuxTypes.VALUE; }
+<YYINITIAL> "[doc]"            { return LuxTypes.K_DOC_ONLY; }
+<YYINITIAL> "[doc"{BLANK}      { yybegin(IN_DOC); return LuxTypes.K_DOC; }
+<IN_DOC> {NOT_CLOSING_SQR}     { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 
-({CRLF}|{WHITE_SPACE})+            { yybegin(YYINITIAL); return TokenType.WHITE_SPACE; }
-[^]                                { return TokenType.BAD_CHARACTER; }
+<YYINITIAL> "[config"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG; }
+<IN_CONFIG> {T_WORD}           { return LuxTypes.T_WORD; }
+<IN_CONFIG> "="                { yybegin(IN_CONFIG_VAL); return LuxTypes.T_EQUALS; }
+<IN_CONFIG_VAL> {NOT_CLOSING_SQR} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+
+<YYINITIAL> "[newshell]"       { return LuxTypes.K_NEWSHELL_ONLY; }
+<YYINITIAL> "[newshell"{BLANK} { yybegin(IN_NEWSHELL); return LuxTypes.K_NEWSHELL; }
+<IN_NEWSHELL> {NOT_CLOSING_SQR} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+
+<YYINITIAL> "[shell]"          { return LuxTypes.K_SHELL_ONLY; }
+<YYINITIAL> "[shell"{BLANK}    { yybegin(IN_SHELL); return LuxTypes.K_SHELL; }
+<IN_SHELL> {NOT_CLOSING_SQR}   { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+
+<YYINITIAL> "[timeout]"        { return LuxTypes.K_TIMEOUT_ONLY; }
+<YYINITIAL> "[timeout"{BLANK}  { yybegin(IN_TIMEOUT); return LuxTypes.K_TIMEOUT; }
+<IN_TIMEOUT> {T_NUMBER}        { yybegin(YYINITIAL); return LuxTypes.T_NUMBER; }
+
+<YYINITIAL> {BLANK}+           { return TokenType.WHITE_SPACE; }
+<YYINITIAL> {CRLF}+            { return LuxTypes.CRLF; }
+[^]                            { return TokenType.BAD_CHARACTER; }

@@ -7,7 +7,23 @@ import com.intellij.psi.PsiElement;
 
 public class LuxVisitor extends PsiElementVisitor {
 
-  public void visitCommand(@NotNull LuxCommand o) {
+  public void visitMetaConfig(@NotNull LuxMetaConfig o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMetaDoc(@NotNull LuxMetaDoc o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMetaNewshell(@NotNull LuxMetaNewshell o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMetaShell(@NotNull LuxMetaShell o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMetaTimeout(@NotNull LuxMetaTimeout o) {
     visitPsiElement(o);
   }
 

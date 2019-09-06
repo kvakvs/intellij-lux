@@ -11,12 +11,61 @@
   elementTypeHolderClass="se.clau.intellijlux.psi.LuxTypes"
   elementTypeClass="se.clau.intellijlux.psi.LuxElementType"
   tokenTypeClass="se.clau.intellijlux.psi.LuxTokenType"
+  tokens=[
+    T_BANG = "!"
+    T_TILDE = "~"
+    T_TRIPLE_QUESTION = "???"
+    T_DOUBLE_QUESTION = "??"
+    T_QUESTION_PLUS = "?+"
+    T_QUESTION = "?"l
+    T_MINUS = "-"
+    T_PLUS = "+"
+    T_AT = "@"
+    T_SQR_OPEN = "["
+    T_SQR_CLOSE = "]"
+  ]
 }
 
-luxFile ::= item*
+luxFile ::= item *
 
-private item ::= (command | META | COMMENT | CRLF)
+private item ::= (
+    COMMENT | CRLF |
+    meta_doc | meta_config | meta_shell | meta_newshell |
+    meta_timeout
+//    send | sendLn
+//    | expectVerbatim | expectTemplate | expectRegex
+//    | flush | expectMaybeRegex
+//    | setFailure0 | setFailure
+//    | setSuccess0 | setSuccess
+//    | setBreak0 | setBreak
+//    | metaLine
+    )
 
-command ::= (SEND | SENDLN | EXPECT_VERBATIM | EXPECT_TEMPLATE | EXPECT_REGEXP
-            | FLUSH | EXPECT_MAYBEREGEXP
-            | SET_FAILURE | SET_SUCCESS | SET_LOOPBREAK)
+//metaDocBegin ::= '[doc]'
+//metaDocEnd ::= '[enddoc]'
+meta_doc ::= (K_DOC_ONLY |
+    (K_DOC T_META_CONTENTS T_SQR_CLOSE)) CRLF
+meta_config ::= K_CONFIG T_WORD T_EQUALS T_META_CONTENTS T_SQR_CLOSE CRLF
+meta_shell ::= (K_SHELL_ONLY |
+    (K_SHELL T_META_CONTENTS T_SQR_CLOSE)) CRLF
+meta_newshell ::= (K_NEWSHELL_ONLY |
+    (K_NEWSHELL T_META_CONTENTS T_SQR_CLOSE)) CRLF
+meta_timeout ::= (K_TIMEOUT_ONLY |
+    (K_TIMEOUT T_NUMBER T_SQR_CLOSE)) CRLF
+
+
+//metaLine ::= TOK_META_LINE CRLF
+
+//send ::= '!' regex CRLF
+//sendLn ::= '~' regex CRLF
+//expectVerbatim ::= '???' regex CRLF
+//expectTemplate ::= '??' regex CRLF
+//expectRegex ::= '?+' regex CRLF
+//expectMaybeRegex ::= '?' regex CRLF
+//flush ::= '?' CRLF
+//setFailure0 ::= '-' CRLF
+//setFailure ::= '-' regex CRLF
+//setSuccess0 ::= '+' CRLF
+//setSuccess ::= '+' regex CRLF
+//setBreak0 ::= '@' CRLF
+//setBreak ::= '@' regex CRLF

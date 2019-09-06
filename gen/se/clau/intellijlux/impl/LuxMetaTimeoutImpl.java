@@ -11,14 +11,14 @@ import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
 
-public class LuxCommandImpl extends ASTWrapperPsiElement implements LuxCommand {
+public class LuxMetaTimeoutImpl extends ASTWrapperPsiElement implements LuxMetaTimeout {
 
-  public LuxCommandImpl(@NotNull ASTNode node) {
+  public LuxMetaTimeoutImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull LuxVisitor visitor) {
-    visitor.visitCommand(this);
+    visitor.visitMetaTimeout(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {

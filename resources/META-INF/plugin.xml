@@ -26,13 +26,22 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
-    <fileType name="Lux testing script"
+    <fileType name="Lux Script"
               implementationClass="se.clau.intellijlux.LuxFileType"
               fieldName="INSTANCE"
               language="Lux"
               extensions="simple"/>
-    <lang.parserDefinition language="Lux"
-                           implementationClass="se.clau.intellijlux.LuxParserDefinition"/>
+    <fileType name="Lux Include"
+              implementationClass="se.clau.intellijlux.LuxIncludeFileType"
+              fieldName="INSTANCE"
+              language="Lux"
+              extensions="simple"/>
+    <lang.parserDefinition
+            language="Lux"
+            implementationClass="se.clau.intellijlux.LuxParserDefinition"/>
+    <lang.syntaxHighlighterFactory
+            language="Lux"
+            implementationClass="se.clau.intellijlux.LuxSyntaxHighlighterFactory"/>
   </extensions>
 
   <actions>
