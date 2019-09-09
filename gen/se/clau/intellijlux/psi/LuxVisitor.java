@@ -63,6 +63,10 @@ public class LuxVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitMetaProgress(@NotNull LuxMetaProgress o) {
+    visitPsiElement(o);
+  }
+
   public void visitMetaShell(@NotNull LuxMetaShell o) {
     visitPsiElement(o);
   }

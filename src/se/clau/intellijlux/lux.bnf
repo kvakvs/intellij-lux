@@ -37,6 +37,7 @@ private item ::= (
     | K_CLEANUP | meta_include
     | meta_macro | K_END_MACRO | meta_invoke
     | meta_loop | K_END_LOOP
+    | meta_progress
     | send | send_ln | expect_verbatim | expect_template | expect_regex
     | K_FLUSH | expect_maybe_regex | set_failure | set_success | set_loop_break
     )
@@ -53,6 +54,7 @@ meta_include ::= K_INCLUDE inner_meta
 meta_macro ::= K_MACRO inner_macro
 meta_invoke ::= (K_INVOKE T_IDENT) inner_meta
 meta_loop ::= (K_LOOP T_IDENT) inner_meta
+meta_progress ::= K_PROGRESS inner_meta
 
 private inner inner_number ::= T_NUMBER T_SQR_CLOSE CRLF
 private inner inner_macro ::= T_IDENT T_META_CONTENTS

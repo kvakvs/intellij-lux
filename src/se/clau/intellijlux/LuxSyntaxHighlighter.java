@@ -101,6 +101,7 @@ public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
             || tokenType.equals(LuxTypes.K_LOOP)
             || tokenType.equals(LuxTypes.K_MACRO)
             || tokenType.equals(LuxTypes.K_MY)
+            || tokenType.equals(LuxTypes.K_PROGRESS)
             || tokenType.equals(LuxTypes.K_SHELL)
             || tokenType.equals(LuxTypes.K_SHELL_ONLY)
             || tokenType.equals(LuxTypes.K_SLEEP)

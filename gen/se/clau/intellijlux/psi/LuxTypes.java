@@ -22,6 +22,7 @@ public interface LuxTypes {
   IElementType META_MACRO = new LuxElementType("META_MACRO");
   IElementType META_MY = new LuxElementType("META_MY");
   IElementType META_NEWSHELL = new LuxElementType("META_NEWSHELL");
+  IElementType META_PROGRESS = new LuxElementType("META_PROGRESS");
   IElementType META_SHELL = new LuxElementType("META_SHELL");
   IElementType META_SLEEP = new LuxElementType("META_SLEEP");
   IElementType META_TIMEOUT = new LuxElementType("META_TIMEOUT");
@@ -63,6 +64,7 @@ public interface LuxTypes {
   IElementType K_MY = new LuxTokenType("K_MY");
   IElementType K_NEWSHELL = new LuxTokenType("K_NEWSHELL");
   IElementType K_NEWSHELL_ONLY = new LuxTokenType("K_NEWSHELL_ONLY");
+  IElementType K_PROGRESS = new LuxTokenType("K_PROGRESS");
   IElementType K_SEND = new LuxTokenType("K_SEND");
   IElementType K_SEND_LN = new LuxTokenType("K_SEND_LN");
   IElementType K_SET_FAILURE = new LuxTokenType("K_SET_FAILURE");
@@ -138,6 +140,9 @@ public interface LuxTypes {
       }
       else if (type == META_NEWSHELL) {
         return new LuxMetaNewshellImpl(node);
+      }
+      else if (type == META_PROGRESS) {
+        return new LuxMetaProgressImpl(node);
       }
       else if (type == META_SHELL) {
         return new LuxMetaShellImpl(node);

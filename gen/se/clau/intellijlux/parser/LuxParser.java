@@ -182,6 +182,18 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // T_IDENT T_META_CONTENTS
+  static boolean inner_macro(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "inner_macro")) return false;
+    if (!nextTokenIs(b, T_IDENT)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, T_IDENT, T_META_CONTENTS);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // T_META_CONTENTS
   static boolean inner_meta(PsiBuilder b, int l) {
     return consumeToken(b, T_META_CONTENTS);
@@ -226,6 +238,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
   //     | K_CLEANUP | meta_include
   //     | meta_macro | K_END_MACRO | meta_invoke
   //     | meta_loop | K_END_LOOP
+  //     | meta_progress
   //     | send | send_ln | expect_verbatim | expect_template | expect_regex
   //     | K_FLUSH | expect_maybe_regex | set_failure | set_success | set_loop_break
   static boolean item(PsiBuilder b, int l) {
@@ -250,6 +263,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
     if (!r) r = meta_invoke(b, l + 1);
     if (!r) r = meta_loop(b, l + 1);
     if (!r) r = consumeToken(b, K_END_LOOP);
+    if (!r) r = meta_progress(b, l + 1);
     if (!r) r = send(b, l + 1);
     if (!r) r = send_ln(b, l + 1);
     if (!r) r = expect_verbatim(b, l + 1);
@@ -398,14 +412,14 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // K_MACRO inner_meta
+  // K_MACRO inner_macro
   public static boolean meta_macro(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_macro")) return false;
     if (!nextTokenIs(b, K_MACRO)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_MACRO);
-    r = r && inner_meta(b, l + 1);
+    r = r && inner_macro(b, l + 1);
     exit_section_(b, m, META_MACRO, r);
     return r;
   }
@@ -444,6 +458,19 @@ public class LuxParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, K_NEWSHELL);
     r = r && inner_meta(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_PROGRESS inner_meta
+  public static boolean meta_progress(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "meta_progress")) return false;
+    if (!nextTokenIs(b, K_PROGRESS)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_PROGRESS);
+    r = r && inner_meta(b, l + 1);
+    exit_section_(b, m, META_PROGRESS, r);
     return r;
   }
 

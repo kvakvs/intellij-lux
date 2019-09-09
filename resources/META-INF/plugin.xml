@@ -1,12 +1,22 @@
 <idea-plugin>
   <id>se.clau.intellij-lux</id>
+
   <name>Lux Script support</name>
-  <version>1.0</version>
+  <version>1.3</version>
   <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko</vendor>
+
+  <depends>com.intellij.modules.lang</depends>
 
   <description><![CDATA[
       Syntax highlighting and support for scripts used for testing in
       <a href="https://github.com/hawk/lux">Lux</a>.
+
+      <ul>
+        <li>Syntax and support for file types for Lux and Lux includes</li>
+        <li>Commenting feature</li>
+        <li>TODO: Code navigation and folding</li>
+        <li>TODO: Minor syntax features such as strings with `]` and line breaks</li>
+      </ul>
     ]]></description>
 
   <change-notes><![CDATA[
@@ -39,9 +49,12 @@
     <lang.parserDefinition
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxParserDefinition"/>
+
     <lang.syntaxHighlighterFactory
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxSyntaxHighlighterFactory"/>
+    <colorSettingsPage implementation="se.clau.intellijlux.LuxColorSettingsPage"/>
+
     <lang.commenter
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxCommenter"/>
