@@ -176,21 +176,26 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // T_LINE_CONTENTS
+  // line_contents * CRLF
   static boolean inner_line(PsiBuilder b, int l) {
-    return consumeToken(b, T_LINE_CONTENTS);
-  }
-
-  /* ********************************************************** */
-  // T_IDENT T_META_CONTENTS
-  static boolean inner_macro(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "inner_macro")) return false;
-    if (!nextTokenIs(b, T_IDENT)) return false;
+    if (!recursion_guard_(b, l, "inner_line")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, T_IDENT, T_META_CONTENTS);
+    r = inner_line_0(b, l + 1);
+    r = r && consumeToken(b, CRLF);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // line_contents *
+  private static boolean inner_line_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "inner_line_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!line_contents(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "inner_line_0", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
@@ -200,9 +205,26 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // T_MULTILINE_CONTENTS
+  // multiline_contents * END_MULTILINE
   static boolean inner_multiline(PsiBuilder b, int l) {
-    return consumeToken(b, T_MULTILINE_CONTENTS);
+    if (!recursion_guard_(b, l, "inner_multiline")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = inner_multiline_0(b, l + 1);
+    r = r && consumeToken(b, END_MULTILINE);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // multiline_contents *
+  private static boolean inner_multiline_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "inner_multiline_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!multiline_contents(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "inner_multiline_0", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
@@ -274,6 +296,20 @@ public class LuxParser implements PsiParser, LightPsiParser {
     if (!r) r = set_failure(b, l + 1);
     if (!r) r = set_success(b, l + 1);
     if (!r) r = set_loop_break(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // T_LINE_CONTENTS | T_DOLLAR | T_PASTE_VARIABLE
+  //     | T_PASTE_CAPTURE | LINE_CONTINUATION
+  static boolean line_contents(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "line_contents")) return false;
+    boolean r;
+    r = consumeToken(b, T_LINE_CONTENTS);
+    if (!r) r = consumeToken(b, T_DOLLAR);
+    if (!r) r = consumeToken(b, T_PASTE_VARIABLE);
+    if (!r) r = consumeToken(b, T_PASTE_CAPTURE);
+    if (!r) r = consumeToken(b, LINE_CONTINUATION);
     return r;
   }
 
@@ -412,15 +448,25 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // K_MACRO inner_macro
+  // (K_MACRO T_IDENT) inner_meta
   public static boolean meta_macro(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_macro")) return false;
     if (!nextTokenIs(b, K_MACRO)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, K_MACRO);
-    r = r && inner_macro(b, l + 1);
+    r = meta_macro_0(b, l + 1);
+    r = r && inner_meta(b, l + 1);
     exit_section_(b, m, META_MACRO, r);
+    return r;
+  }
+
+  // K_MACRO T_IDENT
+  private static boolean meta_macro_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "meta_macro_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeTokens(b, 0, K_MACRO, T_IDENT);
+    exit_section_(b, m, null, r);
     return r;
   }
 
@@ -532,6 +578,20 @@ public class LuxParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, K_TIMEOUT);
     r = r && inner_number(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // T_LINE_CONTENTS | T_DOLLAR | T_PASTE_VARIABLE
+  //     | T_PASTE_CAPTURE | CRLF
+  static boolean multiline_contents(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "multiline_contents")) return false;
+    boolean r;
+    r = consumeToken(b, T_LINE_CONTENTS);
+    if (!r) r = consumeToken(b, T_DOLLAR);
+    if (!r) r = consumeToken(b, T_PASTE_VARIABLE);
+    if (!r) r = consumeToken(b, T_PASTE_CAPTURE);
+    if (!r) r = consumeToken(b, CRLF);
     return r;
   }
 

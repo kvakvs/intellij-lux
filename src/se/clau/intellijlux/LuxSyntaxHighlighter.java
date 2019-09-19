@@ -55,12 +55,13 @@ public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
   @NotNull
   @Override
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-    if (tokenType.equals(LuxTypes.T_LINE_CONTENTS)
-            || tokenType.equals(LuxTypes.T_MULTILINE_CONTENTS)) {
+    if (tokenType.equals(LuxTypes.T_LINE_CONTENTS)) {
       return LINE_CONTENT_KEYS;
     } else if (tokenType.equals(LuxTypes.COMMENT)) {
       return COMMENT_KEYS;
-    } else if (tokenType.equals(LuxTypes.T_IDENT)) {
+    } else if (tokenType.equals(LuxTypes.T_IDENT)
+            || tokenType.equals(LuxTypes.T_PASTE_VARIABLE)
+            || tokenType.equals(LuxTypes.T_PASTE_CAPTURE)) {
       return IDENT_KEYS;
     } else if (tokenType.equals(TokenType.BAD_CHARACTER)) {
       return BAD_CHAR_KEYS;

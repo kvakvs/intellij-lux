@@ -51,13 +51,13 @@ meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL inner_meta)
 meta_timeout ::= K_TIMEOUT_ONLY | (K_TIMEOUT inner_number)
 meta_sleep ::= K_SLEEP inner_number
 meta_include ::= K_INCLUDE inner_meta
-meta_macro ::= K_MACRO inner_macro
+meta_macro ::= (K_MACRO T_IDENT) inner_meta
 meta_invoke ::= (K_INVOKE T_IDENT) inner_meta
 meta_loop ::= (K_LOOP T_IDENT) inner_meta
 meta_progress ::= K_PROGRESS inner_meta
 
 private inner inner_number ::= T_NUMBER T_SQR_CLOSE CRLF
-private inner inner_macro ::= T_IDENT T_META_CONTENTS
+//private inner inner_macro ::= T_IDENT T_META_CONTENTS
 private inner inner_meta ::= T_META_CONTENTS
 
 meta_config ::= K_CONFIG inner_x_equals_y
@@ -77,8 +77,14 @@ set_failure ::= K_SET_FAILURE_ONLY | (K_SET_FAILURE inner_line) | (K_ML_SET_FAIL
 set_success ::= K_SET_SUCCESS_ONLY | (K_SET_SUCCESS inner_line) | (K_ML_SET_SUCCESS inner_multiline)
 set_loop_break ::= K_SET_LOOP_BREAK_ONLY | (K_SET_LOOP_BREAK inner_line) | (K_ML_SET_LOOP_BREAK inner_multiline)
 
-private inner inner_line ::= T_LINE_CONTENTS
-private inner inner_multiline ::= T_MULTILINE_CONTENTS
+private inner inner_line ::= line_contents * CRLF
+// LINE_CONTINUATION in line_contents for when it is broken with \\
+private line_contents ::= T_LINE_CONTENTS | T_DOLLAR | T_PASTE_VARIABLE
+    | T_PASTE_CAPTURE | LINE_CONTINUATION
+
+private inner inner_multiline ::= multiline_contents * END_MULTILINE
+private multiline_contents ::= T_LINE_CONTENTS | T_DOLLAR | T_PASTE_VARIABLE
+    | T_PASTE_CAPTURE | CRLF
 
 //setFailure0 ::= '-' CRLF
 //setFailure ::= '-' regex CRLF

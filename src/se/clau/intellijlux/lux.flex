@@ -19,11 +19,17 @@ CRLF            = [\r\n]
 BLANK           = [\ \t\f]
 COMMENT         = "#"[^\r\n]*
 T_META_CONTENTS = ~("]" {CRLF})
-T_IDENT          = [\w_\$][\w\d_\-]*
+T_IDENT         = [\w_\$] ([\w\d_\-] *)
 T_NUMBER        = [0-9]+
-T_LINE_CONTENTS = [^\r\n]* {CRLF}
-T_QQQ           = "\"\"\""
-T_MULTILINE_CONTENTS = ~{T_QQQ} {CRLF}
+
+LineDollar          = \$\$
+LinePasteCapture    = \$[\d+]
+LinePasteVar        = \$ {T_IDENT}
+LinePasteVarCurly   = \$\{ {T_IDENT} \}
+LineContents        = [^\r\n\$]*
+LineContentsNoBackslash = [^\r\n\$\\]*
+
+TripleQuote = "\"\"\""
 
 %state IN_DOC
 %state IN_CONFIG
@@ -32,7 +38,9 @@ T_MULTILINE_CONTENTS = ~{T_QQQ} {CRLF}
 %state IN_SHELL
 %state IN_INCLUDE
 %state IN_LOOP
+%state IN_LOOP_ARGS
 %state IN_MACRO
+%state IN_MACRO_TAIL
 
 %state IN_INVOKE
 %state IN_INVOKE_ARGS
@@ -51,20 +59,21 @@ T_MULTILINE_CONTENTS = ~{T_QQQ} {CRLF}
 
 <YYINITIAL> {
     {COMMENT}    { return LuxTypes.COMMENT; }
-    "!"          { yybegin(REMAINING_LINE); return LuxTypes.K_SEND; }
-    {T_QQQ}"!"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND; }
-    "~"          { yybegin(REMAINING_LINE); return LuxTypes.K_SEND_LN; }
-    {T_QQQ}"~"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND_LN; }
-    "???"        { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_VERBATIM; }
-    {T_QQQ}"???" { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_VERBATIM; }
-    "??"         { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_TEMPLATE; }
-    {T_QQQ}"??"  { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_TEMPLATE; }
-    "?+"         { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX; }
-    {T_QQQ}"?+"  { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_MAYBE_REGEX; }
 
-    "?"{CRLF}    { return LuxTypes.K_FLUSH; }
-    "?"          { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX; }
-    {T_QQQ}"?"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_REGEX; }
+    "!"                { yybegin(REMAINING_LINE); return LuxTypes.K_SEND; }
+    {TripleQuote}"!"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND; }
+    "~"                { yybegin(REMAINING_LINE); return LuxTypes.K_SEND_LN; }
+    {TripleQuote}"~"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND_LN; }
+    "???"              { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_VERBATIM; }
+    {TripleQuote}"???" { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_VERBATIM; }
+    "??"               { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_TEMPLATE; }
+    {TripleQuote}"??"  { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_TEMPLATE; }
+    "?+"               { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX; }
+    {TripleQuote}"?+"  { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_MAYBE_REGEX; }
+
+    "?"{CRLF}          { return LuxTypes.K_FLUSH; }
+    "?"                { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX; }
+    {TripleQuote}"?"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_REGEX; }
 
     "+"{CRLF}    { return LuxTypes.K_SET_SUCCESS_ONLY; }
     "+"          { yybegin(REMAINING_LINE); return LuxTypes.K_SET_SUCCESS; }
@@ -111,23 +120,40 @@ T_MULTILINE_CONTENTS = ~{T_QQQ} {CRLF}
 }
 
 <REMAINING_LINE> {
-    {T_LINE_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_LINE_CONTENTS; }
+    "\\" {CRLF}       { return LuxTypes.LINE_CONTINUATION; }
+    {LineContentsNoBackslash} { return LuxTypes.T_LINE_CONTENTS; }
+    {LineDollar}      { return LuxTypes.T_DOLLAR; }
+    {LinePasteVar}    { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
+    {CRLF}            { yybegin(YYINITIAL); return LuxTypes.CRLF; }
+    "\\"              { return LuxTypes.T_LINE_CONTENTS; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }
 
 <REMAINING_MULTILINE> {
-    {T_MULTILINE_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_MULTILINE_CONTENTS; }
+    {TripleQuote}     { yybegin(YYINITIAL); return LuxTypes.END_MULTILINE; }
+    {LineContents}    { return LuxTypes.T_LINE_CONTENTS; }
+    {LineDollar}      { return LuxTypes.T_DOLLAR; }
+    {LinePasteVar}    { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
+    {CRLF}            { return LuxTypes.CRLF; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_LOOP> {
+    {T_IDENT}           { yybegin(IN_LOOP_ARGS); return LuxTypes.T_IDENT; }
+}
+<IN_LOOP_ARGS> {
     {T_META_CONTENTS}    { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
-//    <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_MACRO> {
-    {T_META_CONTENTS}   { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
-//    <<EOF>>           { return TokenType.BAD_CHARACTER; }
+    {T_IDENT}           { yybegin(IN_MACRO_TAIL); return LuxTypes.T_IDENT; }
+}
+<IN_MACRO_TAIL> {
+    {T_META_CONTENTS}  { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
 }
 
 <IN_INVOKE> {T_IDENT}           { yybegin(IN_INVOKE_ARGS); return LuxTypes.T_IDENT; }
