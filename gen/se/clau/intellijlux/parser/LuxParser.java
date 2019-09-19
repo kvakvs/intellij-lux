@@ -199,12 +199,6 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // T_META_CONTENTS
-  static boolean inner_meta(PsiBuilder b, int l) {
-    return consumeToken(b, T_META_CONTENTS);
-  }
-
-  /* ********************************************************** */
   // multiline_contents * END_MULTILINE
   static boolean inner_multiline(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inner_multiline")) return false;
@@ -240,13 +234,14 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // T_IDENT T_EQUALS T_META_CONTENTS
+  // T_IDENT T_EQUALS meta_contents
   static boolean inner_x_equals_y(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inner_x_equals_y")) return false;
     if (!nextTokenIs(b, T_IDENT)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, T_IDENT, T_EQUALS, T_META_CONTENTS);
+    r = consumeTokens(b, 0, T_IDENT, T_EQUALS);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -300,15 +295,12 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // T_LINE_CONTENTS | T_DOLLAR | T_PASTE_VARIABLE
-  //     | T_PASTE_CAPTURE | LINE_CONTINUATION
+  // TEXT | paste | LINE_CONTINUATION
   static boolean line_contents(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "line_contents")) return false;
     boolean r;
-    r = consumeToken(b, T_LINE_CONTENTS);
-    if (!r) r = consumeToken(b, T_DOLLAR);
-    if (!r) r = consumeToken(b, T_PASTE_VARIABLE);
-    if (!r) r = consumeToken(b, T_PASTE_CAPTURE);
+    r = consumeToken(b, TEXT);
+    if (!r) r = paste(b, l + 1);
     if (!r) r = consumeToken(b, LINE_CONTINUATION);
     return r;
   }
@@ -339,7 +331,30 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // K_DOC_ONLY | (K_DOC inner_meta)
+  // ( meta_element * ) END_META
+  static boolean meta_contents(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "meta_contents")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = meta_contents_0(b, l + 1);
+    r = r && consumeToken(b, END_META);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  // meta_element *
+  private static boolean meta_contents_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "meta_contents_0")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!meta_element(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "meta_contents_0", c)) break;
+    }
+    return true;
+  }
+
+  /* ********************************************************** */
+  // K_DOC_ONLY | (K_DOC meta_contents)
   public static boolean meta_doc(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_doc")) return false;
     if (!nextTokenIs(b, "<meta doc>", K_DOC, K_DOC_ONLY)) return false;
@@ -351,14 +366,24 @@ public class LuxParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // K_DOC inner_meta
+  // K_DOC meta_contents
   private static boolean meta_doc_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_doc_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_DOC);
-    r = r && inner_meta(b, l + 1);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // TEXT | paste
+  static boolean meta_element(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "meta_element")) return false;
+    boolean r;
+    r = consumeToken(b, TEXT);
+    if (!r) r = paste(b, l + 1);
     return r;
   }
 
@@ -376,27 +401,27 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // K_INCLUDE inner_meta
+  // K_INCLUDE meta_contents
   public static boolean meta_include(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_include")) return false;
     if (!nextTokenIs(b, K_INCLUDE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_INCLUDE);
-    r = r && inner_meta(b, l + 1);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, META_INCLUDE, r);
     return r;
   }
 
   /* ********************************************************** */
-  // (K_INVOKE T_IDENT) inner_meta
+  // (K_INVOKE T_IDENT) meta_contents
   public static boolean meta_invoke(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_invoke")) return false;
     if (!nextTokenIs(b, K_INVOKE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = meta_invoke_0(b, l + 1);
-    r = r && inner_meta(b, l + 1);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, META_INVOKE, r);
     return r;
   }
@@ -425,14 +450,14 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (K_LOOP T_IDENT) inner_meta
+  // (K_LOOP T_IDENT) meta_contents
   public static boolean meta_loop(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_loop")) return false;
     if (!nextTokenIs(b, K_LOOP)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = meta_loop_0(b, l + 1);
-    r = r && inner_meta(b, l + 1);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, META_LOOP, r);
     return r;
   }
@@ -448,14 +473,14 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (K_MACRO T_IDENT) inner_meta
+  // (K_MACRO T_IDENT) meta_contents
   public static boolean meta_macro(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_macro")) return false;
     if (!nextTokenIs(b, K_MACRO)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = meta_macro_0(b, l + 1);
-    r = r && inner_meta(b, l + 1);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, META_MACRO, r);
     return r;
   }
@@ -484,7 +509,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // K_NEWSHELL_ONLY | (K_NEWSHELL inner_meta)
+  // K_NEWSHELL_ONLY | (K_NEWSHELL meta_contents)
   public static boolean meta_newshell(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_newshell")) return false;
     if (!nextTokenIs(b, "<meta newshell>", K_NEWSHELL, K_NEWSHELL_ONLY)) return false;
@@ -496,32 +521,32 @@ public class LuxParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // K_NEWSHELL inner_meta
+  // K_NEWSHELL meta_contents
   private static boolean meta_newshell_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_newshell_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_NEWSHELL);
-    r = r && inner_meta(b, l + 1);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
   /* ********************************************************** */
-  // K_PROGRESS inner_meta
+  // K_PROGRESS meta_contents
   public static boolean meta_progress(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_progress")) return false;
     if (!nextTokenIs(b, K_PROGRESS)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_PROGRESS);
-    r = r && inner_meta(b, l + 1);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, META_PROGRESS, r);
     return r;
   }
 
   /* ********************************************************** */
-  // K_SHELL_ONLY | (K_SHELL inner_meta)
+  // K_SHELL_ONLY | (K_SHELL T_IDENT meta_contents)
   public static boolean meta_shell(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_shell")) return false;
     if (!nextTokenIs(b, "<meta shell>", K_SHELL, K_SHELL_ONLY)) return false;
@@ -533,13 +558,13 @@ public class LuxParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // K_SHELL inner_meta
+  // K_SHELL T_IDENT meta_contents
   private static boolean meta_shell_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_shell_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, K_SHELL);
-    r = r && inner_meta(b, l + 1);
+    r = consumeTokens(b, 0, K_SHELL, T_IDENT);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -582,16 +607,24 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // T_LINE_CONTENTS | T_DOLLAR | T_PASTE_VARIABLE
-  //     | T_PASTE_CAPTURE | CRLF
+  // TEXT | paste | CRLF
   static boolean multiline_contents(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "multiline_contents")) return false;
     boolean r;
-    r = consumeToken(b, T_LINE_CONTENTS);
-    if (!r) r = consumeToken(b, T_DOLLAR);
+    r = consumeToken(b, TEXT);
+    if (!r) r = paste(b, l + 1);
+    if (!r) r = consumeToken(b, CRLF);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // T_DOLLAR | T_PASTE_VARIABLE | T_PASTE_CAPTURE
+  static boolean paste(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "paste")) return false;
+    boolean r;
+    r = consumeToken(b, T_DOLLAR);
     if (!r) r = consumeToken(b, T_PASTE_VARIABLE);
     if (!r) r = consumeToken(b, T_PASTE_CAPTURE);
-    if (!r) r = consumeToken(b, CRLF);
     return r;
   }
 

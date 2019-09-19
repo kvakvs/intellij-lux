@@ -1,9 +1,9 @@
 package se.clau.intellijlux;
 
-import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 import se.clau.intellijlux.psi.LuxTypes;
 import com.intellij.psi.TokenType;
+import com.intellij.lexer.FlexLexer;
 
 %%
 
@@ -15,19 +15,20 @@ import com.intellij.psi.TokenType;
 %eof{  return;
 %eof}
 
-CRLF            = [\r\n]
+EndLine         = [\r\n]
 BLANK           = [\ \t\f]
 COMMENT         = "#"[^\r\n]*
-T_META_CONTENTS = ~("]" {CRLF})
 T_IDENT         = [\w_\$] ([\w\d_\-] *)
 T_NUMBER        = [0-9]+
+
+MetaText            = [^\]\$\r\n]*
 
 LineDollar          = \$\$
 LinePasteCapture    = \$[\d+]
 LinePasteVar        = \$ {T_IDENT}
 LinePasteVarCurly   = \$\{ {T_IDENT} \}
-LineContents        = [^\r\n\$]*
-LineContentsNoBackslash = [^\r\n\$\\]*
+LineText            = [^\r\n\$]*
+LineTextNoBackslash = [^\r\n\$\\]*
 
 TripleQuote = "\"\"\""
 
@@ -38,20 +39,21 @@ TripleQuote = "\"\"\""
 %state IN_SHELL
 %state IN_INCLUDE
 %state IN_LOOP
-%state IN_LOOP_ARGS
 %state IN_MACRO
-%state IN_MACRO_TAIL
 
 %state IN_INVOKE
-%state IN_INVOKE_ARGS
 
 //=== Generic states ===
+
 // consumes one numeric argument
 %state WAIT_NUM
+
 // consumes everything until end of the meta, closing ] and CRLF
-%state REMAINING_META
+%state CONSUME_META
+
 // consumes everything until end of the line, to CRLF
 %state REMAINING_LINE
+
 // consumes everything until """ including CRLF
 %state REMAINING_MULTILINE
 
@@ -71,18 +73,18 @@ TripleQuote = "\"\"\""
     "?+"               { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX; }
     {TripleQuote}"?+"  { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_MAYBE_REGEX; }
 
-    "?"{CRLF}          { return LuxTypes.K_FLUSH; }
+    "?"{EndLine}          { return LuxTypes.K_FLUSH; }
     "?"                { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX; }
     {TripleQuote}"?"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_REGEX; }
 
-    "+"{CRLF}    { return LuxTypes.K_SET_SUCCESS_ONLY; }
-    "+"          { yybegin(REMAINING_LINE); return LuxTypes.K_SET_SUCCESS; }
+    "+"{EndLine}   { return LuxTypes.K_SET_SUCCESS_ONLY; }
+    "+"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_SUCCESS; }
 
-    "-"{CRLF}    { return LuxTypes.K_SET_FAILURE_ONLY; }
-    "-"          { yybegin(REMAINING_LINE); return LuxTypes.K_SET_FAILURE; }
+    "-"{EndLine}   { return LuxTypes.K_SET_FAILURE_ONLY; }
+    "-"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_FAILURE; }
 
-    "@"{CRLF}    { return LuxTypes.K_SET_LOOP_BREAK_ONLY; }
-    "@"          { yybegin(REMAINING_LINE); return LuxTypes.K_SET_LOOP_BREAK; }
+    "@"{EndLine}   { return LuxTypes.K_SET_LOOP_BREAK_ONLY; }
+    "@"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_LOOP_BREAK; }
 
     "]"                { return LuxTypes.T_SQR_CLOSE; }
 
@@ -97,9 +99,9 @@ TripleQuote = "\"\"\""
     "[invoke"{BLANK}   { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE; }
     "[doc]"            { return LuxTypes.K_DOC_ONLY; }
     "[enddoc]"         { return LuxTypes.K_END_DOC; }
-    "[doc"{BLANK}      { yybegin(REMAINING_META); return LuxTypes.K_DOC; }
+    "[doc"{BLANK}      { yybegin(CONSUME_META); return LuxTypes.K_DOC; }
 
-    "[progress"{BLANK}      { yybegin(REMAINING_META); return LuxTypes.K_PROGRESS; }
+    "[progress"{BLANK}      { yybegin(CONSUME_META); return LuxTypes.K_PROGRESS; }
 
     "[config"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG; }
     "[local"{BLANK}    { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL; }
@@ -113,79 +115,73 @@ TripleQuote = "\"\"\""
     "[timeout]"        { return LuxTypes.K_TIMEOUT_ONLY; }
     "[timeout"{BLANK}  { yybegin(WAIT_NUM); return LuxTypes.K_TIMEOUT; }
     "[sleep"{BLANK}    { yybegin(WAIT_NUM); return LuxTypes.K_SLEEP; }
-    "[include"{BLANK}  { yybegin(IN_INCLUDE); return LuxTypes.K_INCLUDE; }
+    "[include"{BLANK}  { yybegin(CONSUME_META); return LuxTypes.K_INCLUDE; }
 
     {BLANK}+           { return TokenType.WHITE_SPACE; }
-    {CRLF}+            { return LuxTypes.CRLF; }
+    {EndLine}+         { return LuxTypes.CRLF; }
 }
 
 <REMAINING_LINE> {
-    "\\" {CRLF}       { return LuxTypes.LINE_CONTINUATION; }
-    {LineContentsNoBackslash} { return LuxTypes.T_LINE_CONTENTS; }
-    {LineDollar}      { return LuxTypes.T_DOLLAR; }
-    {LinePasteVar}    { return LuxTypes.T_PASTE_VARIABLE; }
+    "\\" {EndLine}      { return LuxTypes.LINE_CONTINUATION; }
+    {LineTextNoBackslash} { return LuxTypes.TEXT; }
+    {LineDollar}        { return LuxTypes.T_DOLLAR; }
+    {LinePasteVar}      { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
-    {CRLF}            { yybegin(YYINITIAL); return LuxTypes.CRLF; }
-    "\\"              { return LuxTypes.T_LINE_CONTENTS; }
+    {EndLine}           { yybegin(YYINITIAL); return LuxTypes.CRLF; }
+    "\\"                { return LuxTypes.TEXT; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }
 
 <REMAINING_MULTILINE> {
     {TripleQuote}     { yybegin(YYINITIAL); return LuxTypes.END_MULTILINE; }
-    {LineContents}    { return LuxTypes.T_LINE_CONTENTS; }
+    {LineText}        { return LuxTypes.TEXT; }
     {LineDollar}      { return LuxTypes.T_DOLLAR; }
     {LinePasteVar}    { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
-    {CRLF}            { return LuxTypes.CRLF; }
+    {EndLine}           { return LuxTypes.CRLF; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }
 
 <IN_LOOP> {
-    {T_IDENT}           { yybegin(IN_LOOP_ARGS); return LuxTypes.T_IDENT; }
-}
-<IN_LOOP_ARGS> {
-    {T_META_CONTENTS}    { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+    {T_IDENT}           { yybegin(CONSUME_META); return LuxTypes.T_IDENT; }
 }
 
 <IN_MACRO> {
-    {T_IDENT}           { yybegin(IN_MACRO_TAIL); return LuxTypes.T_IDENT; }
-}
-<IN_MACRO_TAIL> {
-    {T_META_CONTENTS}  { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+    {T_IDENT}           { yybegin(CONSUME_META); return LuxTypes.T_IDENT; }
 }
 
-<IN_INVOKE> {T_IDENT}           { yybegin(IN_INVOKE_ARGS); return LuxTypes.T_IDENT; }
-
-<IN_INVOKE_ARGS> {
-    {T_META_CONTENTS}  { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
-//    <<EOF>>           { return TokenType.BAD_CHARACTER; }
+<IN_INVOKE> {
+    {T_IDENT}           { yybegin(CONSUME_META); return LuxTypes.T_IDENT; }
 }
 
 // Scan the rest of the line until ]\n
-<REMAINING_META> {
-    {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
-//    <<EOF>>           { return TokenType.BAD_CHARACTER; }
+<CONSUME_META> {
+    "]" {EndLine}       { yybegin(YYINITIAL); return LuxTypes.END_META; }
+    {MetaText}          { return LuxTypes.TEXT; }
+    {LineDollar}        { return LuxTypes.T_DOLLAR; }
+    {LinePasteVar}      { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
+    "]"                 { return LuxTypes.TEXT; }
 }
 
 <IN_CONFIG> {
     {T_IDENT} { return LuxTypes.T_IDENT; }
-    "="       { yybegin(IN_CONFIG_VAL); return LuxTypes.T_EQUALS; }
+    "="       { yybegin(CONSUME_META); return LuxTypes.T_EQUALS; }
 }
 
-// Scan the remaining value after ident= <...> until ]\n
-<IN_CONFIG_VAL> {
-    {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
-//    <<EOF>> { return TokenType.BAD_CHARACTER; }
+<IN_NEWSHELL> {
+    {T_IDENT} { yybegin(CONSUME_META); return LuxTypes.T_IDENT; }
 }
 
-<IN_NEWSHELL> {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+<IN_SHELL> {
+    {T_IDENT} { yybegin(CONSUME_META); return LuxTypes.T_IDENT; }
+}
 
-<IN_SHELL> {T_META_CONTENTS}   { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
+<WAIT_NUM> {
+    {T_NUMBER}    { yybegin(YYINITIAL); return LuxTypes.T_NUMBER; }
+}
 
-<WAIT_NUM> {T_NUMBER}    { yybegin(YYINITIAL); return LuxTypes.T_NUMBER; }
-
-<IN_INCLUDE> {T_META_CONTENTS} { yybegin(YYINITIAL); return LuxTypes.T_META_CONTENTS; }
-
-[^]                            { return TokenType.BAD_CHARACTER; }
+[^]     { return TokenType.BAD_CHARACTER; }

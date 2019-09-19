@@ -55,7 +55,7 @@ public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
   @NotNull
   @Override
   public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-    if (tokenType.equals(LuxTypes.T_LINE_CONTENTS)) {
+    if (tokenType.equals(LuxTypes.TEXT)) {
       return LINE_CONTENT_KEYS;
     } else if (tokenType.equals(LuxTypes.COMMENT)) {
       return COMMENT_KEYS;

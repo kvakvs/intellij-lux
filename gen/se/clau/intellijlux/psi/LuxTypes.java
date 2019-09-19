@@ -34,6 +34,7 @@ public interface LuxTypes {
 
   IElementType COMMENT = new LuxTokenType("COMMENT");
   IElementType CRLF = new LuxTokenType("CRLF");
+  IElementType END_META = new LuxTokenType("END_META");
   IElementType END_MULTILINE = new LuxTokenType("END_MULTILINE");
   IElementType K_CLEANUP = new LuxTokenType("K_CLEANUP");
   IElementType K_CONFIG = new LuxTokenType("K_CONFIG");
@@ -80,14 +81,13 @@ public interface LuxTypes {
   IElementType K_TIMEOUT = new LuxTokenType("K_TIMEOUT");
   IElementType K_TIMEOUT_ONLY = new LuxTokenType("K_TIMEOUT_ONLY");
   IElementType LINE_CONTINUATION = new LuxTokenType("LINE_CONTINUATION");
+  IElementType TEXT = new LuxTokenType("TEXT");
   IElementType T_AT = new LuxTokenType("@");
   IElementType T_BANG = new LuxTokenType("!");
   IElementType T_DOLLAR = new LuxTokenType("T_DOLLAR");
   IElementType T_DOUBLE_QUESTION = new LuxTokenType("??");
   IElementType T_EQUALS = new LuxTokenType("T_EQUALS");
   IElementType T_IDENT = new LuxTokenType("T_IDENT");
-  IElementType T_LINE_CONTENTS = new LuxTokenType("T_LINE_CONTENTS");
-  IElementType T_META_CONTENTS = new LuxTokenType("T_META_CONTENTS");
   IElementType T_MINUS = new LuxTokenType("-");
   IElementType T_NUMBER = new LuxTokenType("T_NUMBER");
   IElementType T_PASTE_CAPTURE = new LuxTokenType("T_PASTE_CAPTURE");

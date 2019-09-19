@@ -2,7 +2,7 @@
   <id>se.clau.intellij-lux</id>
 
   <name>Lux Script support</name>
-  <version>1.4</version>
+  <version>1.5</version>
   <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko</vendor>
 
   <depends>com.intellij.modules.lang</depends>
@@ -20,6 +20,7 @@
 
   <change-notes><![CDATA[
     <ul>
+      <li>Variables can now be pasted also in other metas</li>
       <li>Fixed syntax highlighting for <code>[macro ident-ident]</code> with dashes.</li>
       <li>$name and ${name} variables are now highlighted in both single and multiline
         commands, $$ denotes a dollar sign.</li>

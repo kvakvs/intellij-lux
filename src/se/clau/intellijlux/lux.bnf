@@ -44,28 +44,28 @@ private item ::= (
 
 //metaDocBegin ::= '[doc]'
 //metaDocEnd ::= '[enddoc]'
-meta_doc ::= K_DOC_ONLY | (K_DOC inner_meta)
+meta_doc ::= K_DOC_ONLY | (K_DOC meta_contents)
 
-meta_shell ::= K_SHELL_ONLY | (K_SHELL inner_meta)
-meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL inner_meta)
+meta_shell ::= K_SHELL_ONLY | (K_SHELL T_IDENT meta_contents)
+meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL meta_contents)
 meta_timeout ::= K_TIMEOUT_ONLY | (K_TIMEOUT inner_number)
 meta_sleep ::= K_SLEEP inner_number
-meta_include ::= K_INCLUDE inner_meta
-meta_macro ::= (K_MACRO T_IDENT) inner_meta
-meta_invoke ::= (K_INVOKE T_IDENT) inner_meta
-meta_loop ::= (K_LOOP T_IDENT) inner_meta
-meta_progress ::= K_PROGRESS inner_meta
+meta_include ::= K_INCLUDE meta_contents
+meta_macro ::= (K_MACRO T_IDENT) meta_contents
+meta_invoke ::= (K_INVOKE T_IDENT) meta_contents
+meta_loop ::= (K_LOOP T_IDENT) meta_contents
+meta_progress ::= K_PROGRESS meta_contents
 
 private inner inner_number ::= T_NUMBER T_SQR_CLOSE CRLF
-//private inner inner_macro ::= T_IDENT T_META_CONTENTS
-private inner inner_meta ::= T_META_CONTENTS
+private inner meta_contents ::= ( meta_element * ) END_META
+private meta_element ::= TEXT | paste
 
 meta_config ::= K_CONFIG inner_x_equals_y
 meta_local ::= K_LOCAL inner_x_equals_y
 meta_global ::= K_GLOBAL inner_x_equals_y
 meta_my ::= K_MY inner_x_equals_y
 
-private inner inner_x_equals_y ::= T_IDENT T_EQUALS T_META_CONTENTS
+private inner inner_x_equals_y ::= T_IDENT T_EQUALS meta_contents
 
 send ::= (K_SEND inner_line) | (K_ML_SEND inner_multiline)
 send_ln ::= (K_SEND_LN inner_line) | (K_ML_SEND_LN inner_multiline)
@@ -79,12 +79,13 @@ set_loop_break ::= K_SET_LOOP_BREAK_ONLY | (K_SET_LOOP_BREAK inner_line) | (K_ML
 
 private inner inner_line ::= line_contents * CRLF
 // LINE_CONTINUATION in line_contents for when it is broken with \\
-private line_contents ::= T_LINE_CONTENTS | T_DOLLAR | T_PASTE_VARIABLE
-    | T_PASTE_CAPTURE | LINE_CONTINUATION
+private line_contents ::= TEXT | paste | LINE_CONTINUATION
 
 private inner inner_multiline ::= multiline_contents * END_MULTILINE
-private multiline_contents ::= T_LINE_CONTENTS | T_DOLLAR | T_PASTE_VARIABLE
-    | T_PASTE_CAPTURE | CRLF
+private multiline_contents ::= TEXT | paste | CRLF
+
+// A pasted value $name ${name} or $123
+private paste ::= T_DOLLAR | T_PASTE_VARIABLE | T_PASTE_CAPTURE
 
 //setFailure0 ::= '-' CRLF
 //setFailure ::= '-' regex CRLF
