@@ -12,6 +12,7 @@ public interface LuxTypes {
   IElementType EXPECT_REGEX = new LuxElementType("EXPECT_REGEX");
   IElementType EXPECT_TEMPLATE = new LuxElementType("EXPECT_TEMPLATE");
   IElementType EXPECT_VERBATIM = new LuxElementType("EXPECT_VERBATIM");
+  IElementType FLUSH = new LuxElementType("FLUSH");
   IElementType META_CONFIG = new LuxElementType("META_CONFIG");
   IElementType META_DOC = new LuxElementType("META_DOC");
   IElementType META_GLOBAL = new LuxElementType("META_GLOBAL");
@@ -114,6 +115,9 @@ public interface LuxTypes {
       }
       else if (type == EXPECT_VERBATIM) {
         return new LuxExpectVerbatimImpl(node);
+      }
+      else if (type == FLUSH) {
+        return new LuxFlushImpl(node);
       }
       else if (type == META_CONFIG) {
         return new LuxMetaConfigImpl(node);

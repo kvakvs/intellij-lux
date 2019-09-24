@@ -176,6 +176,18 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // K_FLUSH
+  public static boolean flush(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "flush")) return false;
+    if (!nextTokenIs(b, K_FLUSH)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_FLUSH);
+    exit_section_(b, m, FLUSH, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // line_contents * CRLF
   static boolean inner_line(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inner_line")) return false;
@@ -257,7 +269,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
   //     | meta_loop | K_END_LOOP
   //     | meta_progress
   //     | send | send_ln | expect_verbatim | expect_template | expect_regex
-  //     | K_FLUSH | expect_maybe_regex | set_failure | set_success | set_loop_break
+  //     | flush | expect_maybe_regex | set_failure | set_success | set_loop_break
   static boolean item(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "item")) return false;
     boolean r;
@@ -286,7 +298,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
     if (!r) r = expect_verbatim(b, l + 1);
     if (!r) r = expect_template(b, l + 1);
     if (!r) r = expect_regex(b, l + 1);
-    if (!r) r = consumeToken(b, K_FLUSH);
+    if (!r) r = flush(b, l + 1);
     if (!r) r = expect_maybe_regex(b, l + 1);
     if (!r) r = set_failure(b, l + 1);
     if (!r) r = set_success(b, l + 1);

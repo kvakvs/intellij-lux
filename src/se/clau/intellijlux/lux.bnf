@@ -39,12 +39,13 @@ private item ::= (
     | meta_loop | K_END_LOOP
     | meta_progress
     | send | send_ln | expect_verbatim | expect_template | expect_regex
-    | K_FLUSH | expect_maybe_regex | set_failure | set_success | set_loop_break
+    | flush | expect_maybe_regex | set_failure | set_success | set_loop_break
     )
 
 //metaDocBegin ::= '[doc]'
 //metaDocEnd ::= '[enddoc]'
 meta_doc ::= K_DOC_ONLY | (K_DOC meta_contents)
+flush ::= K_FLUSH
 
 meta_shell ::= K_SHELL_ONLY | (K_SHELL T_IDENT meta_contents)
 meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL meta_contents)

@@ -23,6 +23,10 @@ public class LuxVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitFlush(@NotNull LuxFlush o) {
+    visitPsiElement(o);
+  }
+
   public void visitMetaConfig(@NotNull LuxMetaConfig o) {
     visitPsiElement(o);
   }

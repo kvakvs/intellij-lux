@@ -2,7 +2,7 @@
   <id>se.clau.intellij-lux</id>
 
   <name>Lux Script support</name>
-  <version>1.5</version>
+  <version>1.6</version>
   <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko</vendor>
 
   <depends>com.intellij.modules.lang</depends>
@@ -13,6 +13,7 @@
 
       <ul>
         <li>Syntax and support for file types for Lux and Lux includes</li>
+        <li>Annotations for Lux operators</li>
         <li>Commenting feature</li>
         <li>TODO: Code navigation and folding</li>
       </ul>
@@ -20,6 +21,7 @@
 
   <change-notes><![CDATA[
     <ul>
+      <li>Operators now have mouse-over annotations on them</li>
       <li>Variables can now be pasted also in other metas</li>
       <li>Fixed syntax highlighting for <code>[macro ident-ident]</code> with dashes.</li>
       <li>$name and ${name} variables are now highlighted in both single and multiline
@@ -64,6 +66,8 @@
     <lang.commenter
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxCommenter"/>
+    <annotator language="Lux"
+               implementationClass="se.clau.intellijlux.LuxAnnotator"/>
   </extensions>
 
   <actions>
