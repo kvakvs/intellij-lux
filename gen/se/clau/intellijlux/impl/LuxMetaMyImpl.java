@@ -26,4 +26,10 @@ public class LuxMetaMyImpl extends ASTWrapperPsiElement implements LuxMetaMy {
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public LuxIdent getIdent() {
+    return findNotNullChildByClass(LuxIdent.class);
+  }
+
 }

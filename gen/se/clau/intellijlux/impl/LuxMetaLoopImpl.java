@@ -26,4 +26,10 @@ public class LuxMetaLoopImpl extends ASTWrapperPsiElement implements LuxMetaLoop
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public LuxIdent getIdent() {
+    return findNotNullChildByClass(LuxIdent.class);
+  }
+
 }

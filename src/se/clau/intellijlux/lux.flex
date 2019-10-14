@@ -18,11 +18,13 @@ import com.intellij.lexer.FlexLexer;
 EndLine         = [\r\n]
 BLANK           = [\ \t\f]
 COMMENT         = "#"[^\r\n]*
+SpecialIdent    = \$ "?"
 T_IDENT         = [\w_\$] ([\w\d_\-] *)
 T_NUMBER        = [0-9]+
 
 MetaText            = [^\]\$\r\n]*
 
+LinePasteExitcode   = \$\?
 LineDollar          = \$\$
 LinePasteCapture    = \$[\d+]
 LinePasteVar        = \$ {T_IDENT}
@@ -128,6 +130,7 @@ TripleQuote = "\"\"\""
     {LinePasteVar}      { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
+    {LinePasteExitcode} { return LuxTypes.T_PASTE_EXITCODE; }
     {EndLine}           { yybegin(YYINITIAL); return LuxTypes.CRLF; }
     "\\"                { return LuxTypes.TEXT; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
@@ -140,6 +143,7 @@ TripleQuote = "\"\"\""
     {LinePasteVar}    { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
+    {LinePasteExitcode} { return LuxTypes.T_PASTE_EXITCODE; }
     {EndLine}           { return LuxTypes.CRLF; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }

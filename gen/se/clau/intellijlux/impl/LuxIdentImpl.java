@@ -8,28 +8,23 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import se.clau.intellijlux.psi.impl.LuxNamedElementImpl;
 import se.clau.intellijlux.psi.*;
+import com.intellij.util.IncorrectOperationException;
 
-public class LuxMetaInvokeImpl extends ASTWrapperPsiElement implements LuxMetaInvoke {
+public class LuxIdentImpl extends LuxNamedElementImpl implements LuxIdent {
 
-  public LuxMetaInvokeImpl(@NotNull ASTNode node) {
+  public LuxIdentImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull LuxVisitor visitor) {
-    visitor.visitMetaInvoke(this);
+    visitor.visitIdent(this);
   }
 
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
-  }
-
-  @Override
-  @NotNull
-  public LuxIdent getIdent() {
-    return findNotNullChildByClass(LuxIdent.class);
   }
 
 }

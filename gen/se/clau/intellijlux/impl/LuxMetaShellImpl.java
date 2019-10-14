@@ -26,4 +26,10 @@ public class LuxMetaShellImpl extends ASTWrapperPsiElement implements LuxMetaShe
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public LuxIdent getIdent() {
+    return findChildByClass(LuxIdent.class);
+  }
+
 }

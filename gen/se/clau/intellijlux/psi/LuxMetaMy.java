@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaMy extends PsiElement {
 
+  @NotNull
+  LuxIdent getIdent();
+
 }

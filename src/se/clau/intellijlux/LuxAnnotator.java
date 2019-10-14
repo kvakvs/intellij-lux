@@ -11,17 +11,17 @@ public class LuxAnnotator implements Annotator {
   @Override
   public void annotate(@NotNull final PsiElement element, @NotNull AnnotationHolder holder) {
     if (element instanceof LuxSend) {
-      annotateKeyword(element, holder, "Send ➡");
+      annotateKeyword(element, holder, "Send ⯈");
     } else if (element instanceof LuxSendLn) {
-      annotateKeyword(element, holder, "Send (+newline) ->");
+      annotateKeyword(element, holder, "Send (+newline) ⯈");
     } else if (element instanceof LuxExpectVerbatim) {
-      annotateKeyword(element, holder, "Expect (verbatim) <-");
+      annotateKeyword(element, holder, "Expect (verbatim) ⯇");
     } else if (element instanceof LuxExpectTemplate) {
-      annotateKeyword(element, holder, "Expect (template) <-");
+      annotateKeyword(element, holder, "Expect (template) ⯇");
     } else if (element instanceof LuxExpectMaybeRegex) {
-      annotateKeyword(element, holder, "Expect (maybe regex) <-?");
+      annotateKeyword(element, holder, "Expect (maybe regex) ⯇?");
     } else if (element instanceof LuxExpectRegex) {
-      annotateKeyword(element, holder, "Expect (regex) <-?");
+      annotateKeyword(element, holder, "Expect (regex) ⯇?");
     } else if (element instanceof LuxFlush) {
       annotateKeyword(element, holder, "Flush");
     } else if (element instanceof LuxSetSuccess) {

@@ -42,19 +42,23 @@ private item ::= (
     | flush | expect_maybe_regex | set_failure | set_success | set_loop_break
     )
 
-//metaDocBegin ::= '[doc]'
-//metaDocEnd ::= '[enddoc]'
-meta_doc ::= K_DOC_ONLY | (K_DOC meta_contents)
 flush ::= K_FLUSH
+ident ::= T_IDENT {
+    mixin="se.clau.intellijlux.psi.impl.LuxNamedElementImpl"
+    implements="se.clau.intellijlux.psi.LuxNamedElement"
+    methods=[getKey getValue getName setName getNameIdentifier]
+}
 
-meta_shell ::= K_SHELL_ONLY | (K_SHELL T_IDENT meta_contents)
+meta_doc ::= K_DOC_ONLY | (K_DOC meta_contents)
+
+meta_shell ::= K_SHELL_ONLY | (K_SHELL ident meta_contents)
 meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL meta_contents)
 meta_timeout ::= K_TIMEOUT_ONLY | (K_TIMEOUT inner_number)
 meta_sleep ::= K_SLEEP inner_number
 meta_include ::= K_INCLUDE meta_contents
-meta_macro ::= (K_MACRO T_IDENT) meta_contents
-meta_invoke ::= (K_INVOKE T_IDENT) meta_contents
-meta_loop ::= (K_LOOP T_IDENT) meta_contents
+meta_macro ::= (K_MACRO ident) meta_contents
+meta_invoke ::= (K_INVOKE ident) meta_contents
+meta_loop ::= (K_LOOP ident) meta_contents
 meta_progress ::= K_PROGRESS meta_contents
 
 private inner inner_number ::= T_NUMBER T_SQR_CLOSE CRLF
@@ -66,7 +70,7 @@ meta_local ::= K_LOCAL inner_x_equals_y
 meta_global ::= K_GLOBAL inner_x_equals_y
 meta_my ::= K_MY inner_x_equals_y
 
-private inner inner_x_equals_y ::= T_IDENT T_EQUALS meta_contents
+private inner inner_x_equals_y ::= ident T_EQUALS meta_contents
 
 send ::= (K_SEND inner_line) | (K_ML_SEND inner_multiline)
 send_ln ::= (K_SEND_LN inner_line) | (K_ML_SEND_LN inner_multiline)
@@ -86,7 +90,7 @@ private inner inner_multiline ::= multiline_contents * END_MULTILINE
 private multiline_contents ::= TEXT | paste | CRLF
 
 // A pasted value $name ${name} or $123
-private paste ::= T_DOLLAR | T_PASTE_VARIABLE | T_PASTE_CAPTURE
+private paste ::= T_DOLLAR | T_PASTE_VARIABLE | T_PASTE_CAPTURE | T_PASTE_EXITCODE
 
 //setFailure0 ::= '-' CRLF
 //setFailure ::= '-' regex CRLF

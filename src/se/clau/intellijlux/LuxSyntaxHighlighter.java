@@ -61,6 +61,7 @@ public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
       return COMMENT_KEYS;
     } else if (tokenType.equals(LuxTypes.T_IDENT)
             || tokenType.equals(LuxTypes.T_PASTE_VARIABLE)
+            || tokenType.equals(LuxTypes.T_PASTE_EXITCODE)
             || tokenType.equals(LuxTypes.T_PASTE_CAPTURE)) {
       return IDENT_KEYS;
     } else if (tokenType.equals(TokenType.BAD_CHARACTER)) {

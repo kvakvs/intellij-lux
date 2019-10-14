@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaShell extends PsiElement {
 
+  @Nullable
+  LuxIdent getIdent();
+
 }

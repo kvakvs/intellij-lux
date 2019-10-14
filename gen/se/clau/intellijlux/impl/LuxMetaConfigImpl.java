@@ -26,4 +26,10 @@ public class LuxMetaConfigImpl extends ASTWrapperPsiElement implements LuxMetaCo
     else super.accept(visitor);
   }
 
+  @Override
+  @NotNull
+  public LuxIdent getIdent() {
+    return findNotNullChildByClass(LuxIdent.class);
+  }
+
 }

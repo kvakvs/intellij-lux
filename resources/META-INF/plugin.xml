@@ -2,7 +2,7 @@
   <id>se.clau.intellij-lux</id>
 
   <name>Lux Script support</name>
-  <version>1.6</version>
+  <version>1.7</version>
   <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko</vendor>
 
   <depends>com.intellij.modules.lang</depends>
@@ -21,11 +21,12 @@
 
   <change-notes><![CDATA[
     <ul>
+      <li>Added special return-code identifier <code>$?</code></li>
       <li>Operators now have mouse-over annotations on them</li>
       <li>Variables can now be pasted also in other metas</li>
       <li>Fixed syntax highlighting for <code>[macro ident-ident]</code> with dashes.</li>
-      <li>$name and ${name} variables are now highlighted in both single and multiline
-        commands, $$ denotes a dollar sign.</li>
+      <li><code>$name</code> and <code>${name}</code> variables are now highlighted in
+        both single and multiline commands, <code>$$</code> denotes a dollar sign.</li>
       <li>Support backslash for single line continuation \\</li>
     </ul>
     <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
@@ -68,6 +69,9 @@
             implementationClass="se.clau.intellijlux.LuxCommenter"/>
     <annotator language="Lux"
                implementationClass="se.clau.intellijlux.LuxAnnotator"/>
+
+    <psi.referenceContributor
+            implementation="se.clau.intellijlux.LuxReferenceContributor"/>
   </extensions>
 
   <actions>

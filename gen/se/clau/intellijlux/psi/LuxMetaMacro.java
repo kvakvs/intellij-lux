@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaMacro extends PsiElement {
 
+  @NotNull
+  LuxIdent getIdent();
+
 }

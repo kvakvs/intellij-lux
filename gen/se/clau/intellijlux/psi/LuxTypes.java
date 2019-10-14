@@ -13,6 +13,7 @@ public interface LuxTypes {
   IElementType EXPECT_TEMPLATE = new LuxElementType("EXPECT_TEMPLATE");
   IElementType EXPECT_VERBATIM = new LuxElementType("EXPECT_VERBATIM");
   IElementType FLUSH = new LuxElementType("FLUSH");
+  IElementType IDENT = new LuxElementType("IDENT");
   IElementType META_CONFIG = new LuxElementType("META_CONFIG");
   IElementType META_DOC = new LuxElementType("META_DOC");
   IElementType META_GLOBAL = new LuxElementType("META_GLOBAL");
@@ -92,6 +93,7 @@ public interface LuxTypes {
   IElementType T_MINUS = new LuxTokenType("-");
   IElementType T_NUMBER = new LuxTokenType("T_NUMBER");
   IElementType T_PASTE_CAPTURE = new LuxTokenType("T_PASTE_CAPTURE");
+  IElementType T_PASTE_EXITCODE = new LuxTokenType("T_PASTE_EXITCODE");
   IElementType T_PASTE_VARIABLE = new LuxTokenType("T_PASTE_VARIABLE");
   IElementType T_PLUS = new LuxTokenType("+");
   IElementType T_QUESTION = new LuxTokenType("?");
@@ -118,6 +120,9 @@ public interface LuxTypes {
       }
       else if (type == FLUSH) {
         return new LuxFlushImpl(node);
+      }
+      else if (type == IDENT) {
+        return new LuxIdentImpl(node);
       }
       else if (type == META_CONFIG) {
         return new LuxMetaConfigImpl(node);

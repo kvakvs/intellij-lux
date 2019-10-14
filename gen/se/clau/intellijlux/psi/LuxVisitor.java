@@ -27,6 +27,10 @@ public class LuxVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitIdent(@NotNull LuxIdent o) {
+    visitNamedElement(o);
+  }
+
   public void visitMetaConfig(@NotNull LuxMetaConfig o) {
     visitPsiElement(o);
   }
@@ -100,6 +104,10 @@ public class LuxVisitor extends PsiElementVisitor {
   }
 
   public void visitSetSuccess(@NotNull LuxSetSuccess o) {
+    visitPsiElement(o);
+  }
+
+  public void visitNamedElement(@NotNull LuxNamedElement o) {
     visitPsiElement(o);
   }
 

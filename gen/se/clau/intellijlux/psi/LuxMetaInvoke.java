@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaInvoke extends PsiElement {
 
+  @NotNull
+  LuxIdent getIdent();
+
 }
