@@ -21,6 +21,7 @@
 
   <change-notes><![CDATA[
     <ul>
+      <li>Parsing fixed for multiline (triple quotes) commands.</li>
       <li>Added special return-code identifier <code>$?</code></li>
       <li>Operators now have mouse-over annotations on them</li>
       <li>Variables can now be pasted also in other metas</li>
