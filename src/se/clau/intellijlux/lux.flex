@@ -22,17 +22,19 @@ SpecialIdent    = \$ "?"
 T_IDENT         = [\w_\$] ([\w\d_\-] *)
 T_NUMBER        = [0-9]+
 
-MetaText            = [^\]\$\r\n]*
+MetaText            = [^\]\$\r\n]+
 
 LinePasteExitcode   = \$\?
 LineDollar          = \$\$
 LinePasteCapture    = \$[\d+]
 LinePasteVar        = \$ {T_IDENT}
 LinePasteVarCurly   = \$\{ {T_IDENT} \}
-LineText            = [^\r\n\$]*
-LineTextNoBackslash = [^\r\n\$\\]*
+LineText                = [^\r\n\$]+
+LineTextNoBackslash     = [^\r\n\$\\]+
 
-TripleQuote = "\"\"\""
+Whitespace              = [\x20\t] +
+TripleQuote             = "\"\"\""
+LineTextUntilTripleQ    = {LineText} {TripleQuote}
 
 %state IN_DOC
 %state IN_CONFIG
@@ -125,6 +127,7 @@ TripleQuote = "\"\"\""
 
 <REMAINING_LINE> {
     "\\" {EndLine}      { return LuxTypes.LINE_CONTINUATION; }
+    {Whitespace}        { return LuxTypes.TEXT; }
     {LineTextNoBackslash} { return LuxTypes.TEXT; }
     {LineDollar}        { return LuxTypes.T_DOLLAR; }
     {LinePasteVar}      { return LuxTypes.T_PASTE_VARIABLE; }
@@ -137,10 +140,11 @@ TripleQuote = "\"\"\""
 }
 
 <REMAINING_MULTILINE> {
-    {TripleQuote}     { yybegin(YYINITIAL); return LuxTypes.END_MULTILINE; }
-    {LineText}        { return LuxTypes.TEXT; }
-    {LineDollar}      { return LuxTypes.T_DOLLAR; }
-    {LinePasteVar}    { return LuxTypes.T_PASTE_VARIABLE; }
+    {TripleQuote}           { yybegin(YYINITIAL); return LuxTypes.END_MULTILINE; }
+    {LineTextUntilTripleQ}  { yybegin(YYINITIAL); return LuxTypes.TEXT; }
+    {LineText}              { return LuxTypes.TEXT; }
+    {LineDollar}            { return LuxTypes.T_DOLLAR; }
+    {LinePasteVar}          { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
     {LinePasteExitcode} { return LuxTypes.T_PASTE_EXITCODE; }

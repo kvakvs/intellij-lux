@@ -1,3 +1,3 @@
-.PHONY: publish
-publish:
-	./gradlew publishPlugin
+.PHONY: build
+build:
+	./gradlew buildPlugin

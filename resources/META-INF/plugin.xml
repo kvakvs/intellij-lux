@@ -2,7 +2,7 @@
   <id>se.clau.intellij-lux</id>
 
   <name>Lux Script support</name>
-  <version>1.7</version>
+<!--  <version>1.7</version> Version is defined in gradle.properties -->
   <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko</vendor>
 
   <depends>com.intellij.modules.lang</depends>

@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'se.clau.intellij-lux'
-version '1.0'
+//version '1.0'
 
 repositories {
     mavenCentral()
@@ -15,7 +15,7 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2019.1'
+    version '2019.3'
 }
 
 allprojects {
@@ -35,8 +35,8 @@ allprojects {
     intellij {
         version ideaVersion
         plugins = ['copyright', 'java']
-        downloadSources Boolean.valueOf(sources)
-        sameSinceUntilBuild Boolean.valueOf(isEAP)
-        alternativeIdePath localIdePath
+//        downloadSources Boolean.valueOf(sources)
+//        sameSinceUntilBuild Boolean.valueOf(isEAP)
+//        alternativeIdePath localIdePath
     }
 }
