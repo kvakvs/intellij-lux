@@ -2,7 +2,7 @@
 
 plugins {
     java
-//    id("kotlin") version "1.4.30"
+    id("org.jetbrains.kotlin.jvm") version "1.4.32"
     id("org.jetbrains.intellij") version "0.7.2"
 }
 
@@ -16,8 +16,7 @@ repositories {
 //    testImplementation(group: "junit", name: "junit", version: "4.12")
 //}
 
-// See https://github.com/JetBrains/gradle-intellij-plugin/
-intellij {
+intellij { // See https://github.com/JetBrains/gradle-intellij-plugin/
     version = "2021.1"
     // not found?    apply(plugin = "copyright")
     apply(plugin = "java")

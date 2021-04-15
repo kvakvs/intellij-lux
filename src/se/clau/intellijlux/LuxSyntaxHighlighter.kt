@@ -1,117 +1,100 @@
-package se.clau.intellijlux;
+package se.clau.intellijlux
 
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.editor.*;
-import com.intellij.openapi.editor.colors.TextAttributesKey;
-import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
-import com.intellij.psi.TokenType;
-import com.intellij.psi.tree.IElementType;
-import se.clau.intellijlux.psi.LuxTypes;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lexer.Lexer
+import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
+import com.intellij.openapi.editor.HighlighterColors
+import com.intellij.openapi.editor.colors.TextAttributesKey
+import com.intellij.openapi.fileTypes.SyntaxHighlighterBase
+import com.intellij.psi.TokenType
+import com.intellij.psi.tree.IElementType
+import se.clau.intellijlux.psi.LuxTypes
 
-import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
-
-public class LuxSyntaxHighlighter extends SyntaxHighlighterBase {
-  public static final TextAttributesKey COMMENT =
-          createTextAttributesKey("LUX_COMMENT",
-                  DefaultLanguageHighlighterColors.LINE_COMMENT);
-  public static final TextAttributesKey LINE_CONTENT =
-          createTextAttributesKey("LUX_LINE_CONTENT",
-                  DefaultLanguageHighlighterColors.STRING);
-  public static final TextAttributesKey BAD_CHARACTER =
-          createTextAttributesKey("LUX_BAD_CHARACTER",
-                  HighlighterColors.BAD_CHARACTER);
-  public static final TextAttributesKey KEYWORD =
-          createTextAttributesKey("LUX_KEYWORD",
-                  DefaultLanguageHighlighterColors.KEYWORD);
-  public static final TextAttributesKey META =
-          createTextAttributesKey("LUX_META",
-                  DefaultLanguageHighlighterColors.CLASS_NAME);
-  public static final TextAttributesKey IDENT =
-          createTextAttributesKey("LUX_IDENT",
-                  DefaultLanguageHighlighterColors.IDENTIFIER);
-
-  private static final TextAttributesKey[] BAD_CHAR_KEYS
-          = new TextAttributesKey[]{BAD_CHARACTER};
-  private static final TextAttributesKey[] COMMENT_KEYS
-          = new TextAttributesKey[]{COMMENT};
-  private static final TextAttributesKey[] LINE_CONTENT_KEYS
-          = new TextAttributesKey[]{LINE_CONTENT};
-  private static final TextAttributesKey[] KEYWORD_KEYS
-          = new TextAttributesKey[]{KEYWORD};
-  private static final TextAttributesKey[] META_KEYS
-          = new TextAttributesKey[]{META};
-  private static final TextAttributesKey[] IDENT_KEYS
-          = new TextAttributesKey[]{IDENT};
-  private static final TextAttributesKey[] EMPTY_KEYS
-          = new TextAttributesKey[0];
-
-  @NotNull
-  @Override
-  public Lexer getHighlightingLexer() {
-    return new LuxLexerAdapter();
-  }
-
-  @NotNull
-  @Override
-  public TextAttributesKey[] getTokenHighlights(IElementType tokenType) {
-    if (tokenType.equals(LuxTypes.TEXT)) {
-      return LINE_CONTENT_KEYS;
-    } else if (tokenType.equals(LuxTypes.COMMENT)) {
-      return COMMENT_KEYS;
-    } else if (tokenType.equals(LuxTypes.T_IDENT)
-            || tokenType.equals(LuxTypes.T_PASTE_VARIABLE)
-            || tokenType.equals(LuxTypes.T_PASTE_EXITCODE)
-            || tokenType.equals(LuxTypes.T_PASTE_CAPTURE)) {
-      return IDENT_KEYS;
-    } else if (tokenType.equals(TokenType.BAD_CHARACTER)) {
-      return BAD_CHAR_KEYS;
-    } else if (tokenType.equals(LuxTypes.K_EXP_MAYBE_REGEX)
-            || tokenType.equals(LuxTypes.K_EXP_REGEX)
-            || tokenType.equals(LuxTypes.K_EXP_TEMPLATE)
-            || tokenType.equals(LuxTypes.K_EXP_VERBATIM)
-            || tokenType.equals(LuxTypes.K_SEND)
-            || tokenType.equals(LuxTypes.K_SEND_LN)
-            || tokenType.equals(LuxTypes.K_SET_FAILURE)
-            || tokenType.equals(LuxTypes.K_SET_FAILURE_ONLY)
-            || tokenType.equals(LuxTypes.K_SET_LOOP_BREAK)
-            || tokenType.equals(LuxTypes.K_SET_LOOP_BREAK_ONLY)
-            || tokenType.equals(LuxTypes.K_SET_SUCCESS)
-            || tokenType.equals(LuxTypes.K_SET_SUCCESS_ONLY)) {
-      return KEYWORD_KEYS;
-    } else if (tokenType.equals(LuxTypes.K_ML_EXP_MAYBE_REGEX)
-            || tokenType.equals(LuxTypes.K_ML_EXP_REGEX)
-            || tokenType.equals(LuxTypes.K_ML_EXP_TEMPLATE)
-            || tokenType.equals(LuxTypes.K_ML_EXP_VERBATIM)
-            || tokenType.equals(LuxTypes.K_ML_SEND)
-            || tokenType.equals(LuxTypes.K_ML_SEND_LN)
-            || tokenType.equals(LuxTypes.K_ML_SET_FAILURE)
-            || tokenType.equals(LuxTypes.K_ML_SET_LOOP_BREAK)
-            || tokenType.equals(LuxTypes.K_ML_SET_SUCCESS)) {
-      return KEYWORD_KEYS;
-    } else if (tokenType.equals(LuxTypes.K_CLEANUP)
-            || tokenType.equals(LuxTypes.K_CONFIG)
-            || tokenType.equals(LuxTypes.K_DOC)
-            || tokenType.equals(LuxTypes.K_DOC_ONLY)
-            || tokenType.equals(LuxTypes.K_END_DOC)
-            || tokenType.equals(LuxTypes.K_END_LOOP)
-            || tokenType.equals(LuxTypes.K_END_MACRO)
-            || tokenType.equals(LuxTypes.K_GLOBAL)
-            || tokenType.equals(LuxTypes.K_INCLUDE)
-            || tokenType.equals(LuxTypes.K_INVOKE)
-            || tokenType.equals(LuxTypes.K_LOCAL)
-            || tokenType.equals(LuxTypes.K_LOOP)
-            || tokenType.equals(LuxTypes.K_MACRO)
-            || tokenType.equals(LuxTypes.K_MY)
-            || tokenType.equals(LuxTypes.K_PROGRESS)
-            || tokenType.equals(LuxTypes.K_SHELL)
-            || tokenType.equals(LuxTypes.K_SHELL_ONLY)
-            || tokenType.equals(LuxTypes.K_SLEEP)
-            || tokenType.equals(LuxTypes.K_TIMEOUT)
-            || tokenType.equals(LuxTypes.K_TIMEOUT_ONLY)) {
-      return META_KEYS;
-    } else {
-      return EMPTY_KEYS;
+class LuxSyntaxHighlighter : SyntaxHighlighterBase() {
+    override fun getHighlightingLexer(): Lexer {
+        return LuxLexerAdapter()
     }
-  }
+
+    override fun getTokenHighlights(tokenType: IElementType): Array<TextAttributesKey> {
+        return if (tokenType == LuxTypes.TEXT) {
+            LINE_CONTENT_KEYS
+        } else if (tokenType == LuxTypes.COMMENT) {
+            COMMENT_KEYS
+        } else if (tokenType == LuxTypes.T_IDENT
+                || tokenType == LuxTypes.T_PASTE_VARIABLE
+                || tokenType == LuxTypes.T_PASTE_EXITCODE
+                || tokenType == LuxTypes.T_PASTE_CAPTURE) {
+            IDENT_KEYS
+        } else if (tokenType == TokenType.BAD_CHARACTER) {
+            BAD_CHAR_KEYS
+        } else if (tokenType == LuxTypes.K_EXP_MAYBE_REGEX
+                || tokenType == LuxTypes.K_EXP_REGEX
+                || tokenType == LuxTypes.K_EXP_TEMPLATE
+                || tokenType == LuxTypes.K_EXP_VERBATIM
+                || tokenType == LuxTypes.K_SEND
+                || tokenType == LuxTypes.K_SEND_LN
+                || tokenType == LuxTypes.K_SET_FAILURE
+                || tokenType == LuxTypes.K_SET_FAILURE_ONLY
+                || tokenType == LuxTypes.K_SET_LOOP_BREAK
+                || tokenType == LuxTypes.K_SET_LOOP_BREAK_ONLY
+                || tokenType == LuxTypes.K_SET_SUCCESS
+                || tokenType == LuxTypes.K_SET_SUCCESS_ONLY) {
+            KEYWORD_KEYS
+        } else if (tokenType == LuxTypes.K_ML_EXP_MAYBE_REGEX
+                || tokenType == LuxTypes.K_ML_EXP_REGEX
+                || tokenType == LuxTypes.K_ML_EXP_TEMPLATE
+                || tokenType == LuxTypes.K_ML_EXP_VERBATIM
+                || tokenType == LuxTypes.K_ML_SEND
+                || tokenType == LuxTypes.K_ML_SEND_LN
+                || tokenType == LuxTypes.K_ML_SET_FAILURE
+                || tokenType == LuxTypes.K_ML_SET_LOOP_BREAK
+                || tokenType == LuxTypes.K_ML_SET_SUCCESS) {
+            KEYWORD_KEYS
+        } else if (tokenType == LuxTypes.K_CLEANUP
+                || tokenType == LuxTypes.K_CONFIG
+                || tokenType == LuxTypes.K_DOC
+                || tokenType == LuxTypes.K_DOC_ONLY
+                || tokenType == LuxTypes.K_END_DOC
+                || tokenType == LuxTypes.K_END_LOOP
+                || tokenType == LuxTypes.K_END_MACRO
+                || tokenType == LuxTypes.K_GLOBAL
+                || tokenType == LuxTypes.K_INCLUDE
+                || tokenType == LuxTypes.K_INVOKE
+                || tokenType == LuxTypes.K_LOCAL
+                || tokenType == LuxTypes.K_LOOP
+                || tokenType == LuxTypes.K_MACRO
+                || tokenType == LuxTypes.K_MY
+                || tokenType == LuxTypes.K_PROGRESS
+                || tokenType == LuxTypes.K_SHELL
+                || tokenType == LuxTypes.K_SHELL_ONLY
+                || tokenType == LuxTypes.K_SLEEP
+                || tokenType == LuxTypes.K_TIMEOUT
+                || tokenType == LuxTypes.K_TIMEOUT_ONLY) {
+            META_KEYS
+        } else {
+            EMPTY_KEYS
+        }
+    }
+
+    companion object {
+        val COMMENT = TextAttributesKey.createTextAttributesKey("LUX_COMMENT",
+                DefaultLanguageHighlighterColors.LINE_COMMENT)
+        val LINE_CONTENT = TextAttributesKey.createTextAttributesKey("LUX_LINE_CONTENT",
+                DefaultLanguageHighlighterColors.STRING)
+        val BAD_CHARACTER = TextAttributesKey.createTextAttributesKey("LUX_BAD_CHARACTER",
+                HighlighterColors.BAD_CHARACTER)
+        val KEYWORD = TextAttributesKey.createTextAttributesKey("LUX_KEYWORD",
+                DefaultLanguageHighlighterColors.KEYWORD)
+        val META = TextAttributesKey.createTextAttributesKey("LUX_META",
+                DefaultLanguageHighlighterColors.CLASS_NAME)
+        val IDENT = TextAttributesKey.createTextAttributesKey("LUX_IDENT",
+                DefaultLanguageHighlighterColors.IDENTIFIER)
+
+        private val BAD_CHAR_KEYS = arrayOf(BAD_CHARACTER)
+        private val COMMENT_KEYS = arrayOf(COMMENT)
+        private val LINE_CONTENT_KEYS = arrayOf(LINE_CONTENT)
+        private val KEYWORD_KEYS = arrayOf(KEYWORD)
+        private val META_KEYS = arrayOf(META)
+        private val IDENT_KEYS = arrayOf(IDENT)
+        private val EMPTY_KEYS = arrayOf<TextAttributesKey>()
+    }
 }

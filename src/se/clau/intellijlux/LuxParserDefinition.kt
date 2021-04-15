@@ -1,61 +1,60 @@
-package se.clau.intellijlux;
+package se.clau.intellijlux
 
-import com.intellij.lang.*;
-import com.intellij.lexer.Lexer;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
-import com.intellij.psi.tree.*;
-import se.clau.intellijlux.parser.LuxParser;
-import se.clau.intellijlux.psi.*;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.lang.ASTNode
+import com.intellij.lang.ParserDefinition
+import com.intellij.lang.ParserDefinition.SpaceRequirements
+import com.intellij.lang.PsiParser
+import com.intellij.lexer.Lexer
+import com.intellij.openapi.project.Project
+import com.intellij.psi.FileViewProvider
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.psi.TokenType
+import com.intellij.psi.tree.IFileElementType
+import com.intellij.psi.tree.TokenSet
+import se.clau.intellijlux.parser.LuxParser
+import se.clau.intellijlux.psi.LuxTypes
 
-public class LuxParserDefinition implements ParserDefinition {
-  public static final TokenSet WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE);
-  public static final TokenSet COMMENTS = TokenSet.create(LuxTypes.COMMENT);
+class LuxParserDefinition : ParserDefinition {
+    override fun createLexer(project: Project): Lexer {
+        return LuxLexerAdapter()
+    }
 
-  public static final IFileElementType FILE = new IFileElementType(LuxLanguage.INSTANCE);
+    override fun getWhitespaceTokens(): TokenSet {
+        return WHITE_SPACES
+    }
 
-  @NotNull
-  @Override
-  public Lexer createLexer(Project project) {
-    return new LuxLexerAdapter();
-  }
+    override fun getCommentTokens(): TokenSet {
+        return COMMENTS
+    }
 
-  @NotNull
-  public TokenSet getWhitespaceTokens() {
-    return WHITE_SPACES;
-  }
+    override fun getStringLiteralElements(): TokenSet {
+        return TokenSet.EMPTY
+    }
 
-  @NotNull
-  public TokenSet getCommentTokens() {
-    return COMMENTS;
-  }
+    override fun createParser(project: Project): PsiParser {
+        return LuxParser()
+    }
 
-  @NotNull
-  public TokenSet getStringLiteralElements() {
-    return TokenSet.EMPTY;
-  }
+    override fun getFileNodeType(): IFileElementType {
+        return FILE
+    }
 
-  @NotNull
-  public PsiParser createParser(final Project project) {
-    return new LuxParser();
-  }
+    override fun createFile(viewProvider: FileViewProvider): PsiFile {
+        return LuxFile(viewProvider)
+    }
 
-  @Override
-  public IFileElementType getFileNodeType() {
-    return FILE;
-  }
+    override fun spaceExistenceTypeBetweenTokens(left: ASTNode, right: ASTNode): SpaceRequirements {
+        return SpaceRequirements.MAY
+    }
 
-  public PsiFile createFile(FileViewProvider viewProvider) {
-    return new LuxFile(viewProvider);
-  }
+    override fun createElement(node: ASTNode): PsiElement {
+        return LuxTypes.Factory.createElement(node)
+    }
 
-  public SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right) {
-    return SpaceRequirements.MAY;
-  }
-
-  @NotNull
-  public PsiElement createElement(ASTNode node) {
-    return LuxTypes.Factory.createElement(node);
-  }
+    companion object {
+        val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE)
+        val COMMENTS = TokenSet.create(LuxTypes.COMMENT)
+        val FILE = IFileElementType(LuxLanguage.INSTANCE)
+    }
 }

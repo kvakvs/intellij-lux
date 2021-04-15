@@ -2,8 +2,9 @@
   <id>se.clau.intellij-lux</id>
 
   <name>Lux Script support</name>
-<!--  <version>1.7</version> Version is defined in gradle.properties -->
-  <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko</vendor>
+  <!--  <version>1.7</version> Version is defined in gradle.properties -->
+  <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko
+  </vendor>
 
   <depends>com.intellij.modules.lang</depends>
 
@@ -63,7 +64,8 @@
     <lang.syntaxHighlighterFactory
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxSyntaxHighlighterFactory"/>
-    <colorSettingsPage implementation="se.clau.intellijlux.LuxColorSettingsPage"/>
+    <colorSettingsPage
+            implementation="se.clau.intellijlux.LuxColorSettingsPage"/>
 
     <lang.commenter
             language="Lux"

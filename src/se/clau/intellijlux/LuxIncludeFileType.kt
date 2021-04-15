@@ -1,39 +1,26 @@
-package se.clau.intellijlux;
+package se.clau.intellijlux
 
-import com.intellij.openapi.fileTypes.LanguageFileType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.openapi.fileTypes.LanguageFileType
+import javax.swing.Icon
 
-import javax.swing.*;
+class LuxIncludeFileType private constructor() : LanguageFileType(LuxLanguage.INSTANCE) {
+    override fun getName(): String {
+        return "Lux Include"
+    }
 
-public class LuxIncludeFileType extends LanguageFileType {
-  public static final LuxIncludeFileType INSTANCE = new LuxIncludeFileType();
+    override fun getDescription(): String {
+        return "Lucid Expect"
+    }
 
-  private LuxIncludeFileType() {
-    super(LuxLanguage.INSTANCE);
-  }
+    override fun getDefaultExtension(): String {
+        return "luxinc"
+    }
 
-  @NotNull
-  @Override
-  public String getName() {
-    return "Lux Include";
-  }
+    override fun getIcon(): Icon? {
+        return LuxIcons.FILE_INC
+    }
 
-  @NotNull
-  @Override
-  public String getDescription() {
-    return "Lucid Expect";
-  }
-
-  @NotNull
-  @Override
-  public String getDefaultExtension() {
-    return "luxinc";
-  }
-
-  @Nullable
-  @Override
-  public Icon getIcon() {
-    return LuxIcons.FILE_INC;
-  }
+    companion object {
+        val INSTANCE = LuxIncludeFileType()
+    }
 }

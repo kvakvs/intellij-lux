@@ -1,31 +1,20 @@
-package se.clau.intellijlux;
+package se.clau.intellijlux
 
-import com.intellij.extapi.psi.PsiFileBase;
-import com.intellij.openapi.fileTypes.FileType;
-import com.intellij.psi.FileViewProvider;
-import se.clau.intellijlux.*;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.extapi.psi.PsiFileBase
+import com.intellij.openapi.fileTypes.FileType
+import com.intellij.psi.FileViewProvider
+import javax.swing.Icon
 
-import javax.swing.*;
+class LuxFile(viewProvider: FileViewProvider) : PsiFileBase(viewProvider, LuxLanguage.INSTANCE) {
+    override fun getFileType(): FileType {
+        return LuxFileType.INSTANCE
+    }
 
-public class LuxFile extends PsiFileBase {
-  public LuxFile(@NotNull FileViewProvider viewProvider) {
-    super(viewProvider, LuxLanguage.INSTANCE);
-  }
+    override fun toString(): String {
+        return "Lux Script"
+    }
 
-  @NotNull
-  @Override
-  public FileType getFileType() {
-    return LuxFileType.INSTANCE;
-  }
-
-  @Override
-  public String toString() {
-    return "Lux Script";
-  }
-
-  @Override
-  public Icon getIcon(int flags) {
-    return super.getIcon(flags);
-  }
+    override fun getIcon(flags: Int): Icon? {
+        return super.getIcon(flags)
+    }
 }

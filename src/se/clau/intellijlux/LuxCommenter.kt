@@ -1,26 +1,25 @@
-package se.clau.intellijlux;
+package se.clau.intellijlux
 
-import com.intellij.lang.Commenter;
-import org.jetbrains.annotations.Nullable;
+import com.intellij.lang.Commenter
 
-public class LuxCommenter implements Commenter {
-  @Nullable
-  @Override
-  public String getLineCommentPrefix() { return "#"; }
+class LuxCommenter : Commenter {
+    override fun getLineCommentPrefix(): String? {
+        return "#"
+    }
 
-  @Nullable
-  @Override
-  public String getBlockCommentPrefix() { return ""; }
+    override fun getBlockCommentPrefix(): String? {
+        return ""
+    }
 
-  @Nullable
-  @Override
-  public String getBlockCommentSuffix() { return null; }
+    override fun getBlockCommentSuffix(): String? {
+        return null
+    }
 
-  @Nullable
-  @Override
-  public String getCommentedBlockCommentPrefix() { return null; }
+    override fun getCommentedBlockCommentPrefix(): String? {
+        return null
+    }
 
-  @Nullable
-  @Override
-  public String getCommentedBlockCommentSuffix() { return null; }
+    override fun getCommentedBlockCommentSuffix(): String? {
+        return null
+    }
 }
