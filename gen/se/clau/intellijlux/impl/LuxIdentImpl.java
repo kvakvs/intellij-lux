@@ -10,10 +10,11 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import se.clau.intellijlux.psi.impl.LuxNamedElementImpl;
 import se.clau.intellijlux.psi.*;
+import com.intellij.util.IncorrectOperationException;
 
 public class LuxIdentImpl extends LuxNamedElementImpl implements LuxIdent {
 
-  public LuxIdentImpl(ASTNode node) {
+  public LuxIdentImpl(@NotNull ASTNode node) {
     super(node);
   }
 

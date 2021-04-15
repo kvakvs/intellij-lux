@@ -4,6 +4,7 @@ package se.clau.intellijlux.psi;
 import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
+import com.intellij.util.IncorrectOperationException;
 
 public interface LuxIdent extends LuxNamedElement {
 
@@ -19,12 +20,8 @@ public interface LuxIdent extends LuxNamedElement {
   //matching getName(LuxIdent, ...)
   //methods are not found in null
 
-  //WARNING: setName(...) is skipped
-  //matching setName(LuxIdent, ...)
-  //methods are not found in null
+  PsiElement setName(@NotNull String s) throws IncorrectOperationException;
 
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(LuxIdent, ...)
-  //methods are not found in null
+  @Nullable PsiElement getNameIdentifier();
 
 }

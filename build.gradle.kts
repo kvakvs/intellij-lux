@@ -27,6 +27,10 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
+val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
+compileKotlin.kotlinOptions.freeCompilerArgs += "-Xjvm-default=enable"
+compileKotlin.kotlinOptions.jvmTarget = "11"
+
 //compileJava { options.encoding = "UTF-8" }
 
 allprojects {

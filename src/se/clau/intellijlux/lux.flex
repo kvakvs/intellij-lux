@@ -108,7 +108,6 @@ T_DOC_TEXT = [^$\[] *
 
     "[invoke"{BLANK}   { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE; }
     "[doc]"            { yybegin(IN_DOC); return LuxTypes.K_DOC_ONLY; }
-//    {T_ENDDOC}         { return LuxTypes.K_END_DOC; }
     "[doc"{BLANK}      { yybegin(CONSUME_META); return LuxTypes.K_DOC; }
 
     "[progress"{BLANK} { yybegin(CONSUME_META); return LuxTypes.K_PROGRESS; }

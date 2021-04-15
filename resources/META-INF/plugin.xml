@@ -2,7 +2,6 @@
   <id>se.clau.intellij-lux</id>
 
   <name>Lux Script support</name>
-  <!--  <version>1.7</version> Version is defined in gradle.properties -->
   <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko
   </vendor>
 
@@ -70,8 +69,10 @@
     <lang.commenter
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxCommenter"/>
-    <annotator language="Lux"
-               implementationClass="se.clau.intellijlux.LuxAnnotator"/>
+<!--    <annotator language="Lux"-->
+<!--               implementationClass="se.clau.intellijlux.LuxAnnotator"/>-->
+    <codeInsight.inlayProvider language="Lux"
+                               implementationClass="se.clau.intellijlux.LuxInlayCommandHintsProvider"/>
 
     <psi.referenceContributor
             implementation="se.clau.intellijlux.LuxReferenceContributor"/>
