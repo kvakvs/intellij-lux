@@ -15,7 +15,7 @@ import com.intellij.lexer.FlexLexer;
 %eof{  return;
 %eof}
 
-EndLine         = [\r\n]
+NewLine         = [\r\n]
 BLANK           = [\ \t\f]
 COMMENT         = "#"[^\r\n]*
 SpecialIdent    = \$ "?"
@@ -33,8 +33,13 @@ LineText                = [^\r\n\$]+
 LineTextNoBackslash     = [^\r\n\$\\]+
 
 Whitespace              = [\x20\t] +
-TripleQuote             = "\"\"\""
-LineTextUntilTripleQ    = {LineText} {TripleQuote}
+T_TRIPLE_QUOTE             = "\"\"\""
+AnyWhitespace           = {Whitespace} *
+AnyWhitespaceTripleQ    = {AnyWhitespace} {T_TRIPLE_QUOTE}
+LineTextUntilTripleQ    = {LineText} {T_TRIPLE_QUOTE}
+
+T_ENDDOC = {AnyWhitespace} "[enddoc]"
+T_DOC_TEXT = [^$\[] *
 
 %state IN_DOC
 %state IN_CONFIG
@@ -58,36 +63,37 @@ LineTextUntilTripleQ    = {LineText} {TripleQuote}
 // consumes everything until end of the line, to CRLF
 %state REMAINING_LINE
 
-// consumes everything until """ including CRLF
-%state REMAINING_MULTILINE
+// marks insides of a string """ and lasts until """ including CRLF
+%state IN_TRIPLE_QUOTE
+%state IN_DOC
 
 %%
 
 <YYINITIAL> {
     {COMMENT}    { return LuxTypes.COMMENT; }
 
-    "!"                { yybegin(REMAINING_LINE); return LuxTypes.K_SEND; }
-    {TripleQuote}"!"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND; }
-    "~"                { yybegin(REMAINING_LINE); return LuxTypes.K_SEND_LN; }
-    {TripleQuote}"~"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_SEND_LN; }
-    "???"              { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_VERBATIM; }
-    {TripleQuote}"???" { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_VERBATIM; }
-    "??"               { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_TEMPLATE; }
-    {TripleQuote}"??"  { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_TEMPLATE; }
-    "?+"               { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX; }
-    {TripleQuote}"?+"  { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_MAYBE_REGEX; }
+    "!"                  { yybegin(REMAINING_LINE); return LuxTypes.K_SEND; }
+    {T_TRIPLE_QUOTE}"!"  { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_SEND; }
+    "~"                  { yybegin(REMAINING_LINE); return LuxTypes.K_SEND_LN; }
+    {T_TRIPLE_QUOTE}"~"  { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_SEND_LN; }
+    "???"                { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_VERBATIM; }
+    {T_TRIPLE_QUOTE}"???" { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_VERBATIM; }
+    "??"                 { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_TEMPLATE; }
+    {T_TRIPLE_QUOTE}"??" { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_TEMPLATE; }
+    "?+"                 { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX; }
+    {T_TRIPLE_QUOTE}"?+" { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_MAYBE_REGEX; }
 
-    "?"{EndLine}          { return LuxTypes.K_FLUSH; }
-    "?"                { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX; }
-    {TripleQuote}"?"   { yybegin(REMAINING_MULTILINE); return LuxTypes.K_ML_EXP_REGEX; }
+    "?"{NewLine}         { return LuxTypes.K_FLUSH; }
+    "?"                  { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX; }
+    {T_TRIPLE_QUOTE}"?"  { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_REGEX; }
 
-    "+"{EndLine}   { return LuxTypes.K_SET_SUCCESS_ONLY; }
+    "+"{NewLine}   { return LuxTypes.K_SET_SUCCESS_ONLY; }
     "+"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_SUCCESS; }
 
-    "-"{EndLine}   { return LuxTypes.K_SET_FAILURE_ONLY; }
+    "-"{NewLine}   { return LuxTypes.K_SET_FAILURE_ONLY; }
     "-"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_FAILURE; }
 
-    "@"{EndLine}   { return LuxTypes.K_SET_LOOP_BREAK_ONLY; }
+    "@"{NewLine}   { return LuxTypes.K_SET_LOOP_BREAK_ONLY; }
     "@"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_LOOP_BREAK; }
 
     "]"                { return LuxTypes.T_SQR_CLOSE; }
@@ -101,11 +107,11 @@ LineTextUntilTripleQ    = {LineText} {TripleQuote}
     "[macro"{BLANK}    { yybegin(IN_MACRO); return LuxTypes.K_MACRO; }
 
     "[invoke"{BLANK}   { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE; }
-    "[doc]"            { return LuxTypes.K_DOC_ONLY; }
-    "[enddoc]"         { return LuxTypes.K_END_DOC; }
+    "[doc]"            { yybegin(IN_DOC); return LuxTypes.K_DOC_ONLY; }
+//    {T_ENDDOC}         { return LuxTypes.K_END_DOC; }
     "[doc"{BLANK}      { yybegin(CONSUME_META); return LuxTypes.K_DOC; }
 
-    "[progress"{BLANK}      { yybegin(CONSUME_META); return LuxTypes.K_PROGRESS; }
+    "[progress"{BLANK} { yybegin(CONSUME_META); return LuxTypes.K_PROGRESS; }
 
     "[config"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG; }
     "[local"{BLANK}    { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL; }
@@ -122,34 +128,43 @@ LineTextUntilTripleQ    = {LineText} {TripleQuote}
     "[include"{BLANK}  { yybegin(CONSUME_META); return LuxTypes.K_INCLUDE; }
 
     {BLANK}+           { return TokenType.WHITE_SPACE; }
-    {EndLine}+         { return LuxTypes.CRLF; }
+    {NewLine}+         { return LuxTypes.CRLF; }
 }
 
 <REMAINING_LINE> {
-    "\\" {EndLine}      { return LuxTypes.LINE_CONTINUATION; }
-    {Whitespace}        { return LuxTypes.TEXT; }
+    "\\" {NewLine}        { return LuxTypes.LINE_CONTINUATION; }
+    {Whitespace}          { return LuxTypes.TEXT; }
     {LineTextNoBackslash} { return LuxTypes.TEXT; }
-    {LineDollar}        { return LuxTypes.T_DOLLAR; }
-    {LinePasteVar}      { return LuxTypes.T_PASTE_VARIABLE; }
-    {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
-    {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
-    {LinePasteExitcode} { return LuxTypes.T_PASTE_EXITCODE; }
-    {EndLine}           { yybegin(YYINITIAL); return LuxTypes.CRLF; }
-    "\\"                { return LuxTypes.TEXT; }
+    {LineDollar}          { return LuxTypes.T_DOLLAR; }
+    {LinePasteVar}        { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteVarCurly}   { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteCapture}    { return LuxTypes.T_PASTE_CAPTURE; }
+    {LinePasteExitcode}   { return LuxTypes.T_PASTE_EXITCODE; }
+    {NewLine}             { yybegin(YYINITIAL); return LuxTypes.CRLF; }
+    "\\"                  { return LuxTypes.TEXT; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }
 
-<REMAINING_MULTILINE> {
-    {TripleQuote}           { yybegin(YYINITIAL); return LuxTypes.END_MULTILINE; }
+<IN_TRIPLE_QUOTE> {
+    {AnyWhitespaceTripleQ}  { yybegin(YYINITIAL); return LuxTypes.T_TRIPLE_QUOTE; }
     {LineTextUntilTripleQ}  { yybegin(YYINITIAL); return LuxTypes.TEXT; }
     {LineText}              { return LuxTypes.TEXT; }
     {LineDollar}            { return LuxTypes.T_DOLLAR; }
     {LinePasteVar}          { return LuxTypes.T_PASTE_VARIABLE; }
-    {LinePasteVarCurly} { return LuxTypes.T_PASTE_VARIABLE; }
-    {LinePasteCapture}  { return LuxTypes.T_PASTE_CAPTURE; }
-    {LinePasteExitcode} { return LuxTypes.T_PASTE_EXITCODE; }
-    {EndLine}           { return LuxTypes.CRLF; }
+    {LinePasteVarCurly}     { return LuxTypes.T_PASTE_VARIABLE; }
+    {LinePasteCapture}      { return LuxTypes.T_PASTE_CAPTURE; }
+    {LinePasteExitcode}     { return LuxTypes.T_PASTE_EXITCODE; }
+    {NewLine}               { return LuxTypes.CRLF; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
+}
+
+<IN_DOC> {
+    {T_ENDDOC}         { yybegin(YYINITIAL); return LuxTypes.K_END_DOC; }
+    {T_DOC_TEXT}       { return LuxTypes.TEXT; }
+    "["                { return LuxTypes.TEXT; }
+//    {LineText}         { return LuxTypes.TEXT; }
+//    {NewLine}          { return LuxTypes.CRLF; }
+//    {AnyWhitespace}    { return LuxTypes.TEXT; }
 }
 
 <IN_LOOP> {
@@ -166,7 +181,7 @@ LineTextUntilTripleQ    = {LineText} {TripleQuote}
 
 // Scan the rest of the line until ]\n
 <CONSUME_META> {
-    "]" {EndLine}       { yybegin(YYINITIAL); return LuxTypes.END_META; }
+    "]" {NewLine}       { yybegin(YYINITIAL); return LuxTypes.END_META; }
     {MetaText}          { return LuxTypes.TEXT; }
     {LineDollar}        { return LuxTypes.T_DOLLAR; }
     {LinePasteVar}      { return LuxTypes.T_PASTE_VARIABLE; }

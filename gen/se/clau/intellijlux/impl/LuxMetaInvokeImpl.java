@@ -21,6 +21,7 @@ public class LuxMetaInvokeImpl extends ASTWrapperPsiElement implements LuxMetaIn
     visitor.visitMetaInvoke(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);

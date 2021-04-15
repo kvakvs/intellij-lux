@@ -21,6 +21,7 @@ public class LuxMetaLoopImpl extends ASTWrapperPsiElement implements LuxMetaLoop
     visitor.visitMetaLoop(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);

@@ -21,6 +21,7 @@ public class LuxSendImpl extends ASTWrapperPsiElement implements LuxSend {
     visitor.visitSend(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);

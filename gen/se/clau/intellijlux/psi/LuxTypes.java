@@ -37,7 +37,6 @@ public interface LuxTypes {
   IElementType COMMENT = new LuxTokenType("COMMENT");
   IElementType CRLF = new LuxTokenType("CRLF");
   IElementType END_META = new LuxTokenType("END_META");
-  IElementType END_MULTILINE = new LuxTokenType("END_MULTILINE");
   IElementType K_CLEANUP = new LuxTokenType("K_CLEANUP");
   IElementType K_CONFIG = new LuxTokenType("K_CONFIG");
   IElementType K_DOC = new LuxTokenType("K_DOC");
@@ -102,6 +101,7 @@ public interface LuxTypes {
   IElementType T_SQR_OPEN = new LuxTokenType("[");
   IElementType T_TILDE = new LuxTokenType("~");
   IElementType T_TRIPLE_QUESTION = new LuxTokenType("???");
+  IElementType T_TRIPLE_QUOTE = new LuxTokenType("T_TRIPLE_QUOTE");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {

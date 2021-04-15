@@ -21,6 +21,7 @@ public class LuxMetaTimeoutImpl extends ASTWrapperPsiElement implements LuxMetaT
     visitor.visitMetaTimeout(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);

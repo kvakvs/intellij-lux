@@ -21,6 +21,7 @@ public class LuxMetaShellImpl extends ASTWrapperPsiElement implements LuxMetaShe
     visitor.visitMetaShell(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);

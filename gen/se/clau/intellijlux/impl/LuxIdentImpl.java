@@ -10,11 +10,10 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import se.clau.intellijlux.psi.impl.LuxNamedElementImpl;
 import se.clau.intellijlux.psi.*;
-import com.intellij.util.IncorrectOperationException;
 
 public class LuxIdentImpl extends LuxNamedElementImpl implements LuxIdent {
 
-  public LuxIdentImpl(@NotNull ASTNode node) {
+  public LuxIdentImpl(ASTNode node) {
     super(node);
   }
 
@@ -22,6 +21,7 @@ public class LuxIdentImpl extends LuxNamedElementImpl implements LuxIdent {
     visitor.visitIdent(this);
   }
 
+  @Override
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);

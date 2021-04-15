@@ -49,7 +49,7 @@ ident ::= T_IDENT {
     methods=[getKey getValue getName setName getNameIdentifier]
 }
 
-meta_doc ::= K_DOC_ONLY | (K_DOC meta_contents)
+meta_doc ::= K_DOC | (K_DOC_ONLY multiline_text K_END_DOC)
 
 meta_shell ::= K_SHELL_ONLY | (K_SHELL ident meta_contents)
 meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL meta_contents)
@@ -72,29 +72,38 @@ meta_my ::= K_MY inner_x_equals_y
 
 private inner inner_x_equals_y ::= ident T_EQUALS meta_contents
 
-send ::= (K_SEND inner_line) | (K_ML_SEND inner_multiline)
-send_ln ::= (K_SEND_LN inner_line) | (K_ML_SEND_LN inner_multiline)
-expect_verbatim ::= (K_EXP_VERBATIM inner_line) | (K_ML_EXP_VERBATIM inner_multiline)
-expect_template ::= (K_EXP_TEMPLATE inner_line) | (K_ML_EXP_TEMPLATE inner_multiline)
-expect_regex ::= (K_EXP_REGEX inner_line) | (K_ML_EXP_REGEX inner_multiline)
-expect_maybe_regex ::= (K_EXP_MAYBE_REGEX inner_line) | (K_ML_EXP_MAYBE_REGEX inner_multiline)
-set_failure ::= K_SET_FAILURE_ONLY | (K_SET_FAILURE inner_line) | (K_ML_SET_FAILURE inner_multiline)
-set_success ::= K_SET_SUCCESS_ONLY | (K_SET_SUCCESS inner_line) | (K_ML_SET_SUCCESS inner_multiline)
-set_loop_break ::= K_SET_LOOP_BREAK_ONLY | (K_SET_LOOP_BREAK inner_line) | (K_ML_SET_LOOP_BREAK inner_multiline)
+send ::= (K_SEND inner_line)
+    | (K_ML_SEND inner_multiline T_TRIPLE_QUOTE)
+send_ln ::= (K_SEND_LN inner_line)
+    | (K_ML_SEND_LN inner_multiline T_TRIPLE_QUOTE)
+expect_verbatim ::= (K_EXP_VERBATIM inner_line)
+    | (K_ML_EXP_VERBATIM inner_multiline T_TRIPLE_QUOTE)
+expect_template ::= (K_EXP_TEMPLATE inner_line)
+    | (K_ML_EXP_TEMPLATE inner_multiline T_TRIPLE_QUOTE)
+expect_regex ::= (K_EXP_REGEX inner_line)
+    | (K_ML_EXP_REGEX inner_multiline T_TRIPLE_QUOTE)
+expect_maybe_regex ::= (K_EXP_MAYBE_REGEX inner_line)
+    | (K_ML_EXP_MAYBE_REGEX inner_multiline T_TRIPLE_QUOTE)
+set_failure ::= K_SET_FAILURE_ONLY
+    | (K_SET_FAILURE inner_line)
+    | (K_ML_SET_FAILURE inner_multiline T_TRIPLE_QUOTE)
+set_success ::= K_SET_SUCCESS_ONLY
+    | (K_SET_SUCCESS inner_line)
+    | (K_ML_SET_SUCCESS inner_multiline T_TRIPLE_QUOTE)
+set_loop_break ::= K_SET_LOOP_BREAK_ONLY
+    | (K_SET_LOOP_BREAK inner_line)
+    | (K_ML_SET_LOOP_BREAK inner_multiline T_TRIPLE_QUOTE)
 
 private inner inner_line ::= line_contents * CRLF
+
 // LINE_CONTINUATION in line_contents for when it is broken with \\
 private line_contents ::= TEXT | paste | LINE_CONTINUATION
 
-private inner inner_multiline ::= multiline_contents * END_MULTILINE
+private inner inner_multiline ::= multiline_contents *
 private multiline_contents ::= TEXT | paste | CRLF
+
+// Like multiline contents above but cannot contain pasted $VARIABLEs
+private multiline_text ::= TEXT | CRLF
 
 // A pasted value $name ${name} or $123
 private paste ::= T_DOLLAR | T_PASTE_VARIABLE | T_PASTE_CAPTURE | T_PASTE_EXITCODE
-
-//setFailure0 ::= '-' CRLF
-//setFailure ::= '-' regex CRLF
-//setSuccess0 ::= '+' CRLF
-//setSuccess ::= '+' regex CRLF
-//setBreak0 ::= '@' CRLF
-//setBreak ::= '@' regex CRLF
