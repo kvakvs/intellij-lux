@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>se.clau.intellij-lux</id>
 
-  <name>Lux Script support</name>
+  <name>Lux Script Support</name>
   <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko
   </vendor>
 

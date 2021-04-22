@@ -88,11 +88,21 @@ class LuxInlayCommandHintsProvider :
                 when (element) {
                     is LuxSend -> {
                         val presentation = typeHintsFactory.textHint("send:")
-                        sink.addInlineElement(element.endOffset, false, presentation, false)
+                        sink.addInlineElement(
+                            offset = element.endOffset + 1,
+                            relatesToPrecedingText = false,
+                            presentation = presentation,
+                            placeAtTheEndOfLine = false
+                        )
                     }
                     is LuxSendLn -> {
                         val presentation = typeHintsFactory.textHint("send ln:")
-                        sink.addInlineElement(element.endOffset, false, presentation, false)
+                        sink.addInlineElement(
+                            offset = element.endOffset + 1,
+                            relatesToPrecedingText = false,
+                            presentation = presentation,
+                            placeAtTheEndOfLine = false
+                        )
                     }
                 }
             }
@@ -100,20 +110,44 @@ class LuxInlayCommandHintsProvider :
             private fun presentExpect(element: PsiElement) {
                 when (element) {
                     is LuxExpectRegex -> {
-                        val presentation = typeHintsFactory.textHint("expect regex:")
-                        sink.addInlineElement(element.endOffset, false, presentation, false)
+                        val presentation =
+                            typeHintsFactory.textHint("expect regex:")
+                        sink.addInlineElement(
+                            offset = element.endOffset + 2,
+                            relatesToPrecedingText = false,
+                            presentation = presentation,
+                            placeAtTheEndOfLine = false
+                        )
                     }
                     is LuxExpectMaybeRegex -> {
-                        val presentation = typeHintsFactory.textHint("expect maybe regex:")
-                        sink.addInlineElement(element.endOffset, false, presentation, false)
+                        val presentation =
+                            typeHintsFactory.textHint("expect maybe regex:")
+                        sink.addInlineElement(
+                            offset = element.endOffset + 2,
+                            relatesToPrecedingText = false,
+                            presentation = presentation,
+                            placeAtTheEndOfLine = false
+                        )
                     }
                     is LuxExpectTemplate -> {
-                        val presentation = typeHintsFactory.textHint("expect template:")
-                        sink.addInlineElement(element.endOffset, false, presentation, false)
+                        val presentation =
+                            typeHintsFactory.textHint("expect template:")
+                        sink.addInlineElement(
+                            offset = element.endOffset + 3,
+                            relatesToPrecedingText = false,
+                            presentation = presentation,
+                            placeAtTheEndOfLine = false
+                        )
                     }
                     is LuxExpectVerbatim -> {
-                        val presentation = typeHintsFactory.textHint("expect verbatim:")
-                        sink.addInlineElement(element.endOffset, false, presentation, false)
+                        val presentation =
+                            typeHintsFactory.textHint("expect verbatim:")
+                        sink.addInlineElement(
+                            offset = element.endOffset + 3,
+                            relatesToPrecedingText = false,
+                            presentation = presentation,
+                            placeAtTheEndOfLine = false
+                        )
                     }
                 }
             }
