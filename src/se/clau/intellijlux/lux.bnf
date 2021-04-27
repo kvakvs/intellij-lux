@@ -26,21 +26,22 @@
   ]
 }
 
-luxFile ::= item *
+lux_file ::= lux_file_item *
 
-private item ::= (
+private lux_command ::=
     COMMENT | CRLF
     | meta_doc | K_END_DOC
     | meta_shell | meta_newshell
     | meta_timeout | meta_sleep
     | meta_config | meta_local | meta_global | meta_my
     | K_CLEANUP | meta_include
-    | meta_macro | K_END_MACRO | meta_invoke
+    | meta_invoke
     | meta_loop | K_END_LOOP
     | meta_progress
     | send | send_ln | expect_verbatim | expect_template | expect_regex
     | flush | expect_maybe_regex | set_failure | set_success | set_loop_break
-    )
+
+private lux_file_item ::= meta_macro | lux_command
 
 flush ::= K_FLUSH
 ident ::= T_IDENT {
@@ -56,7 +57,12 @@ meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL meta_contents)
 meta_timeout ::= K_TIMEOUT_ONLY | (K_TIMEOUT inner_number)
 meta_sleep ::= K_SLEEP inner_number
 meta_include ::= K_INCLUDE meta_contents
+
+// Macro..Endmacro groups some Lux directives together and gives them a name
 meta_macro ::= (K_MACRO ident) meta_contents
+    lux_command *
+    K_END_MACRO
+
 meta_invoke ::= (K_INVOKE ident) meta_contents
 meta_loop ::= (K_LOOP ident) meta_contents
 meta_progress ::= K_PROGRESS meta_contents

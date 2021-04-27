@@ -29,8 +29,146 @@ public class LuxMetaMacroImpl extends ASTWrapperPsiElement implements LuxMetaMac
 
   @Override
   @NotNull
+  public List<LuxExpectMaybeRegex> getExpectMaybeRegexList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxExpectMaybeRegex.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxExpectRegex> getExpectRegexList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxExpectRegex.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxExpectTemplate> getExpectTemplateList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxExpectTemplate.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxExpectVerbatim> getExpectVerbatimList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxExpectVerbatim.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxFlush> getFlushList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxFlush.class);
+  }
+
+  @Override
+  @NotNull
   public LuxIdent getIdent() {
     return findNotNullChildByClass(LuxIdent.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaConfig> getMetaConfigList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaConfig.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaDoc> getMetaDocList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaDoc.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaGlobal> getMetaGlobalList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaGlobal.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaInclude> getMetaIncludeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaInclude.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaInvoke> getMetaInvokeList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaInvoke.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaLocal> getMetaLocalList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaLocal.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaLoop> getMetaLoopList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaLoop.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaMy> getMetaMyList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaMy.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaNewshell> getMetaNewshellList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaNewshell.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaProgress> getMetaProgressList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaProgress.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaShell> getMetaShellList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaShell.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaSleep> getMetaSleepList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaSleep.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMetaTimeout> getMetaTimeoutList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMetaTimeout.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxSend> getSendList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSend.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxSendLn> getSendLnList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSendLn.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxSetFailure> getSetFailureList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetFailure.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxSetLoopBreak> getSetLoopBreakList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetLoopBreak.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxSetSuccess> getSetSuccessList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetSuccess.class);
   }
 
 }

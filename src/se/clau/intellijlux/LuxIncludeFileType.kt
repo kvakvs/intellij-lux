@@ -1,26 +1,17 @@
 package se.clau.intellijlux
 
 import com.intellij.openapi.fileTypes.LanguageFileType
+import com.intellij.openapi.vfs.VirtualFile
 import javax.swing.Icon
 
-class LuxIncludeFileType private constructor() : LanguageFileType(LuxLanguage.INSTANCE) {
-    override fun getName(): String {
-        return "Lux Include"
-    }
+object LuxIncludeFileType : LanguageFileType(LuxLanguage) {
+  override fun getName(): String = "Lux Include"
 
-    override fun getDescription(): String {
-        return "Lucid Expect"
-    }
+  override fun getDescription(): String = "Lux header"
 
-    override fun getDefaultExtension(): String {
-        return "luxinc"
-    }
+  override fun getDefaultExtension(): String = "luxinc"
 
-    override fun getIcon(): Icon? {
-        return LuxIcons.FILE_INC
-    }
+  override fun getIcon(): Icon = LuxIcons.FILE_INC
 
-    companion object {
-        val INSTANCE = LuxIncludeFileType()
-    }
+  override fun getCharset(file: VirtualFile, content: ByteArray): String = "UTF-8"
 }

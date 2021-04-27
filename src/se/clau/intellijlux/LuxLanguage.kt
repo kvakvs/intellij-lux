@@ -1,11 +1,9 @@
-package se.clau.intellijlux;
+package se.clau.intellijlux
 
-import com.intellij.lang.Language;
+import com.intellij.lang.Language
 
-public class LuxLanguage extends Language {
-  public static final LuxLanguage INSTANCE = new LuxLanguage();
+object LuxLanguage : Language("Lux", "text/lux") {
+  override fun isCaseSensitive() = true
 
-  private LuxLanguage() {
-    super("Lux");
-  }
+  override fun getDisplayName() = "Lux"
 }

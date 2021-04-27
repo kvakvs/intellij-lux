@@ -32,7 +32,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   static boolean parse_root_(IElementType t, PsiBuilder b, int l) {
-    return luxFile(b, l + 1);
+    return lux_file(b, l + 1);
   }
 
   /* ********************************************************** */
@@ -269,19 +269,30 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // TEXT | paste | LINE_CONTINUATION
+  static boolean line_contents(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "line_contents")) return false;
+    boolean r;
+    r = consumeToken(b, TEXT);
+    if (!r) r = paste(b, l + 1);
+    if (!r) r = consumeToken(b, LINE_CONTINUATION);
+    return r;
+  }
+
+  /* ********************************************************** */
   // COMMENT | CRLF
   //     | meta_doc | K_END_DOC
   //     | meta_shell | meta_newshell
   //     | meta_timeout | meta_sleep
   //     | meta_config | meta_local | meta_global | meta_my
   //     | K_CLEANUP | meta_include
-  //     | meta_macro | K_END_MACRO | meta_invoke
+  //     | meta_invoke
   //     | meta_loop | K_END_LOOP
   //     | meta_progress
   //     | send | send_ln | expect_verbatim | expect_template | expect_regex
   //     | flush | expect_maybe_regex | set_failure | set_success | set_loop_break
-  static boolean item(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "item")) return false;
+  static boolean lux_command(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "lux_command")) return false;
     boolean r;
     r = consumeToken(b, COMMENT);
     if (!r) r = consumeToken(b, CRLF);
@@ -297,8 +308,6 @@ public class LuxParser implements PsiParser, LightPsiParser {
     if (!r) r = meta_my(b, l + 1);
     if (!r) r = consumeToken(b, K_CLEANUP);
     if (!r) r = meta_include(b, l + 1);
-    if (!r) r = meta_macro(b, l + 1);
-    if (!r) r = consumeToken(b, K_END_MACRO);
     if (!r) r = meta_invoke(b, l + 1);
     if (!r) r = meta_loop(b, l + 1);
     if (!r) r = consumeToken(b, K_END_LOOP);
@@ -317,26 +326,25 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // TEXT | paste | LINE_CONTINUATION
-  static boolean line_contents(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "line_contents")) return false;
-    boolean r;
-    r = consumeToken(b, TEXT);
-    if (!r) r = paste(b, l + 1);
-    if (!r) r = consumeToken(b, LINE_CONTINUATION);
-    return r;
+  // lux_file_item *
+  static boolean lux_file(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "lux_file")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!lux_file_item(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "lux_file", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */
-  // item *
-  static boolean luxFile(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "luxFile")) return false;
-    while (true) {
-      int c = current_position_(b);
-      if (!item(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "luxFile", c)) break;
-    }
-    return true;
+  // meta_macro | lux_command
+  static boolean lux_file_item(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "lux_file_item")) return false;
+    boolean r;
+    r = meta_macro(b, l + 1);
+    if (!r) r = lux_command(b, l + 1);
+    return r;
   }
 
   /* ********************************************************** */
@@ -511,6 +519,8 @@ public class LuxParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // (K_MACRO ident) meta_contents
+  //     lux_command *
+  //     K_END_MACRO
   public static boolean meta_macro(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_macro")) return false;
     if (!nextTokenIs(b, K_MACRO)) return false;
@@ -518,6 +528,8 @@ public class LuxParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b);
     r = meta_macro_0(b, l + 1);
     r = r && meta_contents(b, l + 1);
+    r = r && meta_macro_2(b, l + 1);
+    r = r && consumeToken(b, K_END_MACRO);
     exit_section_(b, m, META_MACRO, r);
     return r;
   }
@@ -531,6 +543,17 @@ public class LuxParser implements PsiParser, LightPsiParser {
     r = r && ident(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
+  }
+
+  // lux_command *
+  private static boolean meta_macro_2(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "meta_macro_2")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!lux_command(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "meta_macro_2", c)) break;
+    }
+    return true;
   }
 
   /* ********************************************************** */

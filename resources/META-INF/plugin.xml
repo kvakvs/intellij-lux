@@ -2,8 +2,7 @@
   <id>se.clau.intellij-lux</id>
 
   <name>Lux Script Support</name>
-  <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko
-  </vendor>
+  <vendor email="dmytro.lytovchenko@gmail.com" url="">Dmytro Lytovchenko</vendor>
 
   <depends>com.intellij.modules.lang</depends>
 
@@ -36,7 +35,7 @@
   </change-notes>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="173.0"/>
+  <idea-version since-build="211"/>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->

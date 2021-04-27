@@ -16,45 +16,36 @@ import se.clau.intellijlux.parser.LuxParser
 import se.clau.intellijlux.psi.LuxTypes
 
 class LuxParserDefinition : ParserDefinition {
-    override fun createLexer(project: Project): Lexer {
-        return LuxLexerAdapter()
-    }
+  override fun createLexer(project: Project): Lexer = LuxLexerAdapter()
 
-    override fun getWhitespaceTokens(): TokenSet {
-        return WHITE_SPACES
-    }
+  override fun getWhitespaceTokens(): TokenSet = WHITE_SPACES
 
-    override fun getCommentTokens(): TokenSet {
-        return COMMENTS
-    }
+  override fun getCommentTokens(): TokenSet = COMMENTS
 
-    override fun getStringLiteralElements(): TokenSet {
-        return TokenSet.EMPTY
-    }
+  override fun getStringLiteralElements(): TokenSet = TokenSet.EMPTY
 
-    override fun createParser(project: Project): PsiParser {
-        return LuxParser()
-    }
+  override fun createParser(project: Project): PsiParser = LuxParser()
 
-    override fun getFileNodeType(): IFileElementType {
-        return FILE
-    }
+  override fun getFileNodeType(): IFileElementType = FILE
 
-    override fun createFile(viewProvider: FileViewProvider): PsiFile {
-        return LuxFile(viewProvider)
-    }
+  override fun createFile(viewProvider: FileViewProvider): PsiFile {
+    return LuxFile(viewProvider)
+  }
 
-    override fun spaceExistenceTypeBetweenTokens(left: ASTNode, right: ASTNode): SpaceRequirements {
-        return SpaceRequirements.MAY
-    }
+  override fun spaceExistenceTypeBetweenTokens(
+    left: ASTNode,
+    right: ASTNode
+  ): SpaceRequirements {
+    return SpaceRequirements.MAY
+  }
 
-    override fun createElement(node: ASTNode): PsiElement {
-        return LuxTypes.Factory.createElement(node)
-    }
+  override fun createElement(node: ASTNode): PsiElement {
+    return LuxTypes.Factory.createElement(node)
+  }
 
-    companion object {
-        val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE)
-        val COMMENTS = TokenSet.create(LuxTypes.COMMENT)
-        val FILE = IFileElementType(LuxLanguage.INSTANCE)
-    }
+  companion object {
+    val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE)
+    val COMMENTS = TokenSet.create(LuxTypes.COMMENT)
+    val FILE = IFileElementType(LuxLanguage)
+  }
 }
