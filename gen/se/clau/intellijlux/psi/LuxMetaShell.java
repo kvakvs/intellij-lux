@@ -10,4 +10,13 @@ public interface LuxMetaShell extends PsiElement {
   @Nullable
   LuxIdent getIdent();
 
+  @Nullable
+  PsiElement getEndMeta();
+
+  @Nullable
+  PsiElement getKShell();
+
+  @Nullable
+  PsiElement getKShellOnly();
+
 }

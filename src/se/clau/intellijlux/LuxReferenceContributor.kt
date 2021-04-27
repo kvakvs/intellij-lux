@@ -8,6 +8,7 @@ import se.clau.intellijlux.psi.LuxIdent
 
 class LuxReferenceContributor : PsiReferenceContributor() {
   override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
+
     val refProvider = object : PsiReferenceProvider() {
       override fun getReferencesByElement(
         idntElement: PsiElement,
@@ -23,6 +24,7 @@ class LuxReferenceContributor : PsiReferenceContributor() {
         )
       }
     }
+
     registrar.registerReferenceProvider(
       PlatformPatterns.psiElement(LuxIdent::class.java),
       refProvider

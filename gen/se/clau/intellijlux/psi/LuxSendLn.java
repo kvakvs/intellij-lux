@@ -7,4 +7,13 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxSendLn extends PsiElement {
 
+  @Nullable
+  PsiElement getKMlSendLn();
+
+  @Nullable
+  PsiElement getKSendLn();
+
+  @Nullable
+  PsiElement getTTripleQuote();
+
 }

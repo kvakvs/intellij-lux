@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaNewshellImpl extends ASTWrapperPsiElement implements LuxMetaNewshell {
 
@@ -25,6 +26,24 @@ public class LuxMetaNewshellImpl extends ASTWrapperPsiElement implements LuxMeta
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getEndMeta() {
+    return findChildByType(END_META);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKNewshell() {
+    return findChildByType(K_NEWSHELL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKNewshellOnly() {
+    return findChildByType(K_NEWSHELL_ONLY);
   }
 
 }

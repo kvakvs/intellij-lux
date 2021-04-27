@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaIncludeImpl extends ASTWrapperPsiElement implements LuxMetaInclude {
 
@@ -25,6 +26,18 @@ public class LuxMetaIncludeImpl extends ASTWrapperPsiElement implements LuxMetaI
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getEndMeta() {
+    return findNotNullChildByType(END_META);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getKInclude() {
+    return findNotNullChildByType(K_INCLUDE);
   }
 
 }

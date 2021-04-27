@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaInvokeImpl extends ASTWrapperPsiElement implements LuxMetaInvoke {
 
@@ -31,6 +32,18 @@ public class LuxMetaInvokeImpl extends ASTWrapperPsiElement implements LuxMetaIn
   @NotNull
   public LuxIdent getIdent() {
     return findNotNullChildByClass(LuxIdent.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getEndMeta() {
+    return findNotNullChildByType(END_META);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getKInvoke() {
+    return findNotNullChildByType(K_INVOKE);
   }
 
 }

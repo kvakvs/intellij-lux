@@ -1,19 +1,19 @@
-package se.clau.intellijlux.psi;
+package se.clau.intellijlux.psi
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.*;
-import se.clau.intellijlux.LuxFile;
-import se.clau.intellijlux.LuxFileType;
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiFileFactory
+import se.clau.intellijlux.LuxFile
+import se.clau.intellijlux.LuxFileType
 
-public class LuxElementFactory {
-  public static LuxIdent createProperty(Project project, String name) {
-    final LuxFile file = createFile(project, name);
-    return (LuxIdent) file.getFirstChild();
+object LuxElementFactory {
+  fun createProperty(project: Project?, name: String?): LuxIdent {
+    val file = createFile(project, name)
+    return file.firstChild as LuxIdent
   }
 
-  public static LuxFile createFile(Project project, String text) {
-    String name = "dummy.lux";
-    return (LuxFile) PsiFileFactory.getInstance(project).
-            createFileFromText(name, LuxFileType.INSTANCE, text);
+  fun createFile(project: Project?, text: String?): LuxFile {
+    val name = "dummy.lux"
+    return PsiFileFactory.getInstance(project)
+      .createFileFromText(name, LuxFileType, text!!) as LuxFile
   }
 }

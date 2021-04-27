@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaDocImpl extends ASTWrapperPsiElement implements LuxMetaDoc {
 
@@ -25,6 +26,36 @@ public class LuxMetaDocImpl extends ASTWrapperPsiElement implements LuxMetaDoc {
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getCrlf() {
+    return findChildByType(CRLF);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKDoc() {
+    return findChildByType(K_DOC);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKDocOnly() {
+    return findChildByType(K_DOC_ONLY);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKEndDoc() {
+    return findChildByType(K_END_DOC);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTSqrClose() {
+    return findChildByType(T_SQR_CLOSE);
   }
 
 }

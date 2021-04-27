@@ -10,4 +10,10 @@ public interface LuxMetaInvoke extends PsiElement {
   @NotNull
   LuxIdent getIdent();
 
+  @NotNull
+  PsiElement getEndMeta();
+
+  @NotNull
+  PsiElement getKInvoke();
+
 }

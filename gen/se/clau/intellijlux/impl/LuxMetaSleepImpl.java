@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaSleepImpl extends ASTWrapperPsiElement implements LuxMetaSleep {
 
@@ -25,6 +26,30 @@ public class LuxMetaSleepImpl extends ASTWrapperPsiElement implements LuxMetaSle
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getCrlf() {
+    return findNotNullChildByType(CRLF);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getKSleep() {
+    return findNotNullChildByType(K_SLEEP);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getTNumber() {
+    return findNotNullChildByType(T_NUMBER);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getTSqrClose() {
+    return findNotNullChildByType(T_SQR_CLOSE);
   }
 
 }

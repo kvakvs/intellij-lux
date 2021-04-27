@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxExpectVerbatimImpl extends ASTWrapperPsiElement implements LuxExpectVerbatim {
 
@@ -25,6 +26,24 @@ public class LuxExpectVerbatimImpl extends ASTWrapperPsiElement implements LuxEx
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKExpVerbatim() {
+    return findChildByType(K_EXP_VERBATIM);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKMlExpVerbatim() {
+    return findChildByType(K_ML_EXP_VERBATIM);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTTripleQuote() {
+    return findChildByType(T_TRIPLE_QUOTE);
   }
 
 }

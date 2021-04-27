@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxSendImpl extends ASTWrapperPsiElement implements LuxSend {
 
@@ -25,6 +26,24 @@ public class LuxSendImpl extends ASTWrapperPsiElement implements LuxSend {
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKMlSend() {
+    return findChildByType(K_ML_SEND);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKSend() {
+    return findChildByType(K_SEND);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTTripleQuote() {
+    return findChildByType(T_TRIPLE_QUOTE);
   }
 
 }

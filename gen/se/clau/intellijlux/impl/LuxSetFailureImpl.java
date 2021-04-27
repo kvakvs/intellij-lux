@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxSetFailureImpl extends ASTWrapperPsiElement implements LuxSetFailure {
 
@@ -25,6 +26,36 @@ public class LuxSetFailureImpl extends ASTWrapperPsiElement implements LuxSetFai
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getCrlf() {
+    return findChildByType(CRLF);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKMlSetFailure() {
+    return findChildByType(K_ML_SET_FAILURE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKSetFailure() {
+    return findChildByType(K_SET_FAILURE);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKSetFailureOnly() {
+    return findChildByType(K_SET_FAILURE_ONLY);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTTripleQuote() {
+    return findChildByType(T_TRIPLE_QUOTE);
   }
 
 }

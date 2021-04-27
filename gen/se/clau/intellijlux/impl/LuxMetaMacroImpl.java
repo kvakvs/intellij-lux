@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaMacroImpl extends ASTWrapperPsiElement implements LuxMetaMacro {
 
@@ -169,6 +170,24 @@ public class LuxMetaMacroImpl extends ASTWrapperPsiElement implements LuxMetaMac
   @NotNull
   public List<LuxSetSuccess> getSetSuccessList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetSuccess.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getEndMeta() {
+    return findNotNullChildByType(END_META);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getKEndMacro() {
+    return findNotNullChildByType(K_END_MACRO);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getKMacro() {
+    return findNotNullChildByType(K_MACRO);
   }
 
 }

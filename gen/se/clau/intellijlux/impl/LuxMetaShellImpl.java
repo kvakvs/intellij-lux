@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaShellImpl extends ASTWrapperPsiElement implements LuxMetaShell {
 
@@ -31,6 +32,24 @@ public class LuxMetaShellImpl extends ASTWrapperPsiElement implements LuxMetaShe
   @Nullable
   public LuxIdent getIdent() {
     return findChildByClass(LuxIdent.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getEndMeta() {
+    return findChildByType(END_META);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKShell() {
+    return findChildByType(K_SHELL);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKShellOnly() {
+    return findChildByType(K_SHELL_ONLY);
   }
 
 }

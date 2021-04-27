@@ -7,4 +7,19 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaDoc extends PsiElement {
 
+  @Nullable
+  PsiElement getCrlf();
+
+  @Nullable
+  PsiElement getKDoc();
+
+  @Nullable
+  PsiElement getKDocOnly();
+
+  @Nullable
+  PsiElement getKEndDoc();
+
+  @Nullable
+  PsiElement getTSqrClose();
+
 }

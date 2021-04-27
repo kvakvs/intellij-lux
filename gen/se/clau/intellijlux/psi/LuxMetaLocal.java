@@ -10,4 +10,13 @@ public interface LuxMetaLocal extends PsiElement {
   @NotNull
   LuxIdent getIdent();
 
+  @NotNull
+  PsiElement getEndMeta();
+
+  @NotNull
+  PsiElement getKLocal();
+
+  @NotNull
+  PsiElement getTEquals();
+
 }

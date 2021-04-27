@@ -1,33 +1,30 @@
-package se.clau.intellijlux.psi.impl;
+package se.clau.intellijlux.psi.impl
 
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import se.clau.intellijlux.psi.LuxIdent;
-import se.clau.intellijlux.psi.LuxTypes;
+import com.intellij.lang.ASTNode
+import com.intellij.psi.PsiElement
+import se.clau.intellijlux.psi.LuxElementFactory
+import se.clau.intellijlux.psi.LuxIdent
+import se.clau.intellijlux.psi.LuxTypes
 
-public class LuxPsiImplUtil {
-
-  // ...
-//
-//  public static PsiElement setName(SimpleProperty element, String newName) {
-//    ASTNode keyNode = element.getNode().findChildByType(SimpleTypes.KEY);
-//    if (keyNode != null) {
-//
-//      SimpleProperty property = SimpleElementFactory.createProperty(element.getProject(), newName);
-//      ASTNode newKeyNode = property.getFirstChild().getNode();
-//      element.getNode().replaceChild(keyNode, newKeyNode);
-//    }
-//    return element;
-//  }
-//
-  public static PsiElement getNameIdentifier(LuxIdent element) {
-    ASTNode keyNode = element.getNode().findChildByType(LuxTypes.IDENT);
-    if (keyNode != null) {
-      return keyNode.getPsi();
-    } else {
-      return null;
-    }
+class LuxPsiImplUtil {
+  fun getName(element: LuxIdent?): String? {
+    return element?.text
   }
 
-  // ...
+  fun setName(element: LuxIdent, newName: String?): PsiElement? {
+    val keyNode: ASTNode? = element.node.findChildByType(LuxTypes.IDENT)
+    val property: LuxIdent = LuxElementFactory.createProperty(element.project, newName)
+    val newKeyNode: ASTNode = property.firstChild.node
+
+    if (keyNode != null) {
+      element.node.replaceChild(keyNode, newKeyNode)
+    }
+
+    return element
+  }
+
+  fun getNameIdentifier(element: LuxIdent): PsiElement? {
+    val keyNode = element.node.findChildByType(LuxTypes.IDENT)
+    return keyNode?.psi
+  }
 }

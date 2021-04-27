@@ -79,4 +79,13 @@ public interface LuxMetaMacro extends PsiElement {
   @NotNull
   List<LuxSetSuccess> getSetSuccessList();
 
+  @NotNull
+  PsiElement getEndMeta();
+
+  @NotNull
+  PsiElement getKEndMacro();
+
+  @NotNull
+  PsiElement getKMacro();
+
 }

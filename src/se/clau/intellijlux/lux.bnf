@@ -7,6 +7,7 @@
   psiImplClassSuffix="Impl"
   psiPackage="se.clau.intellijlux.psi"
   psiImplPackage="se.clau.intellijlux.impl"
+  psiImplUtilClass="se.clau.intellijlux.psi.impl.LuxPsiImplUtil"
 
   elementTypeHolderClass="se.clau.intellijlux.psi.LuxTypes"
   elementTypeClass="se.clau.intellijlux.psi.LuxElementType"
@@ -24,6 +25,7 @@
     T_SQR_OPEN = "["
     T_SQR_CLOSE = "]"
   ]
+  generateTokenAccessors=true
 }
 
 lux_file ::= lux_file_item *
@@ -47,7 +49,7 @@ flush ::= K_FLUSH
 ident ::= T_IDENT {
     mixin="se.clau.intellijlux.psi.impl.LuxNamedElementImpl"
     implements="se.clau.intellijlux.psi.LuxNamedElement"
-    methods=[getKey getValue getName setName getNameIdentifier]
+    methods=[getName setName getNameIdentifier]
 }
 
 meta_doc ::= (K_DOC inner_line "]" ) | (K_DOC_ONLY multiline_text K_END_DOC)

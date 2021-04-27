@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaTimeoutImpl extends ASTWrapperPsiElement implements LuxMetaTimeout {
 
@@ -25,6 +26,36 @@ public class LuxMetaTimeoutImpl extends ASTWrapperPsiElement implements LuxMetaT
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getCrlf() {
+    return findChildByType(CRLF);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKTimeout() {
+    return findChildByType(K_TIMEOUT);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKTimeoutOnly() {
+    return findChildByType(K_TIMEOUT_ONLY);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTNumber() {
+    return findChildByType(T_NUMBER);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTSqrClose() {
+    return findChildByType(T_SQR_CLOSE);
   }
 
 }

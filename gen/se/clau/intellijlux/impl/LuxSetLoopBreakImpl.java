@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxSetLoopBreakImpl extends ASTWrapperPsiElement implements LuxSetLoopBreak {
 
@@ -25,6 +26,36 @@ public class LuxSetLoopBreakImpl extends ASTWrapperPsiElement implements LuxSetL
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getCrlf() {
+    return findChildByType(CRLF);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKMlSetLoopBreak() {
+    return findChildByType(K_ML_SET_LOOP_BREAK);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKSetLoopBreak() {
+    return findChildByType(K_SET_LOOP_BREAK);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKSetLoopBreakOnly() {
+    return findChildByType(K_SET_LOOP_BREAK_ONLY);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTTripleQuote() {
+    return findChildByType(T_TRIPLE_QUOTE);
   }
 
 }

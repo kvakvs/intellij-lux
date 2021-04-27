@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxSetSuccessImpl extends ASTWrapperPsiElement implements LuxSetSuccess {
 
@@ -25,6 +26,36 @@ public class LuxSetSuccessImpl extends ASTWrapperPsiElement implements LuxSetSuc
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getCrlf() {
+    return findChildByType(CRLF);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKMlSetSuccess() {
+    return findChildByType(K_ML_SET_SUCCESS);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKSetSuccess() {
+    return findChildByType(K_SET_SUCCESS);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getKSetSuccessOnly() {
+    return findChildByType(K_SET_SUCCESS_ONLY);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTTripleQuote() {
+    return findChildByType(T_TRIPLE_QUOTE);
   }
 
 }

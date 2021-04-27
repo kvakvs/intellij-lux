@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxFlush extends PsiElement {
 
+  @NotNull
+  PsiElement getKFlush();
+
 }

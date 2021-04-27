@@ -7,4 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaProgress extends PsiElement {
 
+  @NotNull
+  PsiElement getEndMeta();
+
+  @NotNull
+  PsiElement getKProgress();
+
 }

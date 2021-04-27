@@ -10,4 +10,10 @@ public interface LuxMetaLoop extends PsiElement {
   @NotNull
   LuxIdent getIdent();
 
+  @NotNull
+  PsiElement getEndMeta();
+
+  @NotNull
+  PsiElement getKLoop();
+
 }

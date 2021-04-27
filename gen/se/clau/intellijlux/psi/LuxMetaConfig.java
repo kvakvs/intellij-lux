@@ -10,4 +10,13 @@ public interface LuxMetaConfig extends PsiElement {
   @NotNull
   LuxIdent getIdent();
 
+  @NotNull
+  PsiElement getEndMeta();
+
+  @NotNull
+  PsiElement getKConfig();
+
+  @NotNull
+  PsiElement getTEquals();
+
 }

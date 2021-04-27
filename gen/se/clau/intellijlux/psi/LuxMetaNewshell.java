@@ -7,4 +7,13 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaNewshell extends PsiElement {
 
+  @Nullable
+  PsiElement getEndMeta();
+
+  @Nullable
+  PsiElement getKNewshell();
+
+  @Nullable
+  PsiElement getKNewshellOnly();
+
 }

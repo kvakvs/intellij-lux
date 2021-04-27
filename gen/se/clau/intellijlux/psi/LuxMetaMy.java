@@ -10,4 +10,13 @@ public interface LuxMetaMy extends PsiElement {
   @NotNull
   LuxIdent getIdent();
 
+  @NotNull
+  PsiElement getEndMeta();
+
+  @NotNull
+  PsiElement getKMy();
+
+  @NotNull
+  PsiElement getTEquals();
+
 }

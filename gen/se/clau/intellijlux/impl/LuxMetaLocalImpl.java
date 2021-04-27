@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxMetaLocalImpl extends ASTWrapperPsiElement implements LuxMetaLocal {
 
@@ -31,6 +32,24 @@ public class LuxMetaLocalImpl extends ASTWrapperPsiElement implements LuxMetaLoc
   @NotNull
   public LuxIdent getIdent() {
     return findNotNullChildByClass(LuxIdent.class);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getEndMeta() {
+    return findNotNullChildByType(END_META);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getKLocal() {
+    return findNotNullChildByType(K_LOCAL);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getTEquals() {
+    return findNotNullChildByType(T_EQUALS);
   }
 
 }

@@ -10,6 +10,7 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static se.clau.intellijlux.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxFlushImpl extends ASTWrapperPsiElement implements LuxFlush {
 
@@ -25,6 +26,12 @@ public class LuxFlushImpl extends ASTWrapperPsiElement implements LuxFlush {
   public void accept(@NotNull PsiElementVisitor visitor) {
     if (visitor instanceof LuxVisitor) accept((LuxVisitor)visitor);
     else super.accept(visitor);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getKFlush() {
+    return findNotNullChildByType(K_FLUSH);
   }
 
 }

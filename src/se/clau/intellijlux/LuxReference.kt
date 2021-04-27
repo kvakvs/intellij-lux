@@ -4,11 +4,20 @@ import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.*
+import org.jetbrains.annotations.NotNull
 import se.clau.intellijlux.LuxUtil.findIdentifiers
 
-class LuxReference(element: PsiElement, textRange: TextRange) :
-  PsiReferenceBase<PsiElement?>(element, textRange), PsiPolyVariantReference {
-//    private val key: String = element.text.substring(textRange.startOffset, textRange.endOffset)
+
+class LuxReference(
+  @NotNull element: PsiElement,
+  textRange: TextRange
+) : PsiReferenceBase<PsiElement?>(element, textRange), PsiPolyVariantReference {
+
+  private var name: String? = null
+
+  init {
+    name = element.text.substring(textRange.startOffset, textRange.endOffset)
+  }
 
   override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
     val project = myElement!!.project

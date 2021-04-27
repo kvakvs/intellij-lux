@@ -7,4 +7,16 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaSleep extends PsiElement {
 
+  @NotNull
+  PsiElement getCrlf();
+
+  @NotNull
+  PsiElement getKSleep();
+
+  @NotNull
+  PsiElement getTNumber();
+
+  @NotNull
+  PsiElement getTSqrClose();
+
 }

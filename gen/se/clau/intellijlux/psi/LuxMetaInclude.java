@@ -7,4 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxMetaInclude extends PsiElement {
 
+  @NotNull
+  PsiElement getEndMeta();
+
+  @NotNull
+  PsiElement getKInclude();
+
 }

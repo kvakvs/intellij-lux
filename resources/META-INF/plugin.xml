@@ -68,13 +68,18 @@
     <lang.commenter
             language="Lux"
             implementationClass="se.clau.intellijlux.LuxCommenter"/>
+
 <!--    <annotator language="Lux"-->
 <!--               implementationClass="se.clau.intellijlux.LuxAnnotator"/>-->
+
     <codeInsight.inlayProvider language="Lux"
                                implementationClass="se.clau.intellijlux.LuxInlayCommandHintsProvider"/>
 
     <psi.referenceContributor
             implementation="se.clau.intellijlux.LuxReferenceContributor"/>
+    <lang.findUsagesProvider language="Lux"
+                             implementationClass="se.clau.intellijlux.LuxFindUsagesProvider"/>
+
   </extensions>
 
   <actions>

@@ -1,16 +1,12 @@
-package se.clau.intellijlux.psi;
+package se.clau.intellijlux.psi
 
-import com.intellij.psi.tree.IElementType;
-import se.clau.intellijlux.LuxLanguage;
-import org.jetbrains.annotations.*;
+import com.intellij.psi.tree.IElementType
+import org.jetbrains.annotations.NonNls
+import se.clau.intellijlux.LuxLanguage
 
-public class LuxTokenType extends IElementType {
-  public LuxTokenType(@NotNull @NonNls String debugName) {
-    super(debugName, LuxLanguage.INSTANCE);
-  }
-
-  @Override
-  public String toString() {
-    return "LuxTokenType." + super.toString();
+class LuxTokenType(@NonNls debugName: String) :
+  IElementType(debugName, LuxLanguage) {
+  override fun toString(): String {
+    return "LuxTokenType." + super.toString()
   }
 }
