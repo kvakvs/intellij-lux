@@ -36,6 +36,12 @@ public class LuxMetaDocImpl extends ASTWrapperPsiElement implements LuxMetaDoc {
 
   @Override
   @Nullable
+  public PsiElement getEndMeta() {
+    return findChildByType(END_META);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getKDoc() {
     return findChildByType(K_DOC);
   }
@@ -50,12 +56,6 @@ public class LuxMetaDocImpl extends ASTWrapperPsiElement implements LuxMetaDoc {
   @Nullable
   public PsiElement getKEndDoc() {
     return findChildByType(K_END_DOC);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getTSqrClose() {
-    return findChildByType(T_SQR_CLOSE);
   }
 
 }

@@ -114,7 +114,7 @@ class LuxInlayCommandHintsProvider :
             val presentation =
               typeHintsFactory.textHint("regex:")
             sink.addInlineElement(
-              offset = element.startOffset + 2,
+              offset = element.startOffset + 1,
               relatesToPrecedingText = false,
               presentation = presentation,
               placeAtTheEndOfLine = false
@@ -134,7 +134,7 @@ class LuxInlayCommandHintsProvider :
             val presentation =
               typeHintsFactory.textHint("template:")
             sink.addInlineElement(
-              offset = element.startOffset + 3,
+              offset = element.startOffset + 2,
               relatesToPrecedingText = false,
               presentation = presentation,
               placeAtTheEndOfLine = false

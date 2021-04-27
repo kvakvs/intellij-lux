@@ -34,4 +34,22 @@ public class LuxIdentImpl extends LuxNamedElementImpl implements LuxIdent {
     return findNotNullChildByType(T_IDENT);
   }
 
+  @Override
+  @Nullable
+  public String getName() {
+    return LuxPsiImplUtil.getName(this);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement setName(@Nullable String newName) {
+    return LuxPsiImplUtil.setName(this, newName);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getNameIdentifier() {
+    return LuxPsiImplUtil.getNameIdentifier(this);
+  }
+
 }

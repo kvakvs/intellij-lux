@@ -52,7 +52,7 @@ ident ::= T_IDENT {
     methods=[getName setName getNameIdentifier]
 }
 
-meta_doc ::= (K_DOC inner_line "]" ) | (K_DOC_ONLY multiline_text K_END_DOC)
+meta_doc ::= (K_DOC meta_contents) | (K_DOC_ONLY multiline_text K_END_DOC)
 
 meta_shell ::= K_SHELL_ONLY | (K_SHELL ident meta_contents)
 meta_newshell ::= K_NEWSHELL_ONLY | (K_NEWSHELL meta_contents)

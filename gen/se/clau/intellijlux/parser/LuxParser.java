@@ -384,7 +384,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (K_DOC inner_line "]" ) | (K_DOC_ONLY multiline_text K_END_DOC)
+  // (K_DOC meta_contents) | (K_DOC_ONLY multiline_text K_END_DOC)
   public static boolean meta_doc(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_doc")) return false;
     if (!nextTokenIs(b, "<meta doc>", K_DOC, K_DOC_ONLY)) return false;
@@ -396,14 +396,13 @@ public class LuxParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // K_DOC inner_line "]"
+  // K_DOC meta_contents
   private static boolean meta_doc_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "meta_doc_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_DOC);
-    r = r && inner_line(b, l + 1);
-    r = r && consumeToken(b, T_SQR_CLOSE);
+    r = r && meta_contents(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }

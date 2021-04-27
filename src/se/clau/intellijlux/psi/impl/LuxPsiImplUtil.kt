@@ -6,11 +6,13 @@ import se.clau.intellijlux.psi.LuxElementFactory
 import se.clau.intellijlux.psi.LuxIdent
 import se.clau.intellijlux.psi.LuxTypes
 
-class LuxPsiImplUtil {
+object LuxPsiImplUtil {
+  @JvmStatic
   fun getName(element: LuxIdent?): String? {
     return element?.text
   }
 
+  @JvmStatic
   fun setName(element: LuxIdent, newName: String?): PsiElement? {
     val keyNode: ASTNode? = element.node.findChildByType(LuxTypes.IDENT)
     val property: LuxIdent = LuxElementFactory.createProperty(element.project, newName)
@@ -23,6 +25,7 @@ class LuxPsiImplUtil {
     return element
   }
 
+  @JvmStatic
   fun getNameIdentifier(element: LuxIdent): PsiElement? {
     val keyNode = element.node.findChildByType(LuxTypes.IDENT)
     return keyNode?.psi

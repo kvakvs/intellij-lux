@@ -10,16 +10,13 @@ public interface LuxIdent extends LuxNamedElement {
   @NotNull
   PsiElement getTIdent();
 
-  //WARNING: getName(...) is skipped
-  //matching getName(LuxIdent, ...)
-  //methods are not found in LuxPsiImplUtil
+  @Nullable
+  String getName();
 
-  //WARNING: setName(...) is skipped
-  //matching setName(LuxIdent, ...)
-  //methods are not found in LuxPsiImplUtil
+  @Nullable
+  PsiElement setName(@Nullable String newName);
 
-  //WARNING: getNameIdentifier(...) is skipped
-  //matching getNameIdentifier(LuxIdent, ...)
-  //methods are not found in LuxPsiImplUtil
+  @Nullable
+  PsiElement getNameIdentifier();
 
 }

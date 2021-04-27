@@ -11,6 +11,9 @@ public interface LuxMetaDoc extends PsiElement {
   PsiElement getCrlf();
 
   @Nullable
+  PsiElement getEndMeta();
+
+  @Nullable
   PsiElement getKDoc();
 
   @Nullable
@@ -18,8 +21,5 @@ public interface LuxMetaDoc extends PsiElement {
 
   @Nullable
   PsiElement getKEndDoc();
-
-  @Nullable
-  PsiElement getTSqrClose();
 
 }
