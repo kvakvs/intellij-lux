@@ -27,6 +27,12 @@ class LuxInlayCommandHintsProvider :
             ?+expect maybe a regex
             ??expect a template
             ???expect a verbatim text
+            -set failure
+            -
+            +set success
+            +
+            @loop break
+            @
             """.trimIndent()
 
   override fun createConfigurable(settings: Settings): ImmediateConfigurable =
@@ -43,6 +49,11 @@ class LuxInlayCommandHintsProvider :
             "Show for expect (receive) commands",
             "expect",
             settings::showForExpect
+          ),
+          ImmediateConfigurable.Case(
+            "Show for triggers (success, failure, loop control)",
+            "triggers",
+            settings::showForTriggers
           ),
         )
 
@@ -80,6 +91,13 @@ class LuxInlayCommandHintsProvider :
           && settings.showForExpect
         ) {
           presentExpect(element)
+        }
+        if ((element is LuxSetFailure
+              || element is LuxSetSuccess
+              || element is LuxSetLoopBreak)
+          && settings.showForTriggers
+        ) {
+          presentTrigger(element)
         }
 
         return true
@@ -152,11 +170,47 @@ class LuxInlayCommandHintsProvider :
           }
         }
       }
+
+      private fun presentTrigger(element: PsiElement) {
+        when (element) {
+          is LuxSetSuccess -> {
+            val presentation =
+              typeHintsFactory.textHint("success:")
+            sink.addInlineElement(
+              offset = element.startOffset + 1,
+              relatesToPrecedingText = false,
+              presentation = presentation,
+              placeAtTheEndOfLine = false
+            )
+          }
+          is LuxSetFailure -> {
+            val presentation =
+              typeHintsFactory.textHint("failure:")
+            sink.addInlineElement(
+              offset = element.startOffset + 1,
+              relatesToPrecedingText = false,
+              presentation = presentation,
+              placeAtTheEndOfLine = false
+            )
+          }
+          is LuxSetLoopBreak -> {
+            val presentation =
+              typeHintsFactory.textHint("loop break:")
+            sink.addInlineElement(
+              offset = element.startOffset + 1,
+              relatesToPrecedingText = false,
+              presentation = presentation,
+              placeAtTheEndOfLine = false
+            )
+          }
+        }
+      }
     }
 
   data class Settings(
     var showForSend: Boolean = true,
     var showForExpect: Boolean = true,
+    var showForTriggers: Boolean = true,
   )
 
   companion object {

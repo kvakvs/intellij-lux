@@ -46,10 +46,8 @@
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
     <fileType name="Lux Script"
-              implementationClass="se.clau.intellijlux.LuxFileType"
-              fieldName="INSTANCE"
-              language="Lux"
-              extensions="lux"/>
+              implementationClass="se.clau.intellijlux.LuxFileType" fieldName="INSTANCE"
+              language="Lux" extensions="lux;delux"/>
     <fileType name="Lux Include"
               implementationClass="se.clau.intellijlux.LuxIncludeFileType"
               fieldName="INSTANCE"
