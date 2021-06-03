@@ -34,6 +34,7 @@ LineTextNoBackslash     = [^\r\n\$\\]+
 
 TripleQuote             = "\"\"\""
 AnyWhitespace           = {Whitespace} *
+// Trailing closing """ with any whitespace as text
 AnyWhitespaceTripleQ    = {AnyWhitespace} {TripleQuote}
 LineTextUntilTripleQ    = {LineText} {TripleQuote}
 

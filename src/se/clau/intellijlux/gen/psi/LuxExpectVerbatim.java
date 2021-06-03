@@ -7,13 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxExpectVerbatim extends PsiElement {
 
-  @Nullable
+  @NotNull
   PsiElement getKExpVerbatim();
-
-  @Nullable
-  PsiElement getKMlExpVerbatim();
-
-  @Nullable
-  PsiElement getTTripleQuote();
 
 }

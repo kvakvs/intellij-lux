@@ -29,27 +29,9 @@ public class LuxSetLoopBreakImpl extends ASTWrapperPsiElement implements LuxSetL
   }
 
   @Override
-  @Nullable
-  public PsiElement getKMlSetLoopBreak() {
-    return findChildByType(K_ML_SET_LOOP_BREAK);
-  }
-
-  @Override
-  @Nullable
+  @NotNull
   public PsiElement getKSetLoopBreak() {
-    return findChildByType(K_SET_LOOP_BREAK);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getKSetLoopBreakOnly() {
-    return findChildByType(K_SET_LOOP_BREAK_ONLY);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getTTripleQuote() {
-    return findChildByType(T_TRIPLE_QUOTE);
+    return findNotNullChildByType(K_SET_LOOP_BREAK);
   }
 
 }

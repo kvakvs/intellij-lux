@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LuxSendLn extends PsiElement {
+public interface LuxMlSetLoopBreak extends PsiElement {
 
   @NotNull
-  PsiElement getKSendLn();
+  PsiElement getKMlSetLoopBreak();
+
+  @NotNull
+  PsiElement getTTripleQuote();
 
 }

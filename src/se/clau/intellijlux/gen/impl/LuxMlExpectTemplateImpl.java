@@ -12,14 +12,14 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.gen.psi.*;
 import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
-public class LuxSendImpl extends ASTWrapperPsiElement implements LuxSend {
+public class LuxMlExpectTemplateImpl extends ASTWrapperPsiElement implements LuxMlExpectTemplate {
 
-  public LuxSendImpl(@NotNull ASTNode node) {
+  public LuxMlExpectTemplateImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull LuxVisitor visitor) {
-    visitor.visitSend(this);
+    visitor.visitMlExpectTemplate(this);
   }
 
   @Override
@@ -30,8 +30,14 @@ public class LuxSendImpl extends ASTWrapperPsiElement implements LuxSend {
 
   @Override
   @NotNull
-  public PsiElement getKSend() {
-    return findNotNullChildByType(K_SEND);
+  public PsiElement getKMlExpTemplate() {
+    return findNotNullChildByType(K_ML_EXP_TEMPLATE);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getTTripleQuote() {
+    return findNotNullChildByType(T_TRIPLE_QUOTE);
   }
 
 }

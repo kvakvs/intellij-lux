@@ -12,14 +12,14 @@ import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import se.clau.intellijlux.gen.psi.*;
 import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
-public class LuxSendImpl extends ASTWrapperPsiElement implements LuxSend {
+public class LuxSetSuccessOnlyImpl extends ASTWrapperPsiElement implements LuxSetSuccessOnly {
 
-  public LuxSendImpl(@NotNull ASTNode node) {
+  public LuxSetSuccessOnlyImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull LuxVisitor visitor) {
-    visitor.visitSend(this);
+    visitor.visitSetSuccessOnly(this);
   }
 
   @Override
@@ -30,8 +30,8 @@ public class LuxSendImpl extends ASTWrapperPsiElement implements LuxSend {
 
   @Override
   @NotNull
-  public PsiElement getKSend() {
-    return findNotNullChildByType(K_SEND);
+  public PsiElement getKSetSuccessOnly() {
+    return findNotNullChildByType(K_SET_SUCCESS_ONLY);
   }
 
 }

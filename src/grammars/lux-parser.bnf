@@ -39,8 +39,9 @@ private lux_command ::=
     | meta_invoke
     | meta_loop | K_END_LOOP
     | meta_progress
-    | send | send_ln | expect_verbatim | expect_template | expect_regex
-    | flush | expect_maybe_regex | set_failure | set_success | set_loop_break
+    | send_ | send_ln_ | expect_verbatim_ | expect_template_ | expect_regex_
+    | flush | expect_maybe_regex_ | set_failure_ | set_success_
+    | set_loop_break_
 
 private lux_file_item ::= meta_macro | lux_command
 
@@ -79,27 +80,44 @@ meta_my ::= K_MY inner_x_equals_y
 
 private inner inner_x_equals_y ::= ident T_EQUALS meta_contents
 
-send ::= (K_SEND inner_line)
-    | (K_ML_SEND inner_multiline T_TRIPLE_QUOTE)
-send_ln ::= (K_SEND_LN inner_line)
-    | (K_ML_SEND_LN inner_multiline T_TRIPLE_QUOTE)
-expect_verbatim ::= (K_EXP_VERBATIM inner_line)
-    | (K_ML_EXP_VERBATIM inner_multiline T_TRIPLE_QUOTE)
-expect_template ::= (K_EXP_TEMPLATE inner_line)
-    | (K_ML_EXP_TEMPLATE inner_multiline T_TRIPLE_QUOTE)
-expect_regex ::= (K_EXP_REGEX inner_line)
-    | (K_ML_EXP_REGEX inner_multiline T_TRIPLE_QUOTE)
-expect_maybe_regex ::= (K_EXP_MAYBE_REGEX inner_line)
-    | (K_ML_EXP_MAYBE_REGEX inner_multiline T_TRIPLE_QUOTE)
-set_failure ::= K_SET_FAILURE_ONLY
-    | (K_SET_FAILURE inner_line)
-    | (K_ML_SET_FAILURE inner_multiline T_TRIPLE_QUOTE)
-set_success ::= K_SET_SUCCESS_ONLY
-    | (K_SET_SUCCESS inner_line)
-    | (K_ML_SET_SUCCESS inner_multiline T_TRIPLE_QUOTE)
-set_loop_break ::= K_SET_LOOP_BREAK_ONLY
-    | (K_SET_LOOP_BREAK inner_line)
-    | (K_ML_SET_LOOP_BREAK inner_multiline T_TRIPLE_QUOTE)
+private send_ ::= send | ml_send
+send ::= K_SEND inner_line
+ml_send ::= K_ML_SEND inner_multiline T_TRIPLE_QUOTE
+
+private send_ln_ ::= send_ln | ml_send_ln
+send_ln ::= K_SEND_LN inner_line
+ml_send_ln ::=  K_ML_SEND_LN inner_multiline T_TRIPLE_QUOTE
+
+private expect_verbatim_ ::= expect_verbatim | ml_expect_verbatim
+expect_verbatim ::= K_EXP_VERBATIM inner_line
+ml_expect_verbatim ::= K_ML_EXP_VERBATIM inner_multiline T_TRIPLE_QUOTE
+
+private expect_template_ ::= expect_template | ml_expect_template
+expect_template ::= K_EXP_TEMPLATE inner_line
+ml_expect_template ::= K_ML_EXP_TEMPLATE inner_multiline T_TRIPLE_QUOTE
+
+private expect_regex_ ::= expect_regex | ml_expect_regex
+expect_regex ::= K_EXP_REGEX inner_line
+ml_expect_regex ::= K_ML_EXP_REGEX inner_multiline T_TRIPLE_QUOTE
+
+private expect_maybe_regex_ ::= expect_maybe_regex | ml_expect_maybe_regex
+expect_maybe_regex ::= K_EXP_MAYBE_REGEX inner_line
+ml_expect_maybe_regex ::= K_ML_EXP_MAYBE_REGEX inner_multiline T_TRIPLE_QUOTE
+
+private set_failure_ ::= set_failure | set_failure_only | ml_set_failure
+set_failure_only ::= K_SET_FAILURE_ONLY
+set_failure ::= K_SET_FAILURE inner_line
+ml_set_failure ::= K_ML_SET_FAILURE inner_multiline T_TRIPLE_QUOTE
+
+private set_success_ ::= set_success | set_success_only | ml_set_success
+set_success_only ::= K_SET_SUCCESS_ONLY
+set_success ::= K_SET_SUCCESS inner_line
+ml_set_success ::= K_ML_SET_SUCCESS inner_multiline T_TRIPLE_QUOTE
+
+private set_loop_break_ ::= set_loop_break_only | set_loop_break | ml_set_loop_break
+set_loop_break_only ::= K_SET_LOOP_BREAK_ONLY
+set_loop_break ::= K_SET_LOOP_BREAK inner_line
+ml_set_loop_break ::= K_ML_SET_LOOP_BREAK inner_multiline T_TRIPLE_QUOTE
 
 private inner inner_line ::= line_contents *
 

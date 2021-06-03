@@ -7,16 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxSetLoopBreak extends PsiElement {
 
-  @Nullable
-  PsiElement getKMlSetLoopBreak();
-
-  @Nullable
+  @NotNull
   PsiElement getKSetLoopBreak();
-
-  @Nullable
-  PsiElement getKSetLoopBreakOnly();
-
-  @Nullable
-  PsiElement getTTripleQuote();
 
 }

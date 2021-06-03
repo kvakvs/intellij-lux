@@ -29,21 +29,9 @@ public class LuxExpectTemplateImpl extends ASTWrapperPsiElement implements LuxEx
   }
 
   @Override
-  @Nullable
+  @NotNull
   public PsiElement getKExpTemplate() {
-    return findChildByType(K_EXP_TEMPLATE);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getKMlExpTemplate() {
-    return findChildByType(K_ML_EXP_TEMPLATE);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getTTripleQuote() {
-    return findChildByType(T_TRIPLE_QUOTE);
+    return findNotNullChildByType(K_EXP_TEMPLATE);
   }
 
 }

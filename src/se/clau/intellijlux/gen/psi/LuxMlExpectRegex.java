@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface LuxSendLn extends PsiElement {
+public interface LuxMlExpectRegex extends PsiElement {
 
   @NotNull
-  PsiElement getKSendLn();
+  PsiElement getKMlExpRegex();
+
+  @NotNull
+  PsiElement getTTripleQuote();
 
 }

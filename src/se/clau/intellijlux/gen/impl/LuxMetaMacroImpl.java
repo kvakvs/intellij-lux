@@ -144,6 +144,60 @@ public class LuxMetaMacroImpl extends ASTWrapperPsiElement implements LuxMetaMac
 
   @Override
   @NotNull
+  public List<LuxMlExpectMaybeRegex> getMlExpectMaybeRegexList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlExpectMaybeRegex.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMlExpectRegex> getMlExpectRegexList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlExpectRegex.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMlExpectTemplate> getMlExpectTemplateList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlExpectTemplate.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMlExpectVerbatim> getMlExpectVerbatimList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlExpectVerbatim.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMlSend> getMlSendList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlSend.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMlSendLn> getMlSendLnList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlSendLn.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMlSetFailure> getMlSetFailureList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlSetFailure.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMlSetLoopBreak> getMlSetLoopBreakList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlSetLoopBreak.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxMlSetSuccess> getMlSetSuccessList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxMlSetSuccess.class);
+  }
+
+  @Override
+  @NotNull
   public List<LuxSend> getSendList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSend.class);
   }
@@ -162,14 +216,32 @@ public class LuxMetaMacroImpl extends ASTWrapperPsiElement implements LuxMetaMac
 
   @Override
   @NotNull
+  public List<LuxSetFailureOnly> getSetFailureOnlyList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetFailureOnly.class);
+  }
+
+  @Override
+  @NotNull
   public List<LuxSetLoopBreak> getSetLoopBreakList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetLoopBreak.class);
   }
 
   @Override
   @NotNull
+  public List<LuxSetLoopBreakOnly> getSetLoopBreakOnlyList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetLoopBreakOnly.class);
+  }
+
+  @Override
+  @NotNull
   public List<LuxSetSuccess> getSetSuccessList() {
     return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetSuccess.class);
+  }
+
+  @Override
+  @NotNull
+  public List<LuxSetSuccessOnly> getSetSuccessOnlyList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, LuxSetSuccessOnly.class);
   }
 
   @Override

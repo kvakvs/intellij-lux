@@ -88,6 +88,42 @@ public class LuxVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitMlExpectMaybeRegex(@NotNull LuxMlExpectMaybeRegex o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMlExpectRegex(@NotNull LuxMlExpectRegex o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMlExpectTemplate(@NotNull LuxMlExpectTemplate o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMlExpectVerbatim(@NotNull LuxMlExpectVerbatim o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMlSend(@NotNull LuxMlSend o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMlSendLn(@NotNull LuxMlSendLn o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMlSetFailure(@NotNull LuxMlSetFailure o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMlSetLoopBreak(@NotNull LuxMlSetLoopBreak o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMlSetSuccess(@NotNull LuxMlSetSuccess o) {
+    visitPsiElement(o);
+  }
+
   public void visitSend(@NotNull LuxSend o) {
     visitPsiElement(o);
   }
@@ -100,11 +136,23 @@ public class LuxVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitSetFailureOnly(@NotNull LuxSetFailureOnly o) {
+    visitPsiElement(o);
+  }
+
   public void visitSetLoopBreak(@NotNull LuxSetLoopBreak o) {
     visitPsiElement(o);
   }
 
+  public void visitSetLoopBreakOnly(@NotNull LuxSetLoopBreakOnly o) {
+    visitPsiElement(o);
+  }
+
   public void visitSetSuccess(@NotNull LuxSetSuccess o) {
+    visitPsiElement(o);
+  }
+
+  public void visitSetSuccessOnly(@NotNull LuxSetSuccessOnly o) {
     visitPsiElement(o);
   }
 

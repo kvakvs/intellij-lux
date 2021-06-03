@@ -65,6 +65,33 @@ public interface LuxMetaMacro extends PsiElement {
   List<LuxMetaTimeout> getMetaTimeoutList();
 
   @NotNull
+  List<LuxMlExpectMaybeRegex> getMlExpectMaybeRegexList();
+
+  @NotNull
+  List<LuxMlExpectRegex> getMlExpectRegexList();
+
+  @NotNull
+  List<LuxMlExpectTemplate> getMlExpectTemplateList();
+
+  @NotNull
+  List<LuxMlExpectVerbatim> getMlExpectVerbatimList();
+
+  @NotNull
+  List<LuxMlSend> getMlSendList();
+
+  @NotNull
+  List<LuxMlSendLn> getMlSendLnList();
+
+  @NotNull
+  List<LuxMlSetFailure> getMlSetFailureList();
+
+  @NotNull
+  List<LuxMlSetLoopBreak> getMlSetLoopBreakList();
+
+  @NotNull
+  List<LuxMlSetSuccess> getMlSetSuccessList();
+
+  @NotNull
   List<LuxSend> getSendList();
 
   @NotNull
@@ -74,10 +101,19 @@ public interface LuxMetaMacro extends PsiElement {
   List<LuxSetFailure> getSetFailureList();
 
   @NotNull
+  List<LuxSetFailureOnly> getSetFailureOnlyList();
+
+  @NotNull
   List<LuxSetLoopBreak> getSetLoopBreakList();
 
   @NotNull
+  List<LuxSetLoopBreakOnly> getSetLoopBreakOnlyList();
+
+  @NotNull
   List<LuxSetSuccess> getSetSuccessList();
+
+  @NotNull
+  List<LuxSetSuccessOnly> getSetSuccessOnlyList();
 
   @NotNull
   PsiElement getEndMeta();

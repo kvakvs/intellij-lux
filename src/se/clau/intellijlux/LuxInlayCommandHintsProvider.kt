@@ -8,7 +8,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.refactoring.suggested.startOffset
 import se.clau.intellijlux.gen.psi.*
-import se.clau.intellijlux.psi.*
 import javax.swing.JComponent
 import javax.swing.JPanel
 
@@ -77,23 +76,23 @@ class LuxInlayCommandHintsProvider :
         sink: InlayHintsSink
       ): Boolean {
         if (file.project.service<DumbService>().isDumb) return true
-        if ((element is LuxSend
-              || element is LuxSendLn)
+        if ((element is LuxSend || element is LuxMlSend
+              || element is LuxSendLn || element is LuxMlSendLn)
           && settings.showForSend
         ) {
           presentSend(element)
         }
-        if ((element is LuxExpectRegex
-              || element is LuxExpectMaybeRegex
-              || element is LuxExpectTemplate
-              || element is LuxExpectVerbatim)
+        if ((element is LuxExpectRegex || element is LuxMlExpectRegex
+              || element is LuxExpectMaybeRegex || element is LuxMlExpectMaybeRegex
+              || element is LuxExpectTemplate || element is LuxMlExpectTemplate
+              || element is LuxExpectVerbatim || element is LuxMlExpectVerbatim)
           && settings.showForExpect
         ) {
           presentExpect(element)
         }
-        if ((element is LuxSetFailure
-              || element is LuxSetSuccess
-              || element is LuxSetLoopBreak)
+        if ((element is LuxSetFailure || element is LuxMlSetFailure || element is LuxSetFailureOnly
+              || element is LuxSetSuccess || element is LuxMlSetSuccess || element is LuxSetSuccessOnly
+              || element is LuxSetLoopBreak || element is LuxMlSetLoopBreak || element is LuxSetLoopBreakOnly)
           && settings.showForTriggers
         ) {
           presentTrigger(element)
@@ -102,106 +101,51 @@ class LuxInlayCommandHintsProvider :
         return true
       }
 
+      private fun tHint(element: PsiElement, startOffset: Int, t: String) {
+        val presentation = typeHintsFactory.textHint(t)
+        sink.addInlineElement(
+          offset = element.startOffset + startOffset,
+          relatesToPrecedingText = false,
+          presentation = presentation,
+          placeAtTheEndOfLine = false
+        )
+      }
+
       private fun presentSend(element: PsiElement) {
         when (element) {
-          is LuxSend -> {
-            val presentation = typeHintsFactory.textHint("send:")
-            sink.addInlineElement(
-              offset = element.startOffset + 1,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
-          is LuxSendLn -> {
-            val presentation = typeHintsFactory.textHint("sendln:")
-            sink.addInlineElement(
-              offset = element.startOffset + 1,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
+          is LuxSend -> tHint(element, 1, "send:")
+          is LuxMlSend -> tHint(element, 1 + 3, "send:")
+          is LuxSendLn -> tHint(element, 1, "sendln:")
+          is LuxMlSendLn -> tHint(element, 1 + 3, "sendln:")
         }
       }
 
       private fun presentExpect(element: PsiElement) {
         when (element) {
-          is LuxExpectRegex -> {
-            val presentation =
-              typeHintsFactory.textHint("regex:")
-            sink.addInlineElement(
-              offset = element.startOffset + 1,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
-          is LuxExpectMaybeRegex -> {
-            val presentation =
-              typeHintsFactory.textHint("maybe regex:")
-            sink.addInlineElement(
-              offset = element.startOffset + 2,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
-          is LuxExpectTemplate -> {
-            val presentation =
-              typeHintsFactory.textHint("template:")
-            sink.addInlineElement(
-              offset = element.startOffset + 2,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
-          is LuxExpectVerbatim -> {
-            val presentation =
-              typeHintsFactory.textHint("verbatim:")
-            sink.addInlineElement(
-              offset = element.startOffset + 3,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
+          is LuxExpectRegex -> tHint(element, 1, "regex:")
+          is LuxMlExpectRegex -> tHint(element, 1 + 3, "regex:")
+
+          is LuxExpectMaybeRegex -> tHint(element, 2, "maybe regex:")
+          is LuxMlExpectMaybeRegex -> tHint(element, 2 + 3, "maybe regex:")
+
+          is LuxExpectTemplate -> tHint(element, 2, "template:")
+          is LuxMlExpectTemplate -> tHint(element, 2 + 3, "template:")
+
+          is LuxExpectVerbatim -> tHint(element, 3, "verbatim:")
+          is LuxMlExpectVerbatim -> tHint(element, 3 + 3, "verbatim:")
         }
       }
 
       private fun presentTrigger(element: PsiElement) {
         when (element) {
-          is LuxSetSuccess -> {
-            val presentation =
-              typeHintsFactory.textHint("success:")
-            sink.addInlineElement(
-              offset = element.startOffset + 1,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
-          is LuxSetFailure -> {
-            val presentation =
-              typeHintsFactory.textHint("failure:")
-            sink.addInlineElement(
-              offset = element.startOffset + 1,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
-          is LuxSetLoopBreak -> {
-            val presentation =
-              typeHintsFactory.textHint("loop break:")
-            sink.addInlineElement(
-              offset = element.startOffset + 1,
-              relatesToPrecedingText = false,
-              presentation = presentation,
-              placeAtTheEndOfLine = false
-            )
-          }
+          is LuxSetSuccess, is LuxSetSuccessOnly -> tHint(element, 1, "success:")
+          is LuxMlSetSuccess -> tHint(element, 1 + 3, "success:")
+
+          is LuxSetFailure, is LuxSetFailureOnly -> tHint(element, 1, "failure:")
+          is LuxMlSetFailure -> tHint(element, 1 + 3, "failure:")
+
+          is LuxSetLoopBreak, is LuxSetLoopBreakOnly -> tHint(element, 1, "loop break:")
+          is LuxMlSetLoopBreak -> tHint(element, 1 + 3, "loop break:")
         }
       }
     }

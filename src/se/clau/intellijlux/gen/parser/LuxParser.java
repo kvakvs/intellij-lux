@@ -36,150 +36,98 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (K_EXP_MAYBE_REGEX inner_line)
-  //     | (K_ML_EXP_MAYBE_REGEX inner_multiline T_TRIPLE_QUOTE)
+  // K_EXP_MAYBE_REGEX inner_line
   public static boolean expect_maybe_regex(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "expect_maybe_regex")) return false;
-    if (!nextTokenIs(b, "<expect maybe regex>", K_EXP_MAYBE_REGEX, K_ML_EXP_MAYBE_REGEX)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, EXPECT_MAYBE_REGEX, "<expect maybe regex>");
-    r = expect_maybe_regex_0(b, l + 1);
-    if (!r) r = expect_maybe_regex_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // K_EXP_MAYBE_REGEX inner_line
-  private static boolean expect_maybe_regex_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_maybe_regex_0")) return false;
+    if (!nextTokenIs(b, K_EXP_MAYBE_REGEX)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_EXP_MAYBE_REGEX);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // K_ML_EXP_MAYBE_REGEX inner_multiline T_TRIPLE_QUOTE
-  private static boolean expect_maybe_regex_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_maybe_regex_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_EXP_MAYBE_REGEX);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, EXPECT_MAYBE_REGEX, r);
     return r;
   }
 
   /* ********************************************************** */
-  // (K_EXP_REGEX inner_line)
-  //     | (K_ML_EXP_REGEX inner_multiline T_TRIPLE_QUOTE)
-  public static boolean expect_regex(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_regex")) return false;
-    if (!nextTokenIs(b, "<expect regex>", K_EXP_REGEX, K_ML_EXP_REGEX)) return false;
+  // expect_maybe_regex | ml_expect_maybe_regex
+  static boolean expect_maybe_regex_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_maybe_regex_")) return false;
+    if (!nextTokenIs(b, "", K_EXP_MAYBE_REGEX, K_ML_EXP_MAYBE_REGEX)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, EXPECT_REGEX, "<expect regex>");
-    r = expect_regex_0(b, l + 1);
-    if (!r) r = expect_regex_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    r = expect_maybe_regex(b, l + 1);
+    if (!r) r = ml_expect_maybe_regex(b, l + 1);
     return r;
   }
 
+  /* ********************************************************** */
   // K_EXP_REGEX inner_line
-  private static boolean expect_regex_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_regex_0")) return false;
+  public static boolean expect_regex(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_regex")) return false;
+    if (!nextTokenIs(b, K_EXP_REGEX)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_EXP_REGEX);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // K_ML_EXP_REGEX inner_multiline T_TRIPLE_QUOTE
-  private static boolean expect_regex_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_regex_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_EXP_REGEX);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, EXPECT_REGEX, r);
     return r;
   }
 
   /* ********************************************************** */
-  // (K_EXP_TEMPLATE inner_line)
-  //     | (K_ML_EXP_TEMPLATE inner_multiline T_TRIPLE_QUOTE)
-  public static boolean expect_template(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_template")) return false;
-    if (!nextTokenIs(b, "<expect template>", K_EXP_TEMPLATE, K_ML_EXP_TEMPLATE)) return false;
+  // expect_regex | ml_expect_regex
+  static boolean expect_regex_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_regex_")) return false;
+    if (!nextTokenIs(b, "", K_EXP_REGEX, K_ML_EXP_REGEX)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, EXPECT_TEMPLATE, "<expect template>");
-    r = expect_template_0(b, l + 1);
-    if (!r) r = expect_template_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    r = expect_regex(b, l + 1);
+    if (!r) r = ml_expect_regex(b, l + 1);
     return r;
   }
 
+  /* ********************************************************** */
   // K_EXP_TEMPLATE inner_line
-  private static boolean expect_template_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_template_0")) return false;
+  public static boolean expect_template(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_template")) return false;
+    if (!nextTokenIs(b, K_EXP_TEMPLATE)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_EXP_TEMPLATE);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // K_ML_EXP_TEMPLATE inner_multiline T_TRIPLE_QUOTE
-  private static boolean expect_template_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_template_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_EXP_TEMPLATE);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, EXPECT_TEMPLATE, r);
     return r;
   }
 
   /* ********************************************************** */
-  // (K_EXP_VERBATIM inner_line)
-  //     | (K_ML_EXP_VERBATIM inner_multiline T_TRIPLE_QUOTE)
-  public static boolean expect_verbatim(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_verbatim")) return false;
-    if (!nextTokenIs(b, "<expect verbatim>", K_EXP_VERBATIM, K_ML_EXP_VERBATIM)) return false;
+  // expect_template | ml_expect_template
+  static boolean expect_template_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_template_")) return false;
+    if (!nextTokenIs(b, "", K_EXP_TEMPLATE, K_ML_EXP_TEMPLATE)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, EXPECT_VERBATIM, "<expect verbatim>");
-    r = expect_verbatim_0(b, l + 1);
-    if (!r) r = expect_verbatim_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    r = expect_template(b, l + 1);
+    if (!r) r = ml_expect_template(b, l + 1);
     return r;
   }
 
+  /* ********************************************************** */
   // K_EXP_VERBATIM inner_line
-  private static boolean expect_verbatim_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_verbatim_0")) return false;
+  public static boolean expect_verbatim(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_verbatim")) return false;
+    if (!nextTokenIs(b, K_EXP_VERBATIM)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_EXP_VERBATIM);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, EXPECT_VERBATIM, r);
     return r;
   }
 
-  // K_ML_EXP_VERBATIM inner_multiline T_TRIPLE_QUOTE
-  private static boolean expect_verbatim_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "expect_verbatim_1")) return false;
+  /* ********************************************************** */
+  // expect_verbatim | ml_expect_verbatim
+  static boolean expect_verbatim_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "expect_verbatim_")) return false;
+    if (!nextTokenIs(b, "", K_EXP_VERBATIM, K_ML_EXP_VERBATIM)) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_EXP_VERBATIM);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    r = expect_verbatim(b, l + 1);
+    if (!r) r = ml_expect_verbatim(b, l + 1);
     return r;
   }
 
@@ -278,8 +226,9 @@ public class LuxParser implements PsiParser, LightPsiParser {
   //     | meta_invoke
   //     | meta_loop | K_END_LOOP
   //     | meta_progress
-  //     | send | send_ln | expect_verbatim | expect_template | expect_regex
-  //     | flush | expect_maybe_regex | set_failure | set_success | set_loop_break
+  //     | send_ | send_ln_ | expect_verbatim_ | expect_template_ | expect_regex_
+  //     | flush | expect_maybe_regex_ | set_failure_ | set_success_
+  //     | set_loop_break_
   static boolean lux_command(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "lux_command")) return false;
     boolean r;
@@ -300,16 +249,16 @@ public class LuxParser implements PsiParser, LightPsiParser {
     if (!r) r = meta_loop(b, l + 1);
     if (!r) r = consumeToken(b, K_END_LOOP);
     if (!r) r = meta_progress(b, l + 1);
-    if (!r) r = send(b, l + 1);
-    if (!r) r = send_ln(b, l + 1);
-    if (!r) r = expect_verbatim(b, l + 1);
-    if (!r) r = expect_template(b, l + 1);
-    if (!r) r = expect_regex(b, l + 1);
+    if (!r) r = send_(b, l + 1);
+    if (!r) r = send_ln_(b, l + 1);
+    if (!r) r = expect_verbatim_(b, l + 1);
+    if (!r) r = expect_template_(b, l + 1);
+    if (!r) r = expect_regex_(b, l + 1);
     if (!r) r = flush(b, l + 1);
-    if (!r) r = expect_maybe_regex(b, l + 1);
-    if (!r) r = set_failure(b, l + 1);
-    if (!r) r = set_success(b, l + 1);
-    if (!r) r = set_loop_break(b, l + 1);
+    if (!r) r = expect_maybe_regex_(b, l + 1);
+    if (!r) r = set_failure_(b, l + 1);
+    if (!r) r = set_success_(b, l + 1);
+    if (!r) r = set_loop_break_(b, l + 1);
     return r;
   }
 
@@ -656,6 +605,132 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
+  // K_ML_EXP_MAYBE_REGEX inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_expect_maybe_regex(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_expect_maybe_regex")) return false;
+    if (!nextTokenIs(b, K_ML_EXP_MAYBE_REGEX)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_EXP_MAYBE_REGEX);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_EXPECT_MAYBE_REGEX, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_ML_EXP_REGEX inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_expect_regex(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_expect_regex")) return false;
+    if (!nextTokenIs(b, K_ML_EXP_REGEX)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_EXP_REGEX);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_EXPECT_REGEX, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_ML_EXP_TEMPLATE inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_expect_template(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_expect_template")) return false;
+    if (!nextTokenIs(b, K_ML_EXP_TEMPLATE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_EXP_TEMPLATE);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_EXPECT_TEMPLATE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_ML_EXP_VERBATIM inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_expect_verbatim(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_expect_verbatim")) return false;
+    if (!nextTokenIs(b, K_ML_EXP_VERBATIM)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_EXP_VERBATIM);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_EXPECT_VERBATIM, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_ML_SEND inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_send(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_send")) return false;
+    if (!nextTokenIs(b, K_ML_SEND)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SEND);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_SEND, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_ML_SEND_LN inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_send_ln(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_send_ln")) return false;
+    if (!nextTokenIs(b, K_ML_SEND_LN)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SEND_LN);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_SEND_LN, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_ML_SET_FAILURE inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_set_failure(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_set_failure")) return false;
+    if (!nextTokenIs(b, K_ML_SET_FAILURE)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SET_FAILURE);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_SET_FAILURE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_ML_SET_LOOP_BREAK inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_set_loop_break(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_set_loop_break")) return false;
+    if (!nextTokenIs(b, K_ML_SET_LOOP_BREAK)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SET_LOOP_BREAK);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_SET_LOOP_BREAK, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_ML_SET_SUCCESS inner_multiline T_TRIPLE_QUOTE
+  public static boolean ml_set_success(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "ml_set_success")) return false;
+    if (!nextTokenIs(b, K_ML_SET_SUCCESS)) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, K_ML_SET_SUCCESS);
+    r = r && inner_multiline(b, l + 1);
+    r = r && consumeToken(b, T_TRIPLE_QUOTE);
+    exit_section_(b, m, ML_SET_SUCCESS, r);
+    return r;
+  }
+
+  /* ********************************************************** */
   // TEXT | paste | CRLF
   static boolean multiline_contents(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "multiline_contents")) return false;
@@ -690,190 +765,158 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // (K_SEND inner_line)
-  //     | (K_ML_SEND inner_multiline T_TRIPLE_QUOTE)
+  // K_SEND inner_line
   public static boolean send(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "send")) return false;
-    if (!nextTokenIs(b, "<send>", K_ML_SEND, K_SEND)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, SEND, "<send>");
-    r = send_0(b, l + 1);
-    if (!r) r = send_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // K_SEND inner_line
-  private static boolean send_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "send_0")) return false;
+    if (!nextTokenIs(b, K_SEND)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_SEND);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // K_ML_SEND inner_multiline T_TRIPLE_QUOTE
-  private static boolean send_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "send_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_SEND);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, SEND, r);
     return r;
   }
 
   /* ********************************************************** */
-  // (K_SEND_LN inner_line)
-  //     | (K_ML_SEND_LN inner_multiline T_TRIPLE_QUOTE)
-  public static boolean send_ln(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "send_ln")) return false;
-    if (!nextTokenIs(b, "<send ln>", K_ML_SEND_LN, K_SEND_LN)) return false;
+  // send | ml_send
+  static boolean send_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "send_")) return false;
+    if (!nextTokenIs(b, "", K_ML_SEND, K_SEND)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, SEND_LN, "<send ln>");
-    r = send_ln_0(b, l + 1);
-    if (!r) r = send_ln_1(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    r = send(b, l + 1);
+    if (!r) r = ml_send(b, l + 1);
     return r;
   }
 
+  /* ********************************************************** */
   // K_SEND_LN inner_line
-  private static boolean send_ln_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "send_ln_0")) return false;
+  public static boolean send_ln(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "send_ln")) return false;
+    if (!nextTokenIs(b, K_SEND_LN)) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, K_SEND_LN);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, SEND_LN, r);
     return r;
   }
 
-  // K_ML_SEND_LN inner_multiline T_TRIPLE_QUOTE
-  private static boolean send_ln_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "send_ln_1")) return false;
+  /* ********************************************************** */
+  // send_ln | ml_send_ln
+  static boolean send_ln_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "send_ln_")) return false;
+    if (!nextTokenIs(b, "", K_ML_SEND_LN, K_SEND_LN)) return false;
+    boolean r;
+    r = send_ln(b, l + 1);
+    if (!r) r = ml_send_ln(b, l + 1);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // K_SET_FAILURE inner_line
+  public static boolean set_failure(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_failure")) return false;
+    if (!nextTokenIs(b, K_SET_FAILURE)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_SEND_LN);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    r = consumeToken(b, K_SET_FAILURE);
+    r = r && inner_line(b, l + 1);
+    exit_section_(b, m, SET_FAILURE, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // set_failure | set_failure_only | ml_set_failure
+  static boolean set_failure_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_failure_")) return false;
+    boolean r;
+    r = set_failure(b, l + 1);
+    if (!r) r = set_failure_only(b, l + 1);
+    if (!r) r = ml_set_failure(b, l + 1);
     return r;
   }
 
   /* ********************************************************** */
   // K_SET_FAILURE_ONLY
-  //     | (K_SET_FAILURE inner_line)
-  //     | (K_ML_SET_FAILURE inner_multiline T_TRIPLE_QUOTE)
-  public static boolean set_failure(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_failure")) return false;
+  public static boolean set_failure_only(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_failure_only")) return false;
+    if (!nextTokenIs(b, K_SET_FAILURE_ONLY)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, SET_FAILURE, "<set failure>");
+    Marker m = enter_section_(b);
     r = consumeToken(b, K_SET_FAILURE_ONLY);
-    if (!r) r = set_failure_1(b, l + 1);
-    if (!r) r = set_failure_2(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, SET_FAILURE_ONLY, r);
     return r;
   }
 
-  // K_SET_FAILURE inner_line
-  private static boolean set_failure_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_failure_1")) return false;
+  /* ********************************************************** */
+  // K_SET_LOOP_BREAK inner_line
+  public static boolean set_loop_break(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_loop_break")) return false;
+    if (!nextTokenIs(b, K_SET_LOOP_BREAK)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, K_SET_FAILURE);
+    r = consumeToken(b, K_SET_LOOP_BREAK);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, SET_LOOP_BREAK, r);
     return r;
   }
 
-  // K_ML_SET_FAILURE inner_multiline T_TRIPLE_QUOTE
-  private static boolean set_failure_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_failure_2")) return false;
+  /* ********************************************************** */
+  // set_loop_break_only | set_loop_break | ml_set_loop_break
+  static boolean set_loop_break_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_loop_break_")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_SET_FAILURE);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    r = set_loop_break_only(b, l + 1);
+    if (!r) r = set_loop_break(b, l + 1);
+    if (!r) r = ml_set_loop_break(b, l + 1);
     return r;
   }
 
   /* ********************************************************** */
   // K_SET_LOOP_BREAK_ONLY
-  //     | (K_SET_LOOP_BREAK inner_line)
-  //     | (K_ML_SET_LOOP_BREAK inner_multiline T_TRIPLE_QUOTE)
-  public static boolean set_loop_break(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_loop_break")) return false;
+  public static boolean set_loop_break_only(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_loop_break_only")) return false;
+    if (!nextTokenIs(b, K_SET_LOOP_BREAK_ONLY)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, SET_LOOP_BREAK, "<set loop break>");
+    Marker m = enter_section_(b);
     r = consumeToken(b, K_SET_LOOP_BREAK_ONLY);
-    if (!r) r = set_loop_break_1(b, l + 1);
-    if (!r) r = set_loop_break_2(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, SET_LOOP_BREAK_ONLY, r);
     return r;
   }
 
-  // K_SET_LOOP_BREAK inner_line
-  private static boolean set_loop_break_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_loop_break_1")) return false;
+  /* ********************************************************** */
+  // K_SET_SUCCESS inner_line
+  public static boolean set_success(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_success")) return false;
+    if (!nextTokenIs(b, K_SET_SUCCESS)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeToken(b, K_SET_LOOP_BREAK);
+    r = consumeToken(b, K_SET_SUCCESS);
     r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, SET_SUCCESS, r);
     return r;
   }
 
-  // K_ML_SET_LOOP_BREAK inner_multiline T_TRIPLE_QUOTE
-  private static boolean set_loop_break_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_loop_break_2")) return false;
+  /* ********************************************************** */
+  // set_success | set_success_only | ml_set_success
+  static boolean set_success_(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_success_")) return false;
     boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_SET_LOOP_BREAK);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    r = set_success(b, l + 1);
+    if (!r) r = set_success_only(b, l + 1);
+    if (!r) r = ml_set_success(b, l + 1);
     return r;
   }
 
   /* ********************************************************** */
   // K_SET_SUCCESS_ONLY
-  //     | (K_SET_SUCCESS inner_line)
-  //     | (K_ML_SET_SUCCESS inner_multiline T_TRIPLE_QUOTE)
-  public static boolean set_success(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_success")) return false;
+  public static boolean set_success_only(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "set_success_only")) return false;
+    if (!nextTokenIs(b, K_SET_SUCCESS_ONLY)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, SET_SUCCESS, "<set success>");
+    Marker m = enter_section_(b);
     r = consumeToken(b, K_SET_SUCCESS_ONLY);
-    if (!r) r = set_success_1(b, l + 1);
-    if (!r) r = set_success_2(b, l + 1);
-    exit_section_(b, l, m, r, false, null);
-    return r;
-  }
-
-  // K_SET_SUCCESS inner_line
-  private static boolean set_success_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_success_1")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_SET_SUCCESS);
-    r = r && inner_line(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // K_ML_SET_SUCCESS inner_multiline T_TRIPLE_QUOTE
-  private static boolean set_success_2(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "set_success_2")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, K_ML_SET_SUCCESS);
-    r = r && inner_multiline(b, l + 1);
-    r = r && consumeToken(b, T_TRIPLE_QUOTE);
-    exit_section_(b, m, null, r);
+    exit_section_(b, m, SET_SUCCESS_ONLY, r);
     return r;
   }
 

@@ -30,11 +30,23 @@ public interface LuxTypes {
   IElementType META_SHELL = new LuxElementType("META_SHELL");
   IElementType META_SLEEP = new LuxElementType("META_SLEEP");
   IElementType META_TIMEOUT = new LuxElementType("META_TIMEOUT");
+  IElementType ML_EXPECT_MAYBE_REGEX = new LuxElementType("ML_EXPECT_MAYBE_REGEX");
+  IElementType ML_EXPECT_REGEX = new LuxElementType("ML_EXPECT_REGEX");
+  IElementType ML_EXPECT_TEMPLATE = new LuxElementType("ML_EXPECT_TEMPLATE");
+  IElementType ML_EXPECT_VERBATIM = new LuxElementType("ML_EXPECT_VERBATIM");
+  IElementType ML_SEND = new LuxElementType("ML_SEND");
+  IElementType ML_SEND_LN = new LuxElementType("ML_SEND_LN");
+  IElementType ML_SET_FAILURE = new LuxElementType("ML_SET_FAILURE");
+  IElementType ML_SET_LOOP_BREAK = new LuxElementType("ML_SET_LOOP_BREAK");
+  IElementType ML_SET_SUCCESS = new LuxElementType("ML_SET_SUCCESS");
   IElementType SEND = new LuxElementType("SEND");
   IElementType SEND_LN = new LuxElementType("SEND_LN");
   IElementType SET_FAILURE = new LuxElementType("SET_FAILURE");
+  IElementType SET_FAILURE_ONLY = new LuxElementType("SET_FAILURE_ONLY");
   IElementType SET_LOOP_BREAK = new LuxElementType("SET_LOOP_BREAK");
+  IElementType SET_LOOP_BREAK_ONLY = new LuxElementType("SET_LOOP_BREAK_ONLY");
   IElementType SET_SUCCESS = new LuxElementType("SET_SUCCESS");
+  IElementType SET_SUCCESS_ONLY = new LuxElementType("SET_SUCCESS_ONLY");
 
   IElementType COMMENT = new LuxTokenType("COMMENT");
   IElementType CRLF = new LuxTokenType("<newline>");
@@ -168,6 +180,33 @@ public interface LuxTypes {
       else if (type == META_TIMEOUT) {
         return new LuxMetaTimeoutImpl(node);
       }
+      else if (type == ML_EXPECT_MAYBE_REGEX) {
+        return new LuxMlExpectMaybeRegexImpl(node);
+      }
+      else if (type == ML_EXPECT_REGEX) {
+        return new LuxMlExpectRegexImpl(node);
+      }
+      else if (type == ML_EXPECT_TEMPLATE) {
+        return new LuxMlExpectTemplateImpl(node);
+      }
+      else if (type == ML_EXPECT_VERBATIM) {
+        return new LuxMlExpectVerbatimImpl(node);
+      }
+      else if (type == ML_SEND) {
+        return new LuxMlSendImpl(node);
+      }
+      else if (type == ML_SEND_LN) {
+        return new LuxMlSendLnImpl(node);
+      }
+      else if (type == ML_SET_FAILURE) {
+        return new LuxMlSetFailureImpl(node);
+      }
+      else if (type == ML_SET_LOOP_BREAK) {
+        return new LuxMlSetLoopBreakImpl(node);
+      }
+      else if (type == ML_SET_SUCCESS) {
+        return new LuxMlSetSuccessImpl(node);
+      }
       else if (type == SEND) {
         return new LuxSendImpl(node);
       }
@@ -177,11 +216,20 @@ public interface LuxTypes {
       else if (type == SET_FAILURE) {
         return new LuxSetFailureImpl(node);
       }
+      else if (type == SET_FAILURE_ONLY) {
+        return new LuxSetFailureOnlyImpl(node);
+      }
       else if (type == SET_LOOP_BREAK) {
         return new LuxSetLoopBreakImpl(node);
       }
+      else if (type == SET_LOOP_BREAK_ONLY) {
+        return new LuxSetLoopBreakOnlyImpl(node);
+      }
       else if (type == SET_SUCCESS) {
         return new LuxSetSuccessImpl(node);
+      }
+      else if (type == SET_SUCCESS_ONLY) {
+        return new LuxSetSuccessOnlyImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

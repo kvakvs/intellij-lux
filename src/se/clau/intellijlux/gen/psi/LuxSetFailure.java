@@ -7,16 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxSetFailure extends PsiElement {
 
-  @Nullable
-  PsiElement getKMlSetFailure();
-
-  @Nullable
+  @NotNull
   PsiElement getKSetFailure();
-
-  @Nullable
-  PsiElement getKSetFailureOnly();
-
-  @Nullable
-  PsiElement getTTripleQuote();
 
 }

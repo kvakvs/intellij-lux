@@ -29,21 +29,9 @@ public class LuxExpectVerbatimImpl extends ASTWrapperPsiElement implements LuxEx
   }
 
   @Override
-  @Nullable
+  @NotNull
   public PsiElement getKExpVerbatim() {
-    return findChildByType(K_EXP_VERBATIM);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getKMlExpVerbatim() {
-    return findChildByType(K_ML_EXP_VERBATIM);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getTTripleQuote() {
-    return findChildByType(T_TRIPLE_QUOTE);
+    return findNotNullChildByType(K_EXP_VERBATIM);
   }
 
 }

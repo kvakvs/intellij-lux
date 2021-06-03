@@ -29,21 +29,9 @@ public class LuxSendLnImpl extends ASTWrapperPsiElement implements LuxSendLn {
   }
 
   @Override
-  @Nullable
-  public PsiElement getKMlSendLn() {
-    return findChildByType(K_ML_SEND_LN);
-  }
-
-  @Override
-  @Nullable
+  @NotNull
   public PsiElement getKSendLn() {
-    return findChildByType(K_SEND_LN);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getTTripleQuote() {
-    return findChildByType(T_TRIPLE_QUOTE);
+    return findNotNullChildByType(K_SEND_LN);
   }
 
 }

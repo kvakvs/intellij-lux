@@ -29,21 +29,9 @@ public class LuxExpectRegexImpl extends ASTWrapperPsiElement implements LuxExpec
   }
 
   @Override
-  @Nullable
+  @NotNull
   public PsiElement getKExpRegex() {
-    return findChildByType(K_EXP_REGEX);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getKMlExpRegex() {
-    return findChildByType(K_ML_EXP_REGEX);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getTTripleQuote() {
-    return findChildByType(T_TRIPLE_QUOTE);
+    return findNotNullChildByType(K_EXP_REGEX);
   }
 
 }

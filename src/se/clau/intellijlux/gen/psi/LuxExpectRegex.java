@@ -7,13 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxExpectRegex extends PsiElement {
 
-  @Nullable
+  @NotNull
   PsiElement getKExpRegex();
-
-  @Nullable
-  PsiElement getKMlExpRegex();
-
-  @Nullable
-  PsiElement getTTripleQuote();
 
 }

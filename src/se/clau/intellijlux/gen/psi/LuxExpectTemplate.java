@@ -7,13 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface LuxExpectTemplate extends PsiElement {
 
-  @Nullable
+  @NotNull
   PsiElement getKExpTemplate();
-
-  @Nullable
-  PsiElement getKMlExpTemplate();
-
-  @Nullable
-  PsiElement getTTripleQuote();
 
 }

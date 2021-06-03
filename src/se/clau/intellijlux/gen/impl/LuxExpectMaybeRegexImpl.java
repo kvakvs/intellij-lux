@@ -29,21 +29,9 @@ public class LuxExpectMaybeRegexImpl extends ASTWrapperPsiElement implements Lux
   }
 
   @Override
-  @Nullable
+  @NotNull
   public PsiElement getKExpMaybeRegex() {
-    return findChildByType(K_EXP_MAYBE_REGEX);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getKMlExpMaybeRegex() {
-    return findChildByType(K_ML_EXP_MAYBE_REGEX);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getTTripleQuote() {
-    return findChildByType(T_TRIPLE_QUOTE);
+    return findNotNullChildByType(K_EXP_MAYBE_REGEX);
   }
 
 }

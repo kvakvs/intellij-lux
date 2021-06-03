@@ -29,27 +29,9 @@ public class LuxSetFailureImpl extends ASTWrapperPsiElement implements LuxSetFai
   }
 
   @Override
-  @Nullable
-  public PsiElement getKMlSetFailure() {
-    return findChildByType(K_ML_SET_FAILURE);
-  }
-
-  @Override
-  @Nullable
+  @NotNull
   public PsiElement getKSetFailure() {
-    return findChildByType(K_SET_FAILURE);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getKSetFailureOnly() {
-    return findChildByType(K_SET_FAILURE_ONLY);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getTTripleQuote() {
-    return findChildByType(T_TRIPLE_QUOTE);
+    return findNotNullChildByType(K_SET_FAILURE);
   }
 
 }
