@@ -17,8 +17,7 @@ import com.intellij.lexer.FlexLexer;
 %public
 
 NewLine         = [\r\n]
-BLANK           = [\ \t\f]
-COMMENT         = "#"[^\r\n]*
+Whitespace      = [\s\t\f]
 SpecialIdent    = \$ "?"
 T_IDENT         = [\w_\$] ([\w\d_\-] *)
 T_NUMBER        = [0-9]+
@@ -33,14 +32,13 @@ LinePasteVarCurly   = \$\{ {T_IDENT} \}
 LineText                = [^\r\n\$]+
 LineTextNoBackslash     = [^\r\n\$\\]+
 
-Whitespace              = [\s\t]
-T_TRIPLE_QUOTE          = "\"\"\""
+TripleQuote             = "\"\"\""
 AnyWhitespace           = {Whitespace} *
-AnyWhitespaceTripleQ    = {AnyWhitespace} {T_TRIPLE_QUOTE}
-LineTextUntilTripleQ    = {LineText} {T_TRIPLE_QUOTE}
+AnyWhitespaceTripleQ    = {AnyWhitespace} {TripleQuote}
+LineTextUntilTripleQ    = {LineText} {TripleQuote}
 
 T_ENDDOC = "[enddoc]"
-T_DOC_TEXT = [^$\[] *
+T_DOC_TEXT = [^$\[] +
 
 %state IN_DOC
 %state IN_CONFIG
@@ -71,68 +69,68 @@ T_DOC_TEXT = [^$\[] *
 %%
 
 <YYINITIAL> {
-    {Whitespace} { return TokenType.WHITE_SPACE; }
-    {COMMENT}    { return LuxTypes.COMMENT; }
+    {Whitespace}     { return TokenType.WHITE_SPACE; }
+    "#" .*           { return LuxTypes.COMMENT; }
 
-    "!"                  { yybegin(REMAINING_LINE); return LuxTypes.K_SEND; }
-    {T_TRIPLE_QUOTE}"!"  { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_SEND; }
-    "~"                  { yybegin(REMAINING_LINE); return LuxTypes.K_SEND_LN; }
-    {T_TRIPLE_QUOTE}"~"  { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_SEND_LN; }
-    "???"                { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_VERBATIM; }
-    {T_TRIPLE_QUOTE}"???" { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_VERBATIM; }
-    "??"                 { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_TEMPLATE; }
-    {T_TRIPLE_QUOTE}"??" { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_TEMPLATE; }
-    "?+"                 { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX; }
-    {T_TRIPLE_QUOTE}"?+" { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_MAYBE_REGEX; }
+    "!"                 { yybegin(REMAINING_LINE); return LuxTypes.K_SEND; }
+    {TripleQuote}"!"    { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_SEND; }
+    "~"                 { yybegin(REMAINING_LINE); return LuxTypes.K_SEND_LN; }
+    {TripleQuote}"~"    { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_SEND_LN; }
+    "???"               { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_VERBATIM; }
+    {TripleQuote}"???"  { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_VERBATIM; }
+    "??"                { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_TEMPLATE; }
+    {TripleQuote}"??"   { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_TEMPLATE; }
+    "?+"                { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_MAYBE_REGEX; }
+    {TripleQuote}"?+"   { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_MAYBE_REGEX; }
 
-    "?"{NewLine}         { return LuxTypes.K_FLUSH; }
-    "?"                  { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX; }
-    {T_TRIPLE_QUOTE}"?"  { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_REGEX; }
+    "?"{NewLine}        { return LuxTypes.K_FLUSH; }
+    "?"                 { yybegin(REMAINING_LINE); return LuxTypes.K_EXP_REGEX; }
+    {TripleQuote}"?"    { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_EXP_REGEX; }
 
-    "+"{NewLine}   { return LuxTypes.K_SET_SUCCESS_ONLY; }
-    "+"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_SUCCESS; }
+    "+"{NewLine}        { return LuxTypes.K_SET_SUCCESS_ONLY; }
+    "+"                 { yybegin(REMAINING_LINE); return LuxTypes.K_SET_SUCCESS; }
 
-    "-"{NewLine}   { return LuxTypes.K_SET_FAILURE_ONLY; }
-    "-"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_FAILURE; }
+    "-"{NewLine}        { return LuxTypes.K_SET_FAILURE_ONLY; }
+    "-"                 { yybegin(REMAINING_LINE); return LuxTypes.K_SET_FAILURE; }
 
-    "@"{NewLine}   { return LuxTypes.K_SET_LOOP_BREAK_ONLY; }
-    "@"            { yybegin(REMAINING_LINE); return LuxTypes.K_SET_LOOP_BREAK; }
+    // Longest to shortest
+    {TripleQuote}"@"    { yybegin(IN_TRIPLE_QUOTE); return LuxTypes.K_ML_SET_LOOP_BREAK; }
+    "@"{NewLine}        { return LuxTypes.K_SET_LOOP_BREAK_ONLY; }
+    "@"                 { yybegin(REMAINING_LINE); return LuxTypes.K_SET_LOOP_BREAK; }
 
     "]"                { return LuxTypes.T_SQR_CLOSE; }
 
     "[cleanup]"        { return LuxTypes.K_CLEANUP; }
 
     "[endloop]"        { return LuxTypes.K_END_LOOP; }
-    "[loop"{BLANK}     { yybegin(IN_LOOP); return LuxTypes.K_LOOP; }
+    "[loop"{Whitespace}     { yybegin(IN_LOOP); return LuxTypes.K_LOOP; }
 
     "[endmacro]"       { return LuxTypes.K_END_MACRO; }
-    "[macro"{BLANK}    { yybegin(IN_MACRO); return LuxTypes.K_MACRO; }
+    "[macro"{Whitespace}    { yybegin(IN_MACRO); return LuxTypes.K_MACRO; }
 
-    "[invoke"{BLANK}   { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE; }
+    "[invoke"{Whitespace}   { yybegin(IN_INVOKE); return LuxTypes.K_INVOKE; }
     "[doc]"            { yybegin(IN_DOC); return LuxTypes.K_DOC_ONLY; }
-    "[doc"{BLANK}      { yybegin(CONSUME_META); return LuxTypes.K_DOC; }
+    "[doc"{Whitespace}      { yybegin(CONSUME_META); return LuxTypes.K_DOC; }
 
-    "[progress"{BLANK} { yybegin(CONSUME_META); return LuxTypes.K_PROGRESS; }
+    "[progress"{Whitespace} { yybegin(CONSUME_META); return LuxTypes.K_PROGRESS; }
 
-    "[config"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG; }
-    "[local"{BLANK}    { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL; }
-    "[global"{BLANK}   { yybegin(IN_CONFIG); return LuxTypes.K_GLOBAL; }
-    "[my"{BLANK}       { yybegin(IN_CONFIG); return LuxTypes.K_MY; }
+    "[config"{Whitespace}   { yybegin(IN_CONFIG); return LuxTypes.K_CONFIG; }
+    "[local"{Whitespace}    { yybegin(IN_CONFIG); return LuxTypes.K_LOCAL; }
+    "[global"{Whitespace}   { yybegin(IN_CONFIG); return LuxTypes.K_GLOBAL; }
+    "[my"{Whitespace}       { yybegin(IN_CONFIG); return LuxTypes.K_MY; }
 
     "[newshell]"       { return LuxTypes.K_NEWSHELL_ONLY; }
-    "[newshell"{BLANK} { yybegin(IN_NEWSHELL); return LuxTypes.K_NEWSHELL; }
+    "[newshell"{Whitespace} { yybegin(IN_NEWSHELL); return LuxTypes.K_NEWSHELL; }
     "[shell]"          { return LuxTypes.K_SHELL_ONLY; }
-    "[shell"{BLANK}    { yybegin(IN_SHELL); return LuxTypes.K_SHELL; }
+    "[shell"{Whitespace}    { yybegin(IN_SHELL); return LuxTypes.K_SHELL; }
     "[timeout]"        { return LuxTypes.K_TIMEOUT_ONLY; }
-    "[timeout"{BLANK}  { yybegin(WAIT_NUM); return LuxTypes.K_TIMEOUT; }
-    "[sleep"{BLANK}    { yybegin(WAIT_NUM); return LuxTypes.K_SLEEP; }
-    "[include"{BLANK}  { yybegin(CONSUME_META); return LuxTypes.K_INCLUDE; }
-
-    {BLANK}+           { return TokenType.WHITE_SPACE; }
-    {NewLine}+         { return LuxTypes.CRLF; }
+    "[timeout"{Whitespace}  { yybegin(WAIT_NUM); return LuxTypes.K_TIMEOUT; }
+    "[sleep"{Whitespace}    { yybegin(WAIT_NUM); return LuxTypes.K_SLEEP; }
+    "[include"{Whitespace}  { yybegin(CONSUME_META); return LuxTypes.K_INCLUDE; }
 }
 
 <REMAINING_LINE> {
+    {NewLine}             { yybegin(YYINITIAL); }
     "\\" {NewLine}        { return LuxTypes.LINE_CONTINUATION; }
     {Whitespace}          { return LuxTypes.TEXT; }
     {LineTextNoBackslash} { return LuxTypes.TEXT; }
@@ -141,8 +139,8 @@ T_DOC_TEXT = [^$\[] *
     {LinePasteVarCurly}   { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteCapture}    { return LuxTypes.T_PASTE_CAPTURE; }
     {LinePasteExitcode}   { return LuxTypes.T_PASTE_EXITCODE; }
-    {NewLine}             { yybegin(YYINITIAL); return LuxTypes.CRLF; }
     "\\"                  { return LuxTypes.TEXT; }
+    "$"                   { return LuxTypes.TEXT; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }
 
@@ -155,6 +153,7 @@ T_DOC_TEXT = [^$\[] *
     {LinePasteVarCurly}     { return LuxTypes.T_PASTE_VARIABLE; }
     {LinePasteCapture}      { return LuxTypes.T_PASTE_CAPTURE; }
     {LinePasteExitcode}     { return LuxTypes.T_PASTE_EXITCODE; }
+    "$"                   { return LuxTypes.TEXT; }
     {NewLine}               { return LuxTypes.CRLF; }
     // <<EOF>>           { return TokenType.BAD_CHARACTER; }
 }

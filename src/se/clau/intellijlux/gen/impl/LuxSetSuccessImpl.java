@@ -30,12 +30,6 @@ public class LuxSetSuccessImpl extends ASTWrapperPsiElement implements LuxSetSuc
 
   @Override
   @Nullable
-  public PsiElement getCrlf() {
-    return findChildByType(CRLF);
-  }
-
-  @Override
-  @Nullable
   public PsiElement getKMlSetSuccess() {
     return findChildByType(K_ML_SET_SUCCESS);
   }

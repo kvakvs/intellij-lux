@@ -1,8 +1,6 @@
 {
   parserClass="se.clau.intellijlux.gen.parser.LuxParser"
-
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
-
   psiClassPrefix="Lux"
   psiImplClassSuffix="Impl"
   psiPackage="se.clau.intellijlux.gen.psi"
@@ -13,6 +11,7 @@
   elementTypeClass="se.clau.intellijlux.psi.LuxElementType"
   tokenTypeClass="se.clau.intellijlux.psi.LuxTokenType"
   tokens=[
+    CRLF = "<newline>"
     T_BANG = "!"
     T_TILDE = "~"
     T_TRIPLE_QUESTION = "???"
@@ -31,7 +30,7 @@
 lux_file ::= lux_file_item *
 
 private lux_command ::=
-    COMMENT | CRLF
+    COMMENT
     | meta_doc | K_END_DOC
     | meta_shell | meta_newshell
     | meta_timeout | meta_sleep
@@ -69,7 +68,7 @@ meta_invoke ::= (K_INVOKE ident) meta_contents
 meta_loop ::= (K_LOOP ident) meta_contents
 meta_progress ::= K_PROGRESS meta_contents
 
-private inner inner_number ::= T_NUMBER T_SQR_CLOSE CRLF
+private inner inner_number ::= T_NUMBER T_SQR_CLOSE
 private inner meta_contents ::= ( meta_element * ) END_META
 private meta_element ::= TEXT | paste
 
@@ -102,7 +101,7 @@ set_loop_break ::= K_SET_LOOP_BREAK_ONLY
     | (K_SET_LOOP_BREAK inner_line)
     | (K_ML_SET_LOOP_BREAK inner_multiline T_TRIPLE_QUOTE)
 
-private inner inner_line ::= line_contents * CRLF
+private inner inner_line ::= line_contents *
 
 // LINE_CONTINUATION in line_contents for when it is broken with \\
 private line_contents ::= TEXT | paste | LINE_CONTINUATION

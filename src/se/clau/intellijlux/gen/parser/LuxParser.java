@@ -208,24 +208,13 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // line_contents * CRLF
+  // line_contents *
   static boolean inner_line(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inner_line")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = inner_line_0(b, l + 1);
-    r = r && consumeToken(b, CRLF);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // line_contents *
-  private static boolean inner_line_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "inner_line_0")) return false;
     while (true) {
       int c = current_position_(b);
       if (!line_contents(b, l + 1)) break;
-      if (!empty_element_parsed_guard_(b, "inner_line_0", c)) break;
+      if (!empty_element_parsed_guard_(b, "inner_line", c)) break;
     }
     return true;
   }
@@ -243,13 +232,13 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // T_NUMBER T_SQR_CLOSE CRLF
+  // T_NUMBER T_SQR_CLOSE
   static boolean inner_number(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "inner_number")) return false;
     if (!nextTokenIs(b, T_NUMBER)) return false;
     boolean r;
     Marker m = enter_section_(b);
-    r = consumeTokens(b, 0, T_NUMBER, T_SQR_CLOSE, CRLF);
+    r = consumeTokens(b, 0, T_NUMBER, T_SQR_CLOSE);
     exit_section_(b, m, null, r);
     return r;
   }
@@ -280,7 +269,7 @@ public class LuxParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // COMMENT | CRLF
+  // COMMENT
   //     | meta_doc | K_END_DOC
   //     | meta_shell | meta_newshell
   //     | meta_timeout | meta_sleep
@@ -295,7 +284,6 @@ public class LuxParser implements PsiParser, LightPsiParser {
     if (!recursion_guard_(b, l, "lux_command")) return false;
     boolean r;
     r = consumeToken(b, COMMENT);
-    if (!r) r = consumeToken(b, CRLF);
     if (!r) r = meta_doc(b, l + 1);
     if (!r) r = consumeToken(b, K_END_DOC);
     if (!r) r = meta_shell(b, l + 1);

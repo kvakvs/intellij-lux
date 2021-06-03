@@ -30,12 +30,6 @@ public class LuxMetaSleepImpl extends ASTWrapperPsiElement implements LuxMetaSle
 
   @Override
   @NotNull
-  public PsiElement getCrlf() {
-    return findNotNullChildByType(CRLF);
-  }
-
-  @Override
-  @NotNull
   public PsiElement getKSleep() {
     return findNotNullChildByType(K_SLEEP);
   }

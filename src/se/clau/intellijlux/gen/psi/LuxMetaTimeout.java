@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface LuxMetaTimeout extends PsiElement {
 
   @Nullable
-  PsiElement getCrlf();
-
-  @Nullable
   PsiElement getKTimeout();
 
   @Nullable

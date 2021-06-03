@@ -1,5 +1,5 @@
 // This is a generated file. Not intended for manual editing.
-package se.clau.intellijlux.impl;
+package se.clau.intellijlux.gen.impl;
 
 import java.util.List;
 import org.jetbrains.annotations.*;
@@ -7,19 +7,19 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static se.clau.intellijlux.psi.LuxTypes.*;
+import static se.clau.intellijlux.gen.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.gen.psi.*;
 import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
-public class LuxExpectVerbatimImpl extends ASTWrapperPsiElement implements LuxExpectVerbatim {
+public class LuxMetaMyImpl extends ASTWrapperPsiElement implements LuxMetaMy {
 
-  public LuxExpectVerbatimImpl(@NotNull ASTNode node) {
+  public LuxMetaMyImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull LuxVisitor visitor) {
-    visitor.visitExpectVerbatim(this);
+    visitor.visitMetaMy(this);
   }
 
   @Override
@@ -29,21 +29,27 @@ public class LuxExpectVerbatimImpl extends ASTWrapperPsiElement implements LuxEx
   }
 
   @Override
-  @Nullable
-  public PsiElement getKExpVerbatim() {
-    return findChildByType(K_EXP_VERBATIM);
+  @NotNull
+  public LuxIdent getIdent() {
+    return findNotNullChildByClass(LuxIdent.class);
   }
 
   @Override
-  @Nullable
-  public PsiElement getKMlExpVerbatim() {
-    return findChildByType(K_ML_EXP_VERBATIM);
+  @NotNull
+  public PsiElement getEndMeta() {
+    return findNotNullChildByType(END_META);
   }
 
   @Override
-  @Nullable
-  public PsiElement getTTripleQuote() {
-    return findChildByType(T_TRIPLE_QUOTE);
+  @NotNull
+  public PsiElement getKMy() {
+    return findNotNullChildByType(K_MY);
+  }
+
+  @Override
+  @NotNull
+  public PsiElement getTEquals() {
+    return findNotNullChildByType(T_EQUALS);
   }
 
 }

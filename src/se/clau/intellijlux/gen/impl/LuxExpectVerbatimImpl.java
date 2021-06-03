@@ -1,5 +1,5 @@
 // This is a generated file. Not intended for manual editing.
-package se.clau.intellijlux.impl;
+package se.clau.intellijlux.gen.impl;
 
 import java.util.List;
 import org.jetbrains.annotations.*;
@@ -7,19 +7,19 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import static se.clau.intellijlux.psi.LuxTypes.*;
+import static se.clau.intellijlux.gen.psi.LuxTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import se.clau.intellijlux.psi.*;
+import se.clau.intellijlux.gen.psi.*;
 import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
-public class LuxMetaProgressImpl extends ASTWrapperPsiElement implements LuxMetaProgress {
+public class LuxExpectVerbatimImpl extends ASTWrapperPsiElement implements LuxExpectVerbatim {
 
-  public LuxMetaProgressImpl(@NotNull ASTNode node) {
+  public LuxExpectVerbatimImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull LuxVisitor visitor) {
-    visitor.visitMetaProgress(this);
+    visitor.visitExpectVerbatim(this);
   }
 
   @Override
@@ -29,15 +29,21 @@ public class LuxMetaProgressImpl extends ASTWrapperPsiElement implements LuxMeta
   }
 
   @Override
-  @NotNull
-  public PsiElement getEndMeta() {
-    return findNotNullChildByType(END_META);
+  @Nullable
+  public PsiElement getKExpVerbatim() {
+    return findChildByType(K_EXP_VERBATIM);
   }
 
   @Override
-  @NotNull
-  public PsiElement getKProgress() {
-    return findNotNullChildByType(K_PROGRESS);
+  @Nullable
+  public PsiElement getKMlExpVerbatim() {
+    return findChildByType(K_ML_EXP_VERBATIM);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getTTripleQuote() {
+    return findChildByType(T_TRIPLE_QUOTE);
   }
 
 }

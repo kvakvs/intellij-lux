@@ -30,12 +30,6 @@ public class LuxSetLoopBreakImpl extends ASTWrapperPsiElement implements LuxSetL
 
   @Override
   @Nullable
-  public PsiElement getCrlf() {
-    return findChildByType(CRLF);
-  }
-
-  @Override
-  @Nullable
   public PsiElement getKMlSetLoopBreak() {
     return findChildByType(K_ML_SET_LOOP_BREAK);
   }

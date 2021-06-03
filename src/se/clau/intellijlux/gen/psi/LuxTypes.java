@@ -1,10 +1,12 @@
 // This is a generated file. Not intended for manual editing.
-package se.clau.intellijlux.psi;
+package se.clau.intellijlux.gen.psi;
 
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.PsiElement;
 import com.intellij.lang.ASTNode;
-import se.clau.intellijlux.impl.*;
+import se.clau.intellijlux.psi.LuxElementType;
+import se.clau.intellijlux.psi.LuxTokenType;
+import se.clau.intellijlux.gen.impl.*;
 
 public interface LuxTypes {
 
@@ -35,7 +37,7 @@ public interface LuxTypes {
   IElementType SET_SUCCESS = new LuxElementType("SET_SUCCESS");
 
   IElementType COMMENT = new LuxTokenType("COMMENT");
-  IElementType CRLF = new LuxTokenType("CRLF");
+  IElementType CRLF = new LuxTokenType("<newline>");
   IElementType END_META = new LuxTokenType("END_META");
   IElementType K_CLEANUP = new LuxTokenType("K_CLEANUP");
   IElementType K_CONFIG = new LuxTokenType("K_CONFIG");

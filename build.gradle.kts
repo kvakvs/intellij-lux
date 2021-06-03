@@ -80,11 +80,11 @@ allprojects {
     purgeOldFiles = true
   }
 
-  tasks.withType<KotlinCompile> {
-    dependsOn(
-      generateLuxLexer, generateLuxParser
-    )
-  }
+//  tasks.withType<KotlinCompile> {
+//    dependsOn(
+//      generateLuxLexer, generateLuxParser
+//    )
+//  }
 
   tasks {
     runIde {

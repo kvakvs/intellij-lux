@@ -30,12 +30,6 @@ public class LuxMetaTimeoutImpl extends ASTWrapperPsiElement implements LuxMetaT
 
   @Override
   @Nullable
-  public PsiElement getCrlf() {
-    return findChildByType(CRLF);
-  }
-
-  @Override
-  @Nullable
   public PsiElement getKTimeout() {
     return findChildByType(K_TIMEOUT);
   }
