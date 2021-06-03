@@ -14,7 +14,7 @@ import se.clau.intellijlux.psi.impl.LuxPsiImplUtil;
 
 public class LuxIdentImpl extends LuxNamedElementImpl implements LuxIdent {
 
-  public LuxIdentImpl(@NotNull ASTNode node) {
+  public LuxIdentImpl(ASTNode node) {
     super(node);
   }
 
@@ -32,24 +32,6 @@ public class LuxIdentImpl extends LuxNamedElementImpl implements LuxIdent {
   @NotNull
   public PsiElement getTIdent() {
     return findNotNullChildByType(T_IDENT);
-  }
-
-  @Override
-  @Nullable
-  public String getName() {
-    return LuxPsiImplUtil.getName(this);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement setName(@Nullable String newName) {
-    return LuxPsiImplUtil.setName(this, newName);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getNameIdentifier() {
-    return LuxPsiImplUtil.getNameIdentifier(this);
   }
 
 }

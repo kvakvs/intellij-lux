@@ -18,34 +18,21 @@ import se.clau.intellijlux.psi.LuxTypes
 class LuxParserDefinition : ParserDefinition {
   override fun createLexer(project: Project): Lexer = LuxLexerAdapter()
 
-  override fun getWhitespaceTokens(): TokenSet = WHITE_SPACES
+  override fun getWhitespaceTokens(): TokenSet = TokenSet.create(TokenType.WHITE_SPACE)
 
-  override fun getCommentTokens(): TokenSet = COMMENTS
+  override fun getCommentTokens(): TokenSet = TokenSet.create(LuxTypes.COMMENT)
 
   override fun getStringLiteralElements(): TokenSet = TokenSet.EMPTY
 
   override fun createParser(project: Project): PsiParser = LuxParser()
 
-  override fun getFileNodeType(): IFileElementType = FILE
+  override fun getFileNodeType(): IFileElementType = IFileElementType(LuxLanguage)
 
-  override fun createFile(viewProvider: FileViewProvider): PsiFile {
-    return LuxFile(viewProvider)
-  }
+  override fun createFile(viewProvider: FileViewProvider): PsiFile = LuxFile(viewProvider)
 
-  override fun spaceExistenceTypeBetweenTokens(
-    left: ASTNode,
-    right: ASTNode
-  ): SpaceRequirements {
+  override fun spaceExistenceTypeBetweenTokens(left: ASTNode, right: ASTNode): SpaceRequirements {
     return SpaceRequirements.MAY
   }
 
-  override fun createElement(node: ASTNode): PsiElement {
-    return LuxTypes.Factory.createElement(node)
-  }
-
-  companion object {
-    val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE)
-    val COMMENTS = TokenSet.create(LuxTypes.COMMENT)
-    val FILE = IFileElementType(LuxLanguage)
-  }
+  override fun createElement(node: ASTNode): PsiElement = LuxTypes.Factory.createElement(node)
 }

@@ -7,7 +7,7 @@ import com.intellij.lexer.FlexLexer;
 
 %%
 
-%class LuxLexer
+%class _LuxLexer
 %implements FlexLexer
 %unicode
 %function advance
@@ -32,13 +32,13 @@ LinePasteVarCurly   = \$\{ {T_IDENT} \}
 LineText                = [^\r\n\$]+
 LineTextNoBackslash     = [^\r\n\$\\]+
 
-Whitespace              = [\x20\t] +
-T_TRIPLE_QUOTE             = "\"\"\""
+Whitespace              = [\s\t]
+T_TRIPLE_QUOTE          = "\"\"\""
 AnyWhitespace           = {Whitespace} *
 AnyWhitespaceTripleQ    = {AnyWhitespace} {T_TRIPLE_QUOTE}
 LineTextUntilTripleQ    = {LineText} {T_TRIPLE_QUOTE}
 
-T_ENDDOC = {AnyWhitespace} "[enddoc]"
+T_ENDDOC = "[enddoc]"
 T_DOC_TEXT = [^$\[] *
 
 %state IN_DOC
@@ -70,6 +70,7 @@ T_DOC_TEXT = [^$\[] *
 %%
 
 <YYINITIAL> {
+    {Whitespace} { return TokenType.WHITE_SPACE; }
     {COMMENT}    { return LuxTypes.COMMENT; }
 
     "!"                  { yybegin(REMAINING_LINE); return LuxTypes.K_SEND; }
