@@ -5,7 +5,7 @@ import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FileTypeIndex
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
-import se.clau.intellijlux.psi.LuxIdent
+import se.clau.intellijlux.gen.psi.*
 import java.util.*
 
 object LuxUtil {

@@ -1,7 +1,7 @@
-package se.clau.intellijlux;
+package se.clau.intellijlux.gen.lexer;
 
 import com.intellij.psi.tree.IElementType;
-import se.clau.intellijlux.psi.LuxTypes;
+import se.clau.intellijlux.gen.psi.LuxTypes;
 import com.intellij.psi.TokenType;
 import com.intellij.lexer.FlexLexer;
 
@@ -14,6 +14,7 @@ import com.intellij.lexer.FlexLexer;
 %type IElementType
 %eof{  return;
 %eof}
+%public
 
 NewLine         = [\r\n]
 BLANK           = [\ \t\f]

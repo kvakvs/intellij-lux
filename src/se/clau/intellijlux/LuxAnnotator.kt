@@ -6,7 +6,7 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
-import se.clau.intellijlux.psi.*
+import se.clau.intellijlux.gen.psi.*
 
 class LuxAnnotator : Annotator {
   override fun annotate(element: PsiElement, holder: AnnotationHolder) {

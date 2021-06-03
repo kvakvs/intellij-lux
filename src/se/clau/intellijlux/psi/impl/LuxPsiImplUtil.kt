@@ -3,8 +3,7 @@ package se.clau.intellijlux.psi.impl
 import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import se.clau.intellijlux.psi.LuxElementFactory
-import se.clau.intellijlux.psi.LuxIdent
-import se.clau.intellijlux.psi.LuxTypes
+import se.clau.intellijlux.gen.psi.*
 
 object LuxPsiImplUtil {
   @JvmStatic

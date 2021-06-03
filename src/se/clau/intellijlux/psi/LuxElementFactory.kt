@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiFileFactory
 import se.clau.intellijlux.LuxFile
 import se.clau.intellijlux.LuxFileType
+import se.clau.intellijlux.gen.psi.*
 
 object LuxElementFactory {
   fun createProperty(project: Project?, name: String?): LuxIdent {

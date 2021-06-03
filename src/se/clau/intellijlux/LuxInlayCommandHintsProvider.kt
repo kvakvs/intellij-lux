@@ -1,14 +1,13 @@
 package se.clau.intellijlux
 
 import com.intellij.codeInsight.hints.*
-import com.intellij.codeInsight.hints.presentation.InlayPresentation
 import com.intellij.openapi.components.service
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.DumbService
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.refactoring.suggested.endOffset
 import com.intellij.refactoring.suggested.startOffset
+import se.clau.intellijlux.gen.psi.*
 import se.clau.intellijlux.psi.*
 import javax.swing.JComponent
 import javax.swing.JPanel

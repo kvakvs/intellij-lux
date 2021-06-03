@@ -31,9 +31,15 @@ java {
   targetCompatibility = JavaVersion.VERSION_11
 }
 
-val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
-compileKotlin.kotlinOptions.freeCompilerArgs += "-Xjvm-default=enable"
-compileKotlin.kotlinOptions.jvmTarget = "11"
+//val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
+//compileKotlin.kotlinOptions.freeCompilerArgs += "-Xjvm-default=enable"
+//compileKotlin.kotlinOptions.jvmTarget = "11"
+tasks.withType(KotlinCompile::class).all {
+  kotlinOptions {
+    jvmTarget = "11"
+    freeCompilerArgs = listOf("-Xjvm-default=enable")
+  }
+}
 
 allprojects {
   sourceSets {
@@ -47,7 +53,7 @@ allprojects {
 
   idea {
     module {
-      generatedSourceDirs.add(file("src/gen"))
+      generatedSourceDirs.add(file("src/se/clau/intellijlux/gen/"))
     }
   }
 
@@ -61,16 +67,16 @@ allprojects {
 
   val generateLuxLexer = task<GenerateLexer>("generateLuxLexer") {
     source = "src/grammars/lux-lexer.flex"
-    targetDir = "src/gen/se/clau/intellijlux/lexer"
+    targetDir = "src/se/clau/intellijlux/gen/lexer"
     targetClass = "_LuxLexer"
     purgeOldFiles = true
   }
 
   val generateLuxParser = task<GenerateParser>("generateLuxParser") {
     source = "src/grammars/lux-parser.bnf"
-    targetRoot = "src/gen"
-    pathToParser = "/se/clau/intellijlux/parser/LuxParser.java"
-    pathToPsiRoot = "/se/clau/intellijlux/psi"
+    targetRoot = "src"
+    pathToParser = "/se/clau/intellijlux/gen/parser/LuxParser.java"
+    pathToPsiRoot = "/se/clau/intellijlux/gen/psi"
     purgeOldFiles = true
   }
 

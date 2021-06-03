@@ -1,15 +1,15 @@
 {
-  parserClass="se.clau.intellijlux.parser.LuxParser"
+  parserClass="se.clau.intellijlux.gen.parser.LuxParser"
 
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
   psiClassPrefix="Lux"
   psiImplClassSuffix="Impl"
-  psiPackage="se.clau.intellijlux.psi"
-  psiImplPackage="se.clau.intellijlux.impl"
+  psiPackage="se.clau.intellijlux.gen.psi"
+  psiImplPackage="se.clau.intellijlux.gen.impl"
   psiImplUtilClass="se.clau.intellijlux.psi.impl.LuxPsiImplUtil"
 
-  elementTypeHolderClass="se.clau.intellijlux.psi.LuxTypes"
+  elementTypeHolderClass="se.clau.intellijlux.gen.psi.LuxTypes"
   elementTypeClass="se.clau.intellijlux.psi.LuxElementType"
   tokenTypeClass="se.clau.intellijlux.psi.LuxTokenType"
   tokens=[

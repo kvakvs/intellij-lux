@@ -4,7 +4,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.util.ProcessingContext
-import se.clau.intellijlux.psi.LuxIdent
+import se.clau.intellijlux.gen.psi.LuxIdent
 
 class LuxReferenceContributor : PsiReferenceContributor() {
   override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {

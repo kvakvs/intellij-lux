@@ -38,12 +38,13 @@ class LuxReference(
     val project = myElement!!.project
     val idents = findIdentifiers(project)
     val variants: MutableList<LookupElement> = ArrayList()
-    for (idnt in idents) {
-      if (idnt.text != null && idnt.text.isNotEmpty()) {
+
+    for (the_ident in idents) {
+      if (the_ident.text != null && the_ident.text.isNotEmpty()) {
         variants.add(
-          LookupElementBuilder.create(idnt)
+          LookupElementBuilder.create(the_ident)
             .withIcon(LuxIcons.FILE)
-            .withTypeText(idnt.containingFile.name)
+            .withTypeText(the_ident.containingFile.name)
         )
       }
     }
