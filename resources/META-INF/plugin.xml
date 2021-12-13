@@ -12,7 +12,7 @@
 
       <ul>
         <li>Syntax and support for file types for Lux and Lux includes</li>
-        <li>Annotations for Lux operators</li>
+        <li>Annotations (inlay hints) for Lux operators</li>
         <li>Commenting feature</li>
         <li>TODO: Code navigation and folding</li>
       </ul>
@@ -20,14 +20,8 @@
 
   <change-notes><![CDATA[
     <ul>
-      <li>Parsing fixed for multiline (triple quotes) commands.</li>
-      <li>Added special return-code identifier <code>$?</code></li>
-      <li>Operators now have mouse-over annotations on them</li>
-      <li>Variables can now be pasted also in other metas</li>
-      <li>Fixed syntax highlighting for <code>[macro ident-ident]</code> with dashes.</li>
-      <li><code>$name</code> and <code>${name}</code> variables are now highlighted in
-        both single and multiline commands, <code>$$</code> denotes a dollar sign.</li>
-      <li>Support backslash for single line continuation \\</li>
+      <li>Fixed bug with creating multiple file root nodes, while a single node object had to be returned, this
+        created IDE error when indexing very large projects.</li>
     </ul>
     <div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a>
     from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>

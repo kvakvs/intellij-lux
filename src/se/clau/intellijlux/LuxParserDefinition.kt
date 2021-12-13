@@ -21,7 +21,13 @@ class LuxParserDefinition : ParserDefinition {
   override fun getCommentTokens(): TokenSet = TokenSet.create(LuxTypes.COMMENT)
   override fun getStringLiteralElements(): TokenSet = TokenSet.EMPTY
   override fun createParser(project: Project): PsiParser = LuxParser()
-  override fun getFileNodeType(): IFileElementType = IFileElementType(LuxLanguage)
+
+  companion object {
+    val FILE = IFileElementType(LuxLanguage)
+  }
+
+  override fun getFileNodeType(): IFileElementType = FILE
+
   override fun createFile(viewProvider: FileViewProvider): PsiFile = LuxFile(viewProvider)
   override fun spaceExistenceTypeBetweenTokens(left: ASTNode, right: ASTNode): SpaceRequirements =
     SpaceRequirements.MAY
