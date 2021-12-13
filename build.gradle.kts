@@ -7,9 +7,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   idea
   java
-  id("org.jetbrains.kotlin.jvm") version "1.4.32"
+  id("org.jetbrains.kotlin.jvm") version "1.6.0"
   id("org.jetbrains.intellij") version "0.7.2"
-  id("org.jetbrains.grammarkit") version "2021.1"
+  id("org.jetbrains.grammarkit") version "2021.1.2"
 }
 
 val intelliLangPlugin = "org.intellij.intelliLang"
@@ -21,7 +21,7 @@ repositories {
 }
 
 intellij { // See https://github.com/JetBrains/gradle-intellij-plugin/
-  version = "2021.1.2"
+  version = "2021.2"
   // not found?    apply(plugin = "copyright")
   apply(plugin = "java")
 }
