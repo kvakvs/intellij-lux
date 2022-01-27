@@ -1,17 +1,18 @@
 import org.gradle.api.internal.HasConvention
-import org.jetbrains.grammarkit.tasks.GenerateLexer
-import org.jetbrains.grammarkit.tasks.GenerateParser
+//import org.jetbrains.grammarkit.tasks.GenerateLexerTask
+//import org.jetbrains.grammarkit.tasks.GenerateParserTask
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   idea
   java
-  id("org.jetbrains.kotlin.jvm") version "1.6.0"
-  id("org.jetbrains.intellij") version "0.7.2"
-  id("org.jetbrains.grammarkit") version "2021.1.2"
+  id("org.jetbrains.kotlin.jvm") version "1.6.10"
+  id("org.jetbrains.intellij") version "1.3.1"
+  id("org.jetbrains.grammarkit") version "2021.2.1"
 }
 
+val intellijVersion = prop("intellijVersion")
 val intelliLangPlugin = "org.intellij.intelliLang"
 val psiViewerPluginVersion = prop("psiViewerPluginVersion")
 val psiViewerPlugin = "PsiViewer:${prop("psiViewerPluginVersion")}"
@@ -20,10 +21,12 @@ repositories {
   mavenCentral()
 }
 
-intellij { // See https://github.com/JetBrains/gradle-intellij-plugin/
-  version = "2021.2"
-  // not found?    apply(plugin = "copyright")
-  apply(plugin = "java")
+allprojects {
+  intellij {
+    // See https://github.com/JetBrains/gradle-intellij-plugin/
+    version.set(intellijVersion)
+    apply(plugin = "java")
+  }
 }
 
 java {
@@ -58,27 +61,28 @@ allprojects {
   }
 
   intellij {
-    val plugins = mutableListOf(
-      intelliLangPlugin,
-      psiViewerPlugin
+    plugins.set(
+      listOf(
+        intelliLangPlugin,
+        psiViewerPlugin
+      )
     )
-    setPlugins(*plugins.toTypedArray())
   }
 
-  val generateLuxLexer = task<GenerateLexer>("generateLuxLexer") {
-    source = "src/grammars/lux-lexer.flex"
-    targetDir = "src/se/clau/intellijlux/gen/lexer"
-    targetClass = "_LuxLexer"
-    purgeOldFiles = true
-  }
-
-  val generateLuxParser = task<GenerateParser>("generateLuxParser") {
-    source = "src/grammars/lux-parser.bnf"
-    targetRoot = "src"
-    pathToParser = "/se/clau/intellijlux/gen/parser/LuxParser.java"
-    pathToPsiRoot = "/se/clau/intellijlux/gen/psi"
-    purgeOldFiles = true
-  }
+//  val generateLuxLexer = task<GenerateLexerTask>("generateLuxLexer") {
+//    source = "src/grammars/lux-lexer.flex"
+//    targetDir = "src/se/clau/intellijlux/gen/lexer"
+//    targetClass = "_LuxLexer"
+//    purgeOldFiles = true
+//  }
+//
+//  val generateLuxParser = task<GenerateParserTask>("generateLuxParser") {
+//    source = "src/grammars/lux-parser.bnf"
+//    targetRoot = "src"
+//    pathToParser = "/se/clau/intellijlux/gen/parser/LuxParser.java"
+//    pathToPsiRoot = "/se/clau/intellijlux/gen/psi"
+//    purgeOldFiles = true
+//  }
 
 //  tasks.withType<KotlinCompile> {
 //    dependsOn(
