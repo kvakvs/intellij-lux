@@ -7,9 +7,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   idea
   java
-  id("org.jetbrains.kotlin.jvm") version "1.6.10"
+  id("org.jetbrains.kotlin.jvm") version "1.6.20"
   id("org.jetbrains.intellij") version "1.3.1"
-  id("org.jetbrains.grammarkit") version "2021.2.1"
+  id("org.jetbrains.grammarkit") version "2021.1.2"
 }
 
 val intellijVersion = prop("intellijVersion")
