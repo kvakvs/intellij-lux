@@ -7,9 +7,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   idea
   java
-  id("org.jetbrains.kotlin.jvm") version "1.6.20"
-  id("org.jetbrains.intellij") version "1.3.1"
-  id("org.jetbrains.grammarkit") version "2021.1.2"
+  id("org.jetbrains.kotlin.jvm") version "1.8.22"
+  id("org.jetbrains.intellij") version "1.17.3"
+  id("org.jetbrains.grammarkit") version "2022.3.2.2"
 }
 
 val intellijVersion = prop("intellijVersion")
@@ -18,7 +18,9 @@ val psiViewerPluginVersion = prop("psiViewerPluginVersion")
 val psiViewerPlugin = "PsiViewer:${prop("psiViewerPluginVersion")}"
 
 repositories {
-  mavenCentral()
+  // mavenCentral()
+  maven("https://oss.sonatype.org/content/repositories/snapshots/")
+  gradlePluginPortal()
 }
 
 allprojects {
@@ -30,16 +32,16 @@ allprojects {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
 }
 
 //val compileKotlin: org.jetbrains.kotlin.gradle.tasks.KotlinCompile by tasks
 //compileKotlin.kotlinOptions.freeCompilerArgs += "-Xjvm-default=enable"
-//compileKotlin.kotlinOptions.jvmTarget = "11"
+//compileKotlin.kotlinOptions.jvmTarget = "17"
 tasks.withType(KotlinCompile::class).all {
   kotlinOptions {
-    jvmTarget = "11"
+    jvmTarget = "17"
     freeCompilerArgs = listOf("-Xjvm-default=enable")
   }
 }
@@ -64,7 +66,7 @@ allprojects {
     plugins.set(
       listOf(
         intelliLangPlugin,
-        psiViewerPlugin
+        // psiViewerPlugin
       )
     )
   }
